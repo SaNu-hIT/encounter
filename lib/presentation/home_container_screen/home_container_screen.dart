@@ -7,6 +7,7 @@ import '../bible_page/bible_page.dart';
 import '../home_page/home_page.dart';
 import '../profile_screen/profile_screen.dart';
 import '../study_details_screen/study_details_screen.dart';
+import '../study_home/study_home.dart';
 import 'provider/home_container_provider.dart';
 
 class HomeContainerScreen extends StatefulWidget {
@@ -87,7 +88,7 @@ class HomeContainerScreenState extends State<HomeContainerScreen> {
       case AppRoutes.homePage:
         return HomePage.builder(context);
       case AppRoutes.studyDetailsScreen:
-        return StudyDetailsScreen.builder(context);
+        return StudyHomePage.builder(context);
       case AppRoutes.biblePage:
         return BiblePage.builder(context);
       case AppRoutes.profileScreen:

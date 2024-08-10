@@ -20,7 +20,17 @@ class AppDecoration {
           colors: [appTheme.teal400, appTheme.teal300],
         ),
       );
-
+  // Gradient decorations
+  static BoxDecoration get gradientBlackToBlack => BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment(0.5, 0),
+          end: Alignment(0.5, 1),
+          colors: [
+            appTheme.black900.withOpacity(0.30),
+            appTheme.black900.withOpacity(0.30),
+          ],
+        ),
+      );
   static BoxDecoration get fillTeal => BoxDecoration(
         color: appTheme.teal100,
       );
@@ -32,7 +42,7 @@ class AppDecoration {
         ),
       );
 
-        static BoxDecoration get outlineGray => BoxDecoration(
+  static BoxDecoration get outlineGray => BoxDecoration(
         color: theme.colorScheme.onPrimaryContainer.withOpacity(1),
         boxShadow: [
           BoxShadow(

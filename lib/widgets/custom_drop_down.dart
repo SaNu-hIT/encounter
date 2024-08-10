@@ -75,6 +75,7 @@ class CustomDropDown extends StatelessWidget {
 
   Widget get dropDownWidget => SizedBox(
         width: width ?? double.maxFinite,
+        height: 50,
         child: DropdownButtonFormField<SelectionPopupModel>(
           focusNode: focusNode,
           icon: icon,
@@ -106,7 +107,7 @@ class CustomDropDown extends StatelessWidget {
         suffixIconConstraints: suffixConstraints,
         isDense: true,
         contentPadding:
-            contentPadding ?? EdgeInsets.fromLTRB(19.h, 42.v, 19.h, 19.v),
+            contentPadding ?? EdgeInsets.fromLTRB(19.h, 1.v, 1.h, 19.v),
         fillColor: fillColor ?? appTheme.whiteA700,
         filled: filled,
         border: borderDecoration ??

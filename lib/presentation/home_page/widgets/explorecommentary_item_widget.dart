@@ -22,19 +22,7 @@ class ExplorecommentaryItemWidget extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width / 4,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromARGB(255, 151, 178, 168), // Start color (#4F9E81)
-              Color.fromARGB(255, 245, 229, 174), // End color (#FFCE19)
-            ],
-
-            stops: [
-              0.2,
-              1.0
-            ], // 20% of the gradient is the start color, and 100% is the end color
-          ),
+          color: Color.fromARGB(255, 198, 229, 249),
           borderRadius: BorderRadius.all(
             Radius.circular(
                 0.1 * 71.h), // 10% curve (0.1 times the width of the container)

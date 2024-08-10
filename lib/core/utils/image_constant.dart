@@ -7,7 +7,11 @@ class ImageConstant {
   static String onboarding1 = '$imagePath/Component 39.svg';
   static String onboarding2 = '$imagePath/Component 40.svg';
   static String onboarding3 = '$imagePath/Component 41.svg';
-  static String imgSplash = '$imagePath/img_splash.png';
+  static String imgSplash = '$imagePath/img_splash.svg';
+  static String logoHome = '$imagePath/logo_home.svg';
+  static String back = '$imagePath/back.svg';
+  static String got_question_back = '$imagePath/img_back_ask.png';
+  static String logo_blue = '$imagePath/logo_blue.svg';
 
   static String imgG6554 = '$imagePath/img_g6554.svg';
 

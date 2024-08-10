@@ -50,50 +50,54 @@ class ProfileScreenState extends State<ProfileScreen> {
           horizontal: 23.h,
           vertical: 8.v,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildColumnbiblequot(context),
-            SizedBox(height: 24.v),
-            Padding(
-              padding: EdgeInsets.only(left: 1.h),
-              child: Text(
-                "msg_share_encounter".tr,
-                style: CustomTextStyles.bodyMediumBluegray70001,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildColumnbiblequot(context),
+              SizedBox(height: 24.v),
+              Padding(
+                padding: EdgeInsets.only(left: 1.h),
+                child: Text(
+                  "msg_share_encounter".tr,
+                  style: CustomTextStyles.bodyMediumBluegray70001,
+                ),
               ),
-            ),
-            SizedBox(height: 8.v),
-            _buildRowcopy(context),
-            SizedBox(height: 26.v),
-            Divider(
-              indent: 1.h,
-            ),
-            SizedBox(height: 25.v),
-            Padding(
-              padding: EdgeInsets.only(left: 1.h),
-              child: _buildRowclockOne(
-                context,
-                clockImage: ImageConstant.imgSettings,
-                logout: "lbl_edit_profile".tr,
+              SizedBox(height: 8.v),
+              _buildRowcopy(context),
+              SizedBox(height: 26.v),
+              Divider(
+                indent: 1.h,
               ),
-            ),
-            SizedBox(height: 30.v),
-            _buildRowquestionsone(context),
-            SizedBox(height: 31.v),
-            _buildRownotesone(context),
-            SizedBox(height: 27.v),
-            _buildRowiconone(context),
-            SizedBox(height: 29.v),
-            Padding(
-              padding: EdgeInsets.only(left: 1.h),
-              child: _buildRowclockOne(
-                context,
-                clockImage: ImageConstant.imgClock,
-                logout: "lbl_logout".tr,
+              SizedBox(height: 25.v),
+              Padding(
+                padding: EdgeInsets.only(left: 1.h),
+                child: _buildRowclockOne(
+                  context,
+                  clockImage: ImageConstant.imgSettings,
+                  logout: "lbl_edit_profile".tr,
+                ),
               ),
-            ),
-            SizedBox(height: 5.v)
-          ],
+              SizedBox(height: 30.v),
+              _buildRowquestionsone(context),
+              SizedBox(height: 30.v),
+              _buildRowquestionsAsk(context),
+              SizedBox(height: 31.v),
+              _buildRownotesone(context),
+              SizedBox(height: 27.v),
+              _buildRowiconone(context),
+              SizedBox(height: 29.v),
+              Padding(
+                padding: EdgeInsets.only(left: 1.h),
+                child: _buildRowclockOne(
+                  context,
+                  clockImage: ImageConstant.imgClock,
+                  logout: "lbl_logout".tr,
+                ),
+              ),
+              SizedBox(height: 5.v)
+            ],
+          ),
         ),
       ),
     );
@@ -136,7 +140,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         vertical: 25.v,
       ),
       decoration: BoxDecoration(
-        color: appTheme.blueGray500,
+        color: appTheme.blueGray600,
         borderRadius: BorderRadiusStyle.roundedBorder16,
         image: DecorationImage(
           image: AssetImage(
@@ -205,6 +209,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           CustomIconButton(
             height: 40.v,
             width: 37.h,
+    
             padding: EdgeInsets.all(9.h),
             decoration: IconButtonStyleHelper.fillGreen,
             child: CustomImageView(
@@ -220,27 +225,72 @@ class ProfileScreenState extends State<ProfileScreen> {
   Widget _buildRowquestionsone(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
-      child: Row(
-        children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgQuestions1,
-            height: 22.adaptSize,
-            width: 22.adaptSize,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 17.h),
-            child: Text(
-              "lbl_ask_questions".tr,
-              style: CustomTextStyles.titleMediumGray70002,
-            ),
-          ),
-          Spacer(),
-          CustomImageView(
-            imagePath: ImageConstant.imgArrowRight,
-            height: 20.adaptSize,
-            width: 20.adaptSize,
+      child: GestureDetector(
+        onTap: () => {
+          NavigatorService.pushNamed(
+            AppRoutes.got_questions,
           )
-        ],
+        },
+        child: Row(
+          children: [
+            CustomImageView(
+              imagePath: ImageConstant.imgQuestions1,
+              height: 22.adaptSize,
+              width: 22.adaptSize,
+              color: appTheme.blueGray600,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 17.h),
+              child: Text(
+                "Got Questions".tr,
+                style: CustomTextStyles.titleMediumGray70002,
+              ),
+            ),
+            Spacer(),
+            CustomImageView(
+              imagePath: ImageConstant.imgArrowRight,
+              height: 20.adaptSize,
+              width: 20.adaptSize,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Section Widget
+  Widget _buildRowquestionsAsk(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: GestureDetector(
+        onTap: () => {
+          NavigatorService.pushNamed(
+            AppRoutes.ask_questions,
+          )
+        },
+        child: Row(
+          children: [
+            CustomImageView(
+              imagePath: ImageConstant.imgQuestions1,
+              height: 22.adaptSize,
+              width: 22.adaptSize,
+              color: appTheme.blueGray600,
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 17.h),
+              child: Text(
+                "lbl_ask_questions".tr,
+                style: CustomTextStyles.titleMediumGray70002,
+              ),
+            ),
+            Spacer(),
+            CustomImageView(
+              imagePath: ImageConstant.imgArrowRight,
+              height: 20.adaptSize,
+              width: 20.adaptSize,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -255,6 +305,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             imagePath: ImageConstant.imgNotesTeal800,
             height: 20.adaptSize,
             width: 20.adaptSize,
+            color: appTheme.blueGray600,
             margin: EdgeInsets.only(bottom: 3.v),
           ),
           Padding(
@@ -286,6 +337,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             imagePath: ImageConstant.imgIconNotification,
             height: 24.adaptSize,
             width: 24.adaptSize,
+            color: appTheme.blueGray600,
           ),
           Padding(
             padding: EdgeInsets.only(left: 16.h),
@@ -334,6 +386,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           imagePath: clockImage,
           height: 24.adaptSize,
           width: 24.adaptSize,
+          color: appTheme.blueGray600,
         ),
         Padding(
           padding: EdgeInsets.only(

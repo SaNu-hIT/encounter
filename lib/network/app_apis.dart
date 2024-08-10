@@ -1,6 +1,12 @@
 class AppAPIs {
   const AppAPIs._();
   static const String login = 'login';
+  static const String signup = 'signup';
+  static const String bible_study = 'bible_study';
+  static const String got_questions = 'got_questions';
+  static const String asked_questions = 'asked_questions';
+  static const String ask_a_question = 'ask_a_question';
+  static const String got_question_categories = 'got_question_categories';
   static const String verify = 'verify_otp';
   static const String my_profile = 'my_profile';
   static const String my_family = 'my_family';
@@ -24,6 +30,9 @@ class AppAPIs {
   static const String marital_statuses = 'marital_statuses';
   static const String blood_groups = 'blood_groups';
   static const String vicar_messages = 'vicar_messages';
+  static const String home = 'home';
+  static const String course_details = 'course_details';
+  static const String course_day_content = 'course_day_content';
   static const String organizations = 'organizations';
   static const String notifications = 'notifications';
   static const String vicars_list = 'vicars_list';

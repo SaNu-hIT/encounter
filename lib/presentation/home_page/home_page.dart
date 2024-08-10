@@ -7,8 +7,10 @@ import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/appbar_trailing_image.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_search_view.dart';
+import '../../widgets/loader_widget.dart';
 import 'models/explorecommentary_item_model.dart';
 import 'models/home_model.dart';
+import 'models/home_respo.dart';
 import 'models/viewhierarchy_item_model.dart';
 import 'provider/home_provider.dart';
 import 'widgets/explorecommentary_item_widget.dart';
@@ -34,87 +36,91 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HomeProvider>(context, listen: false).getHome("10");
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: appTheme.gray10001,
-      resizeToAvoidBottomInset: true,
-      appBar: _buildAppBar(context),
-      body: SizedBox(
-        width: SizeUtils.width,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 7.v),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 5.v),
-            child: Column(
-              children: [
-                bannerWithBibleWorse(context),
-                SizedBox(height: 18.v),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.h),
-                  child: Selector<HomeProvider, TextEditingController?>(
-                    selector: (context, provider) => provider.searchController,
-                    builder: (context, searchController, child) {
-                      return CustomSearchView(
-                        controller: searchController,
-                        hintText: "msg_search_books_chapters".tr,
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(height: 18.v),
-                _buildExploreCommentary(context),
-                SizedBox(height: 18.v),
-                _buildRowBibleStudy(context),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 24.h),
-                    child: Text(
-                      "msg_stay_rooted_in_god_s".tr,
-                      style: CustomTextStyles.bodySmallGray90001,
+    return Consumer<HomeProvider>(builder: (context, provider, child) {
+      if (provider.isLoading) {
+        return LoaderHomeWidget();
+      }
+
+      return Scaffold(
+        backgroundColor: appTheme.gray10001,
+        resizeToAvoidBottomInset: true,
+        appBar: _buildAppBar(context),
+        body: SizedBox(
+          width: SizeUtils.width,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 0.v),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 5.v),
+              child: Column(
+                children: [
+                  _buildTelevision(context, provider),
+                  SizedBox(height: 18.v),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.h),
+                    child: CustomSearchView(
+                      controller: provider.searchController,
+                      hintText: "msg_search_books_chapters".tr,
                     ),
                   ),
-                ),
-                SizedBox(height: 18.v),
-                _buildViewHierarchy(context),
-                SizedBox(height: 18.v),
-              ],
+                  SizedBox(height: 18.v),
+                  _buildExploreCommentary(context),
+                  SizedBox(height: 18.v),
+                  _buildRowBibleStudy(context),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 24.h),
+                      child: Text(
+                        "msg_stay_rooted_in_god_s".tr,
+                        style: CustomTextStyles.bodySmallGray90001,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 18.v),
+                  _buildViewHierarchy(context),
+                  SizedBox(height: 18.v),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      leadingWidth: 64.h,
+      leadingWidth: 170.h,
       height: 90,
       leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgMale,
+        imagePath: ImageConstant.logoHome,
         margin: EdgeInsets.only(
           left: 24.h,
           top: 5.v,
           bottom: 10.v,
         ),
       ),
-      title: Padding(
-        padding: EdgeInsets.only(left: 10.h),
-        child: Column(
-          children: [
-            AppbarSubtitleOne(
-              text: "lbl_welcome".tr,
-            ),
-            AppbarTitle(
-              text: "lbl_jeevan_george".tr,
-            )
-          ],
-        ),
-      ),
+      // title: Padding(
+      //   padding: EdgeInsets.only(left: 10.h),
+      //   child: Column(
+      //     children: [
+      //       AppbarSubtitleOne(
+      //         text: "lbl_welcome".tr,
+      //       ),
+      //       AppbarTitle(
+      //         text: "lbl_jeevan_george".tr,
+      //       )
+      //     ],
+      //   ),
+      // ),
       actions: [
         AppbarTrailingImage(
           imagePath: ImageConstant.imgNotification5,
@@ -124,8 +130,93 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildTelevision(BuildContext context, HomeProvider provider) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+      child: SizedBox(
+        height: 180.v,
+        width: double.maxFinite,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SizedBox(
+                height: 180.v,
+                width: 368.h,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CustomImageView(
+                      imagePath: ImageConstant.imgRectangle4322,
+                      height: 200.v,
+                      width: 368.h,
+                      radius: BorderRadius.circular(
+                        10.h,
+                      ),
+                      alignment: Alignment.center,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        // padding: EdgeInsets.symmetric(
+                        //   horizontal: 26.h,
+                        //   vertical: 17.v,
+                        // ),
+                        height: 200.v,
+                        width: 368.h,
+                        decoration: AppDecoration.gradientBlackToBlack.copyWith(
+                          borderRadius: BorderRadius.circular(
+                            10.h,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 312.h,
+                              margin: EdgeInsets.only(right: 2.h),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    provider.respo.bibleVerse?.data1 ?? "",
+                                    maxLines: 8,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: CustomTextStyles
+                                        .titleSmallPoppinsWhiteA70001,
+                                  ),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    provider.respo.bibleVerse?.data2 ?? "",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: CustomTextStyles
+                                        .titleSmallPoppinsWhiteA700012,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// Section Widget
-  Widget bannerWithBibleWorse(BuildContext context) {
+  Widget bannerWithBibleWorse(BuildContext context, HomeProvider provider) {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: SizedBox(
@@ -223,9 +314,12 @@ class HomePageState extends State<HomePage> {
             "lbl_bible_study".tr,
             style: CustomTextStyles.titleMediumGray90001,
           ),
-          Text(
-            "lbl_see_all".tr,
-            style: CustomTextStyles.titleSmallBluegray600,
+          GestureDetector(
+            onTap: () {},
+            child: Text(
+              "lbl_see_all".tr,
+              style: CustomTextStyles.titleSmallBluegray600,
+            ),
           )
         ],
       ),
@@ -240,19 +334,13 @@ class HomePageState extends State<HomePage> {
         height: 235.v,
         child: Consumer<HomeProvider>(
           builder: (context, provider, child) {
-            return ListView.separated(
-              padding: EdgeInsets.only(left: 24.h),
+            return ListView.builder(
+              padding: EdgeInsets.only(left: 12.h),
               scrollDirection: Axis.horizontal,
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  width: 15.h,
-                );
-              },
-              itemCount: provider.homeModelObj.viewhierarchyItemList.length,
+              itemCount: provider.respo.data?.first.list?.length ?? 0,
               itemBuilder: (context, index) {
-                ViewhierarchyItemModel model =
-                    provider.homeModelObj.viewhierarchyItemList[index];
-                return ViewhierarchyItemWidget(
+                BibileList model = provider.respo.data!.first.list![index];
+                return CourseListWidget(
                   model,
                 );
               },

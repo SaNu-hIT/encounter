@@ -1,0 +1,110 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Import Provider package
+
+import '../../core/app_export.dart';
+import '../../core/utils/size_utils.dart';
+import '../../widgets/app_bar/appbar_title.dart';
+import '../../widgets/app_bar/custom_app_bar.dart';
+import '../home_page/models/home_respo.dart';
+import '../home_page/provider/home_provider.dart';
+import '../home_page/widgets/viewhierarchy_item_widget.dart';
+import 'models/viewhierarchy_item_model.dart';
+import 'provider/study_home_provider.dart';
+import 'widgets/viewhierarchy_item_widget.dart';
+
+class StudyHomePage extends StatefulWidget {
+  const StudyHomePage({Key? key})
+      : super(
+          key: key,
+        );
+
+  @override
+  HomePageState createState() => HomePageState();
+  static Widget builder(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => HomeProvider(),
+      child: StudyHomePage(),
+    );
+  }
+}
+
+class HomePageState extends State<StudyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<HomeProvider>(context, listen: false).getHome("");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<HomeProvider>(builder: (context, provider, child) {
+      return Scaffold(
+        backgroundColor: appTheme.gray10001,
+        appBar: _buildAppBar(context),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Bible Study",
+                    style: TextStyle(
+                      fontSize: 20, // Example font size
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "Stay rooted in God’s Word",
+                    style: TextStyle(
+                      fontSize: 12, // Example font size
+                    ),
+                  ),
+                  SizedBox(height: 14),
+                ],
+              ),
+              Expanded(
+                child: _buildViewHierarchy(context, provider),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+      leadingWidth: 164.h,
+      leading: AppbarTitle(
+        text: "Study",
+        margin: EdgeInsets.only(left: 24.h, top: 0.v),
+      ),
+    );
+  }
+
+  Widget _buildViewHierarchy(BuildContext context, HomeProvider provider) {
+    return GridView.builder(
+      physics: ScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio:
+            0.75, // Adjust the aspect ratio of grid items as needed
+        crossAxisSpacing: 10.0, // Adjust the spacing between columns
+        mainAxisSpacing: 10.0, // Adjust the spacing between rows
+      ),
+      itemCount: provider.respo.data?.first.list?.length ?? 0,
+      itemBuilder: (context, index) {
+        BibileList model = provider.respo.data!.first.list![index];
+        return CourseListWidget(
+          model,
+        );
+      },
+    );
+  }
+}

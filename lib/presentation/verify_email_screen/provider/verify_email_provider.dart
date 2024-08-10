@@ -25,23 +25,18 @@ class VerifyEmailProvider extends ChangeNotifier {
 
   verifyEmail(BuildContext context) async {
     var email = PrefUtils().getEmail();
-    var familyCode = PrefUtils().getfamilyode();
-    if (otpController.text != "" && email != "" && familyCode != "") {
+    if (otpController.text != "" && email != "") {
       loader(true);
-      VerifyModel respo = await _repo.verify(
-          email: email, otp: otpController.text, familyCode: familyCode);
+      VerifyModel respo =
+          await _repo.verify(email: email, otp: otpController.text);
       loader(false);
       if (respo.status == "success") {
         if (null != respo.data?.token) {
           SecureStorage.setValue(
               key: SecureStorageKeys.kAccessToken, value: respo.data?.token);
           PrefUtils().setToken(respo.data?.token ?? "");
-          PrefUtils().setName(respo.data?.user?.name ?? "");
+          PrefUtils().setName(respo.data?.user?.firstName ?? "");
           PrefUtils().setEmail(respo.data?.user?.email ?? "");
-          PrefUtils().setfamilyName(respo.data?.user?.familyName ?? "");
-          PrefUtils().setfamilyHeadName(respo.data?.user?.familyHeadName ?? "");
-          PrefUtils().setImage(respo.data?.user?.image ?? "");
-          PrefUtils().setUserType(respo.data?.user?.userType ?? "");
           NavigatorService.pushNamed(
             AppRoutes.homeContainerScreen,
           );

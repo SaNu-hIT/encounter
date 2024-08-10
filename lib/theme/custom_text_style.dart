@@ -38,6 +38,19 @@ class CustomTextStyles {
         fontWeight: FontWeight.w600,
       );
 
+  static get titleSmallPoppinsWhiteA70001 =>
+      theme.textTheme.titleSmall?.canelaTrial.copyWith(
+        color: appTheme.whiteA70001,
+        fontSize: 15.fSize,
+        fontWeight: FontWeight.w700,
+      );
+  static get titleSmallPoppinsWhiteA700012 =>
+      theme.textTheme.titleSmall?.canelaTrial.copyWith(
+        color: appTheme.whiteA70001,
+        fontSize: 14.fSize,
+        fontWeight: FontWeight.w700,
+      );
+
   static get bodyLargeOnPrimaryContainer => theme.textTheme.bodyLarge!.copyWith(
         color: theme.colorScheme.onPrimaryContainer.withOpacity(1),
         fontSize: 18.fSize,
@@ -102,7 +115,7 @@ class CustomTextStyles {
         fontWeight: FontWeight.w400,
       );
   static get headlineSmallGray100 => theme.textTheme.headlineSmall!.copyWith(
-        color: appTheme.gray100,
+        color: appTheme.blueGray90001,
       );
 // Label text style
   static get labelLargeManropeBluegray500 =>
@@ -110,14 +123,14 @@ class CustomTextStyles {
         color: appTheme.blueGray500,
       );
 
+  static get largeManrope24Bold => theme.textTheme.titleLarge!.manrope.copyWith(
+      color: appTheme.black900, fontSize: 24, fontWeight: FontWeight.w800);
+
   static get labelManropeWhiteSemi20 => theme.textTheme.labelLarge!.manrope
-      .copyWith(color: appTheme.whiteA700, fontSize: 20)
-      ;
+      .copyWith(color: appTheme.whiteA700, fontSize: 20);
   static get labelManropeWhiteSemi18 => theme.textTheme.labelLarge!.manrope
       .copyWith(color: appTheme.whiteA700, fontSize: 18);
- 
- 
- 
+
   static get labelLargeManropeWhiteTitle =>
       theme.textTheme.labelLarge!.manrope.copyWith(
         color: appTheme.whiteA700,
@@ -161,13 +174,11 @@ class CustomTextStyles {
       );
   static get labelLargeManropeTeal800 =>
       theme.textTheme.labelLarge!.manrope.copyWith(
-        color: appTheme.teal800,
+        color: appTheme.teal40001,
       );
 
   static get buttonText => theme.textTheme.labelLarge!.manrope.copyWith(
-        color: appTheme.whiteA700,
-        fontWeight: FontWeight.w900,
-      );
+      color: appTheme.amber600, fontWeight: FontWeight.w900, fontSize: 16);
   static get labelLargeManropeWhiteA700 =>
       theme.textTheme.labelLarge!.manrope.copyWith(
         color: appTheme.whiteA700,
@@ -205,6 +216,7 @@ class CustomTextStyles {
   static get titleMediumGray70002 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.gray70002,
       );
+
   static get titleMediumGray900 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.gray900,
       );

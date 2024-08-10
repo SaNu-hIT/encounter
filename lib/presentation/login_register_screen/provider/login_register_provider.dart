@@ -12,10 +12,11 @@ import '../repo/login_repo.dart';
 // ignore_for_file: must_be_immutable
 
 class LoginRegisterProvider extends ChangeNotifier {
-  final LoginRepo _repo = LoginRepo();
-  TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+
   LoginModel loginModelObj = LoginModel();
+  final LoginRepo _repo = LoginRepo();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
   loader(bool load) {
@@ -24,14 +25,12 @@ class LoginRegisterProvider extends ChangeNotifier {
   }
 
   login(BuildContext context) async {
-    if (emailController.text != "" && passwordController.text != "") {
+    if (emailController.text != "") {
       loader(true);
-      LoginModel loginRepo = await _repo.login(
-          email: emailController.text, password: passwordController.text);
+      LoginModel loginRepo = await _repo.login(email: emailController.text);
       loader(false);
       if (loginRepo.status == "success") {
         PrefUtils().setEmail(emailController.text);
-        PrefUtils().setfamilyCode(passwordController.text);
         NavigatorService.pushNamed(
           AppRoutes.verifyEmailScreen,
         );
@@ -48,9 +47,46 @@ class LoginRegisterProvider extends ChangeNotifier {
       }
     } else {
       Fluttertoast.showToast(
-          msg: "Please enter email and Family Code",
+          msg: "Please enter email and Password",
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  register(BuildContext context) async {
+    if (emailController.text != "" && nameController.text != "") {
+      loader(true);
+      LoginModel loginRepo = await _repo.register(
+          email: emailController.text,
+          gender: "MALE",
+          first_name: nameController.text);
+      loader(false);
+      if (loginRepo.status == "success") {
+        PrefUtils().setEmail(emailController.text);
+        // NavigatorService.pushNamed(
+        //   AppRoutes.verifyEmailScreen,
+        // );
+        login(context);
+      } else {
+        Fluttertoast.showToast(
+            msg: loginRepo.data?.messsage ?? "",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        loader(false);
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "Please enter email and Password",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.red,
           textColor: Colors.white,
@@ -62,6 +98,5 @@ class LoginRegisterProvider extends ChangeNotifier {
   void dispose() {
     super.dispose();
     emailController.dispose();
-    passwordController.dispose();
   }
 }

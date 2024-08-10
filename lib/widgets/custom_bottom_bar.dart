@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
@@ -48,8 +50,9 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    double btmNavigationBarHeight = Platform.isAndroid ? 80 : 100;
     return Container(
-      height: 78.v,
+      height: btmNavigationBarHeight,
       decoration: BoxDecoration(
         color: appTheme.whiteA700,
         borderRadius: BorderRadius.vertical(

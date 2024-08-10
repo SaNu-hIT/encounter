@@ -19,7 +19,7 @@ extension IconButtonStyleHelper on CustomIconButton {
         borderRadius: BorderRadius.circular(20.h),
       );
   static BoxDecoration get fillGreen => BoxDecoration(
-        color: appTheme.green400,
+        color: appTheme.blueGray600,
         borderRadius: BorderRadius.circular(6.h),
       );
 }

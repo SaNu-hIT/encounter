@@ -8,8 +8,7 @@ import '../models/verify_email_model.dart';
 class VerifyRepo {
   Future<VerifyModel> verify(
       {required String email,
-      required String otp,
-      required String familyCode}) async {
+      required String otp}) async {
     try {
       DioBuilderResponse dioBuilderResponse =
           await DioBuilder().buildNonCachedDio(hasAuth: false);
@@ -19,7 +18,6 @@ class VerifyRepo {
         data: jsonEncode(<String, String>{
           'email': email,
           'otp': otp,
-          'family_code': familyCode
         }),
       ));
 

@@ -16,10 +16,10 @@ class CustomButtonStyles {
         elevation: MaterialStateProperty.all<double>(0),
       );
 
-        static ButtonStyle get outlineBlueGrayC => ElevatedButton.styleFrom(
-        backgroundColor: appTheme.amber600,
+  static ButtonStyle get outlineBlueGrayC => ElevatedButton.styleFrom(
+        backgroundColor: appTheme.whiteA700,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(27.h),
+          borderRadius: BorderRadius.circular(10.h),
         ),
         shadowColor: appTheme.blueGray3000c,
         elevation: 26,

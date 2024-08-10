@@ -82,7 +82,8 @@ class CustomTextFormFieldLogIn extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(16), // 16 point padding
           decoration: BoxDecoration(
-            color: appTheme.blueGray600, // Background color
+            border: Border.all(width: 1.5, color: Colors.white),
+
             borderRadius: BorderRadius.circular(10), // Rounded corners
           ),
           child: TextFormField(

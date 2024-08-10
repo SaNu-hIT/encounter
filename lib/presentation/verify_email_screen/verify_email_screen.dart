@@ -38,41 +38,51 @@ class VerifyEmailScreenState extends State<VerifyEmailScreen> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
-      body: Container(
-        width: SizeUtils.width,
-        height: SizeUtils.height,
-        decoration: BoxDecoration(
-          color: theme.colorScheme.onPrimaryContainer.withOpacity(1),
-          image: DecorationImage(
-            image: AssetImage(
-              ImageConstant.imgLoginRegister,
+      body: Stack(
+        children: [
+          Container(
+            width: SizeUtils.width,
+            height: SizeUtils.height,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.onPrimaryContainer.withOpacity(1),
+              image: DecorationImage(
+                image: AssetImage(
+                  ImageConstant.imgLoginRegister,
+                ),
+                fit: BoxFit.cover,
+              ),
             ),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Form(
-              key: _formKey,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 22.h),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    AppNameHeader(),
-                    SizedBox(height: 19.v),
-                    _buildLoginRegisterSection(context),
-                    SizedBox(height: 5.v),
-                  ],
+            child: Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 22.h),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        AppNameHeader(),
+                        SizedBox(height: 19.v),
+                        _buildLoginRegisterSection(context),
+                        SizedBox(height: 5.v),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+          Selector<VerifyEmailProvider, bool>(
+            selector: (context, provider) => provider.isLoading,
+            builder: (context, value, child) {
+              return value ? CircularLoader() : SizedBox();
+            },
+          ),
+        ],
       ),
     );
   }
@@ -134,9 +144,12 @@ class VerifyEmailScreenState extends State<VerifyEmailScreen> {
           CustomElevatedButton1(
             text: "Submit",
             onPressed: () {
-              NavigatorService.pushNamed(
-                AppRoutes.homeContainerScreen,
-              );
+              // NavigatorService.pushNamed(
+              //   AppRoutes.homeContainerScreen,
+              // );
+
+              Provider.of<VerifyEmailProvider>(context, listen: false)
+                  .verifyEmail(context);
             },
             buttonStyle: CustomButtonStyles.outlineBlueGrayC,
           ),

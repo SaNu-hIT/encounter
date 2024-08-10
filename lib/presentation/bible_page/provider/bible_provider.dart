@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../data/models/selectionPopupModel/selection_popup_model.dart';
 import '../models/bible_model.dart';
+import '../repo/login_repo.dart';
 
 /// A provider class for the BiblePage.
 ///
@@ -11,40 +12,50 @@ import '../models/bible_model.dart';
 
 // ignore_for_file: must_be_immutable
 class BibleProvider extends ChangeNotifier {
-  BibleModel bibleModelObj = BibleModel();
-
   @override
   void dispose() {
     super.dispose();
   }
 
-  onSelected(dynamic value) {
-    for (var element in bibleModelObj.dropdownItemList) {
-      element.isSelected = false;
-      if (element.id == value.id) {
-        element.isSelected = true;
-      }
-    }
+  bool _isSelectedOldTestament = true;
+  bool _isSelectedNewTestament = false;
+
+  bool get isSelectedOldTestament => _isSelectedOldTestament;
+  bool get isSelectedNewTestament => _isSelectedNewTestament;
+
+  void selectOldTestament() {
+    _isSelectedOldTestament = true;
+    _isSelectedNewTestament = false;
+    testament_id = "1";
+    notifyListeners();
+    getBibleList();
+  }
+
+  void selectNewTestament() {
+    _isSelectedOldTestament = false;
+    _isSelectedNewTestament = true;
+    testament_id = "2";
+    notifyListeners();
+    getBibleList();
+  }
+
+  final BibleRepo _repo = BibleRepo();
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  loader(bool load) {
+    _isLoading = load;
     notifyListeners();
   }
 
-  onSelected1(dynamic value) {
-    for (var element in bibleModelObj.dropdownItemList1) {
-      element.isSelected = false;
-      if (element.id == value.id) {
-        element.isSelected = true;
-      }
-    }
-    notifyListeners();
-  }
+  var testament_id = "1";
+  BibleListModel _bibleRespo = BibleListModel();
+  BibleListModel get bibleRespo => _bibleRespo;
+  getBibleList() async {
+    loader(true);
+    
+    _bibleRespo = await _repo.getBibleList(testament_id: testament_id);
+    loader(false);
 
-  onSelected2(dynamic value) {
-    for (var element in bibleModelObj.dropdownItemList2) {
-      element.isSelected = false;
-      if (element.id == value.id) {
-        element.isSelected = true;
-      }
-    }
     notifyListeners();
   }
 }

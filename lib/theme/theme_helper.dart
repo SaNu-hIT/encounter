@@ -37,7 +37,6 @@ class ThemeHelper {
       visualDensity: VisualDensity.standard,
       colorScheme: colorScheme,
       textTheme: TextThemes.textTheme(colorScheme),
-      scaffoldBackgroundColor: appTheme.whiteA700,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: appTheme.whiteA700,
@@ -149,8 +148,10 @@ class LightCodeColors {
   Color get blueGray30003 => Color(0XFF9CA8BA);
   Color get blueGray400 => Color(0XFF898995);
   Color get blueGray40001 => Color(0XFF888888);
-  Color get blueGray500 => Color(0XFF4F9E81);
-  Color get blueGray600 => Color(0XFF3E8E71);
+
+  Color get blueGray500 => Color(0XFF3C95E5);
+
+  Color get blueGray600 => Color(0XFF3C95E5);
   Color get blueGray700 => Color(0XFF515151);
   Color get blueGray70001 => Color(0XFF50525A);
   Color get blueGray900 => Color(0XFF2E2E2E);
@@ -177,6 +178,7 @@ class LightCodeColors {
   Color get gray80090 => Color(0X904F4F4F);
   Color get gray900 => Color(0XFF1C1B1D);
   Color get gray90001 => Color(0XFF1C1C1C);
+  Color get grayDivider => Color(0XFFD7DEF0);
 // Green
   Color get green200 => Color(0XFF9BC3B5);
   Color get green400 => Color(0XFF67C15E);
@@ -190,19 +192,23 @@ class LightCodeColors {
   Color get teal900 => Color(0XFF00603D);
 // White
   Color get whiteA700 => Color(0XFFFFFFFF);
+  Color get backgroundColor => Color(0XFFFBFEFF);
 // Yellow
   Color get yellow200A9 => Color(0XA9FFEE99);
 
   Color get teal100 => Color(0XFFADF0D8);
 
-  Color get teal300 => Color(0XFF57C19A);
-  Color get teal400 => Color(0XFF39B588);
+  Color get teal300 => Color(0XFF3C95E5);
+  Color get teal400 => Color(0XFF3C95E5);
 
   Color get gray10002 => Color(0XFFF7F5EF);
 
-  Color get teal40001 => Color(0XFF3DBA8C);
+  Color get teal40001 => Color(0XFF3C95E5);
 
   Color get gray70019 => Color(0X19555E68);
   Color get blueGray3000c => Color(0X0C8D9BAA);
-   Color get amber400 => Color(0XFFFFCD19);
+  Color get amber400 => Color.fromARGB(255, 70, 60, 22);
+
+  // White
+  Color get whiteA70001 => Color(0XFFFFFFFF);
 }
