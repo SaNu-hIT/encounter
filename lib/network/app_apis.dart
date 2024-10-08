@@ -3,10 +3,13 @@ class AppAPIs {
   static const String login = 'login';
   static const String signup = 'signup';
   static const String bible_study = 'bible_study';
+  static const String bible_study_chapters = 'bible_study_chapters';
   static const String got_questions = 'got_questions';
+  static const String get_notes = 'my_notes';
   static const String asked_questions = 'asked_questions';
   static const String ask_a_question = 'ask_a_question';
   static const String got_question_categories = 'got_question_categories';
+  static const String got_question_sub_categories = 'got_question_sub_categories';
   static const String verify = 'verify_otp';
   static const String my_profile = 'my_profile';
   static const String my_family = 'my_family';
@@ -23,7 +26,7 @@ class AppAPIs {
   static const String prayer_group = 'prayer_group_details';
   static const String update_family = 'update_family';
   static const String delete_member = 'delete_member';
-  static const String add_member = 'add_member';
+  static const String edit_profile = 'edit_profile';
   static const String update_member = 'update_member';
   static const String prayer_groups = 'prayer_groups';
   static const String relationships = 'relationships';
@@ -32,6 +35,9 @@ class AppAPIs {
   static const String vicar_messages = 'vicar_messages';
   static const String home = 'home';
   static const String course_details = 'course_details';
+  static const String myprofile = 'myprofile';
+  static const String mark_as_read = 'mark_as_read';
+  static const String enroll_batch = 'enroll_batch';
   static const String course_day_content = 'course_day_content';
   static const String organizations = 'organizations';
   static const String notifications = 'notifications';
@@ -61,4 +67,5 @@ class AppAPIs {
   static const String comments = 'api/comments';
   static const String getInvoiceHistory = 'api/getInvoiceHistory';
   static const String getPoCode = 'api/get_po_ocode';
+  static const String completed_courses = 'api/completed_courses';
 }

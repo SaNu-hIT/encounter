@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 import '../theme/custom_button_style.dart';
@@ -58,8 +59,9 @@ class CustomElevatedButton extends BaseButton {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               leftIcon ?? const SizedBox.shrink(),
-              Text(
+              AutoSizeText(
                 text,
+                
                 style:
                     buttonTextStyle ?? CustomTextStyles.bodySmallBluegray30003,
               ),

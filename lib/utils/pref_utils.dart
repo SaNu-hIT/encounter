@@ -74,13 +74,13 @@ class PrefUtils {
     }
   }
 
-  Future<void> setfamilyName(String value) {
-    return _sharedPreferences!.setString('familyName', value);
+  Future<void> setVerses(String value) {
+    return _sharedPreferences!.setString('dailyVerses', value);
   }
 
-  String getfamilyName() {
+  String getVerses() {
     try {
-      return _sharedPreferences!.getString('familyName') ?? "";
+      return _sharedPreferences!.getString('dailyVerses') ?? "";
     } catch (e) {
       return "";
     }
@@ -146,5 +146,10 @@ class PrefUtils {
     } catch (e) {
       return "";
     }
+  }
+
+  Future<void> clearToken() {
+    SecureStorage.deleteAll();
+    return _sharedPreferences!.clear();
   }
 }

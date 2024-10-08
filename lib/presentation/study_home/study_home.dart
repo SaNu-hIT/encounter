@@ -1,3 +1,4 @@
+import 'package:encounter_app/widgets/loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import Provider package
 
@@ -40,6 +41,10 @@ class HomePageState extends State<StudyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(builder: (context, provider, child) {
+      if (provider.isLoading) {
+        return LoaderWidget();
+      }
+
       return Scaffold(
         backgroundColor: appTheme.gray10001,
         appBar: _buildAppBar(context),
@@ -55,7 +60,8 @@ class HomePageState extends State<StudyHomePage> {
                   Text(
                     "Bible Study",
                     style: TextStyle(
-                      fontSize: 20, // Example font size
+                      fontSize: 16, // Example font size
+                      color: appTheme.black900,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -63,6 +69,7 @@ class HomePageState extends State<StudyHomePage> {
                     "Stay rooted in God’s Word",
                     style: TextStyle(
                       fontSize: 12, // Example font size
+                      color: appTheme.black900,
                     ),
                   ),
                   SizedBox(height: 14),
@@ -83,7 +90,7 @@ class HomePageState extends State<StudyHomePage> {
       leadingWidth: 164.h,
       leading: AppbarTitle(
         text: "Study",
-        margin: EdgeInsets.only(left: 24.h, top: 0.v),
+        margin: EdgeInsets.only(left: 24.h, top: 10.v),
       ),
     );
   }
@@ -94,7 +101,7 @@ class HomePageState extends State<StudyHomePage> {
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio:
-            0.75, // Adjust the aspect ratio of grid items as needed
+            0.73, // Adjust the aspect ratio of grid items as needed
         crossAxisSpacing: 10.0, // Adjust the spacing between columns
         mainAxisSpacing: 10.0, // Adjust the spacing between rows
       ),

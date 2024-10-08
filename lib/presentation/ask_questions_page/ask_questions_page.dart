@@ -61,91 +61,107 @@ class AskQuestionsPageState extends State<AskQuestionsPage>
   @override
   Widget build(BuildContext context) {
     return Consumer<AskQuestionProvider>(builder: (context, provider, child) {
-      
       return Scaffold(
-        backgroundColor: appTheme.gray10001,
-        body: SafeArea(
-          child: SizedBox(
-            width: SizeUtils.width,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => {NavigatorService.goBack()},
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
+          backgroundColor: appTheme.gray10001,
+          body: SafeArea(
+            child: SizedBox(
+              width: SizeUtils.width,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                              onTap: () => {NavigatorService.goBack()},
                               child: CustomImageView(
                                 imagePath: ImageConstant.back,
                               ),
                             ),
-                          ),
-                          Text(
-                            "Asked Questions",
-                            style: CustomTextStyles.titleMediumSemiBold,
-                          ),
-                        ],
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "Asked Questions",
+                              style: CustomTextStyles.titleMediumSemiBold,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Expanded(child: _buildViewHierarchy(context, provider.respo)),
-              ],
+                    ],
+                  ),
+                  Expanded(child: _buildViewHierarchy(context, provider.respo)),
+                ],
+              ),
             ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          // isExtended: true,
-          child: Icon(Icons.add),
-          backgroundColor: Colors.green,
-          onPressed: () {
-            NavigatorService.pushNamed(
-              AppRoutes.ask_question_form,
-            ).then(Provider.of<AskQuestionProvider>(context, listen: false)
-                .getAskQuestionsList());
-          },
-        ),
-      );
-      
+          floatingActionButton: GestureDetector(
+            onTap: () {
+              NavigatorService.pushNamed(
+                AppRoutes.ask_question_form,
+              ).then((val) => provider.getAskQuestionsList());
+            },
+            child: SvgPicture.asset(
+              ImageConstant
+                  .askButton, // This should be the path to your SVG file
+              fit: BoxFit.cover, // Ensure the image fills the button
+            ),
+          )
+
+          //    FloatingActionButton(
+          //     onPressed: () {
+          //       NavigatorService.pushNamed(
+          //         AppRoutes.ask_question_form,
+          //       ).then((val) => provider.getAskQuestionsList());
+          //     },
+          //     child: SvgPicture.asset(
+          //       ImageConstant.askButton, // This should be the path to your SVG file
+          //       fit: BoxFit.cover, // Ensure the image fills the button
+          //     ),
+          //     backgroundColor:
+          //         Colors.transparent, // Make the background color transparent
+          //   ),
+          );
     });
   }
 
   Widget _buildViewHierarchy(BuildContext context, GotQuestionModel data) {
     return ListView.builder(
       physics: ScrollPhysics(),
+      padding: EdgeInsets.zero,
       itemCount: data.data?.length ?? 0,
       itemBuilder: (context, index) {
         QuestionData? item = data.data?[index];
 
         return Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16),
+          padding: const EdgeInsets.only(left: 24.0, right: 24),
           child: Container(
-            // decoration: BoxDecoration(
-            //     border: Border.all(
-            //         width: 1, color: Color.fromARGB(255, 207, 223, 236)),
-            //     borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Column(
               children: [
+                Divider(
+                  thickness: 3,
+                  color: appTheme.grayDivider,
+                ),
+                SizedBox(
+                  height: 8,
+                ),
                 ExpansionTile(
-                    trailing: Icon(
-                      Icons.add,
-                      color: Colors.blue,
-                    ),
+                    trailing: Icon(Icons.add, color: appTheme.blue1A),
                     collapsedShape: RoundedRectangleBorder(
                       side: BorderSide.none,
                     ),
+                    tilePadding: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(
                       side: BorderSide.none,
                     ),
                     title: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,8 +170,7 @@ class AskQuestionsPageState extends State<AskQuestionsPage>
                                 width: SizeUtils.width - 150,
                                 child: Text(
                                   item?.question ?? "Test name",
-                                  style:
-                                      CustomTextStyles.titleSmallBluegray90002,
+                                  style: CustomTextStyles.askQuestiontittle,
                                 ),
                               ),
                             ],
@@ -163,21 +178,48 @@ class AskQuestionsPageState extends State<AskQuestionsPage>
                         ],
                       ),
                     ),
-                    maintainState: true,
-                    expandedAlignment: Alignment.centerLeft,
+                    maintainState: false,
+                    expandedAlignment: Alignment.topLeft,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          "${item?.answer} ",
-                          style: CustomTextStyles.titleSmallBluegray90002,
-                        ),
-                      ),
+                      item?.answer == null
+                          ? Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 16.0, bottom: 12),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "Pending",
+                                    style: CustomTextStyles
+                                        .titleSmallBluegrayYellow,
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "${item?.createdAt} ",
+                                    style: CustomTextStyles
+                                        .titleSmallBluegray90002,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "${item?.answer} ",
+                                    style: CustomTextStyles
+                                        .titleSmallBluegray90002,
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    "${item?.createdAt} ",
+                                    style: CustomTextStyles
+                                        .titleSmallBluegray90002,
+                                  ),
+                                ],
+                              ),
+                            ),
                     ]),
-                Divider(
-                  thickness: 2,
-                  color: appTheme.grayDivider,
-                )
               ],
             ),
           ),

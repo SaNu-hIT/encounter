@@ -2,24 +2,20 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:encounter_app/widgets/loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:readmore/readmore.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_leading_iconbutton.dart';
-import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_icon_button.dart';
-import '../../widgets/custom_text_form_field.dart';
 import 'models/course_detail_respo.dart';
-import 'models/study_details_item_model.dart';
-import 'models/study_details_model.dart';
 import 'provider/study_details_provider.dart';
-import 'widgets/study_details_item_widget.dart';
 
 class StudyDetailsScreen extends StatefulWidget {
   const StudyDetailsScreen({Key? key})
       : super(
           key: key,
         );
-
   @override
   StudyDetailsScreenState createState() => StudyDetailsScreenState();
   static Widget builder(BuildContext context) {
@@ -41,16 +37,28 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
         ));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       String course_id = ModalRoute.of(context)!.settings.arguments as String;
+
       Provider.of<StudyDetailsProvider>(context, listen: false)
           .getDetails(course_id);
     });
+  }
+
+  _changeStatusBarToLight() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  }
+
+  /// Navigates to the previous screen.
+  onTapArrowLeft(BuildContext context) {
+    NavigatorService.goBack();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<StudyDetailsProvider>(builder: (context, provider, child) {
       if (provider.isLoading) {
-        return LoaderHomeWidget();
+        return LoaderWidget();
       }
       return Scaffold(
         backgroundColor: appTheme.backgroundColor,
@@ -58,6 +66,12 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
           slivers: [
             SliverAppBar(
               expandedHeight: 270.0,
+              leading: AppbarLeadingIconbutton(
+                  imagePath: ImageConstant.imgArrowLeft,
+                  margin: EdgeInsets.only(left: 1.h, right: 1.h),
+                  onTap: () {
+                    onTapArrowLeft(context);
+                  }),
               floating: true,
               pinned: false,
               flexibleSpace: FlexibleSpaceBar(
@@ -75,33 +89,28 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                       padding: EdgeInsets.only(left: 24.h, top: 13),
                       child: SizedBox(
                         width: SizeUtils.width / 1.2,
-                        child: Row(
-                          children: [
-                            AutoSizeText(
-                              provider.respo.data?.first.courseName ?? "",
-                              style: CustomTextStyles.titleLargeManrope,
-                            ),
-                            AutoSizeText(
-                              ": ${provider.respo.data?.first.batchName ?? ""}",
-                              style: CustomTextStyles.titleLargeManrope,
-                            ),
-                          ],
+                        child: AutoSizeText(
+                          "${provider.respo.data?.first.courseName ?? ""} : ${provider.respo.data?.first.batchName ?? ""}",
+                          style: CustomTextStyles.titleLargeManrope,
                         ),
                       ),
                     ),
-                    SizedBox(height: 4.v),
+                    SizedBox(height: 8.v),
                     Padding(
                       padding: EdgeInsets.only(
-                        left: 24.h,
+                        left: 22.h,
                         right: 24.h,
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(bottom: 1.v),
+                            padding: EdgeInsets.only(bottom: 0.v),
                             child: Text(
-                              " Start on ${provider.respo.data?.first.startDate ?? ""}",
+                              provider.respo.data?.first.courseStartStatus ==
+                                      "started"
+                                  ? " Started on : ${provider.respo.data?.first.startDate ?? ""}"
+                                  : " Start on ${provider.respo.data?.first.startDate ?? ""}",
                               style: CustomTextStyles.titleSmallBluegray500,
                             ),
                           ),
@@ -110,8 +119,6 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                             width: 4.adaptSize,
                             margin: EdgeInsets.only(
                               left: 9.h,
-                              top: 9.v,
-                              bottom: 8.v,
                             ),
                             decoration: BoxDecoration(
                               color: appTheme.amber700,
@@ -125,9 +132,13 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                             child: SizedBox(
                               width: SizeUtils.width / 2.4,
                               child: AutoSizeText(
-                                "Enrolment Last date ${provider.respo.data?.first.endDate ?? ""}",
-                                style: CustomTextStyles.bodyMediumGray500,
+                                provider.respo.data?.first.courseStartStatus ==
+                                        "started"
+                                    ? "Last updated date : ${provider.respo.data?.first.lastUpdatedData ?? ""}"
+                                    : "Enrolment Last date  ${provider.respo.data?.first.lastDate ?? ""}",
+                                style: CustomTextStyles.bodySmallGray700,
                                 maxLines: 2,
+                                textAlign: TextAlign.start,
                                 minFontSize: 8,
                               ),
                             ),
@@ -148,10 +159,10 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                       padding: EdgeInsets.only(left: 24.h),
                       child: Text(
                         "About the course".tr,
-                        style: theme.textTheme.titleMedium,
+                        style: CustomTextStyles.titleMediumSemiBold16,
                       ),
                     ),
-                    SizedBox(height: 11.v),
+                    SizedBox(height: 8.v),
                     Align(
                       alignment: Alignment.center,
                       child: Container(
@@ -192,13 +203,12 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                             children: [
                               CustomImageView(
                                 imagePath: null !=
-                                        provider.respo.data?.first
-                                            .courseCreatorImage
-                                    ? provider
-                                        .respo.data?.first.courseCreatorImage
+                                        provider.respo.data?.first.creatorImage
+                                    ? provider.respo.data?.first.creatorImage
                                     : ImageConstant.imgRectangle9522,
                                 height: 68.adaptSize,
                                 width: 68.adaptSize,
+                                fit: BoxFit.cover,
                                 radius: BorderRadius.circular(
                                   8.h,
                                 ),
@@ -245,38 +255,12 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                     ),
                     provider.respo.data?.first.userEnrolled == true
                         ? SizedBox()
-                        : entrolWidget(context),
+                        : entrolWidget(context, provider),
                     SizedBox(height: 13.v),
-                    _buildRowDay(context, provider),
-                    SizedBox(height: 13.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h),
-                      child: Text(
-                        "lbl_commentary".tr,
-                        style: theme.textTheme.titleMedium,
-                      ),
-                    ),
-                    SizedBox(height: 13.v),
-                    Align(
-                      alignment: Alignment.center,
-                      child: SizedBox(
-                        width: 325.h,
-                        child: ReadMoreText(
-                          provider.respo.data?.first.introCommentary ?? "",
-                          trimLines: 8,
-                          colorClickableText: appTheme.blueGray500,
-                          trimMode: TrimMode.Line,
-                          trimCollapsedText: "lbl_read_more".tr,
-                          moreStyle: theme.textTheme.bodyMedium!.copyWith(
-                            height: 1.50,
-                          ),
-                          lessStyle: theme.textTheme.bodyMedium!.copyWith(
-                            height: 1.50,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 15.v),
+                    provider.respo.data?.first.userEnrolled == true
+                        ? _buildRowDay(context, provider)
+                        : SizedBox(),
+                    SizedBox(height: 8.v),
                     Padding(
                       padding: EdgeInsets.only(left: 24.h),
                       child: Text(
@@ -285,15 +269,57 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                       ),
                     ),
                     SizedBox(height: 8.v),
-                    CustomImageView(
-                      imagePath: provider.respo.data?.first.introVideo != null
-                          ? provider.respo.data?.first.introVideo
-                          : ImageConstant.imgImage,
-                      height: 200.v,
-                      width: 326.h,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center,
-                    ),
+                    provider.controller != null
+                        ? Padding(
+                            padding: EdgeInsets.only(
+                              left: 24.h,
+                              right: 23.h,
+                            ),
+                            child: YoutubePlayer(
+                              controller: provider.controller!,
+                              bottomActions: [
+                                CurrentPosition(),
+                                ProgressBar(isExpanded: true)
+                              ],
+                              showVideoProgressIndicator: true,
+                              progressIndicatorColor: Colors.amber,
+                              progressColors: const ProgressBarColors(
+                                playedColor: Colors.amber,
+                                handleColor: Colors.amberAccent,
+                              ),
+                              onReady: () {},
+                            ),
+                          )
+                        : SizedBox(),
+
+                    // Padding(
+                    //     padding: EdgeInsets.only(
+                    //       left: 2.h,
+                    //       right: 2.h,
+                    //     ),
+                    //     child: SizedBox(
+                    //       height: 200.v,
+                    //       child: WebViewWidget(
+                    //         controller: provider.controller,
+                    //       ),
+                    //     )),
+
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     NavigatorService.pushNamed(AppRoutes.videoPlayerScreen,
+                    //         arguments: provider.respo.data?.first.introVideo
+                    //             .toString());
+                    //   },
+                    //   child: CustomImageView(
+                    //     imagePath: provider.respo.data?.first.introVideo != null
+                    //         ? provider.respo.data?.first.introVideoThumb
+                    //         : ImageConstant.imgImage,
+                    //     height: 200.v,
+                    //     width: 326.h,
+                    //     fit: BoxFit.cover,
+                    //     alignment: Alignment.center,
+                    //   ),
+                    // ),
                     SizedBox(height: 8.v),
                     Padding(
                       padding: EdgeInsets.only(left: 24.h),
@@ -412,12 +438,33 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
             width: SizeUtils.width,
             alignment: Alignment.center,
           ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 35.0, right: 28.0),
+              child: CircularPercentIndicator(
+                radius: 30.0,
+                lineWidth: 5.0,
+                animation: true,
+                percent:
+                    (provider.respo.data?.first.completionPercentage ?? 0) /
+                        100,
+                center: new Text(
+                  "${provider.respo.data?.first.completionPercentage}%",
+                  style: new TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 13.0),
+                ),
+                circularStrokeCap: CircularStrokeCap.round,
+                progressColor: Colors.blue,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildRowDayOne(BuildContext context, CourseContents model) {
+  Widget _buildRowDayOne(BuildContext context, CourseContent model) {
     return Align(
       alignment: Alignment.center,
       child: Container(
@@ -427,6 +474,7 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
           vertical: 15.v,
         ),
         decoration: BoxDecoration(
+            // color:  Color.fromARGB(255, 143, 187, 226),
             border: Border.all(
               width: 1,
               color: Color.fromARGB(255, 143, 187, 226),
@@ -450,6 +498,10 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                   Text(
                     model.day.toString(),
                     style: theme.textTheme.headlineSmall,
+                  ),
+                  Text(
+                    model.readStatus == true ? "COMPLETE" : "PENDING",
+                    style: CustomTextStyles.bodyMediumBluegray90010,
                   )
                 ],
               ),
@@ -474,30 +526,51 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                   top: 4.v,
                   bottom: 4.v,
                 ),
-                child: _buildColumngenesis(
-                  context,
-                  titleText: model.book ?? "",
-                  chapterText: model.chapter ?? "",
+                // Build a column with a list of Text widgets from the details list
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: model.details!.map<Widget>((detail) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 1.0), // Add spacing between text
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              detail
+                                  .toString(), // Convert each detail to string if necessary
+                              style: theme.textTheme.titleMedium!.copyWith(
+                                color: appTheme.blueGray90002,
+                              ), // Customize the text style if needed
+                              maxLines:
+                                  1, // Ensure the text stays in a single line
+                              overflow: TextOverflow
+                                  .ellipsis, // Add ellipsis if the text exceeds one line
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(), // Convert the Iterable to a List of Widgets
                 ),
               ),
             ),
-            Spacer(),
-            Container(
-              height: 3.adaptSize,
-              width: 3.adaptSize,
-              margin: EdgeInsets.only(bottom: 45.v),
-              decoration: BoxDecoration(
-                color: appTheme.whiteA700,
-                borderRadius: BorderRadius.circular(
-                  1.h,
-                ),
-              ),
-            ),
+            // Container(
+            //   height: 3.adaptSize,
+            //   width: 3.adaptSize,
+            //   margin: EdgeInsets.only(bottom: 45.v),
+            //   decoration: BoxDecoration(
+            //     color: appTheme.whiteA700,
+            //     borderRadius: BorderRadius.circular(
+            //       1.h,
+            //     ),
+            //   ),
+            // ),
             CustomImageView(
               imagePath: ImageConstant.imgVector,
-              height: 5.v,
+              height: 10.v,
               width: 10.h,
-              margin: EdgeInsets.fromLTRB(7.h, 21.v, 12.h, 22.v),
+              margin: EdgeInsets.fromLTRB(7.h, 22.v, 12.h, 22.v),
             )
           ],
         ),
@@ -507,59 +580,114 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
 
   /// Section Widget
   Widget _buildRowDay(BuildContext context, StudyDetailsProvider provider) {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: provider.respo.data!.first.courseContents?.length ?? 0,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      itemBuilder: (context, index) {
-        CourseContents model =
-            provider.respo.data!.first.courseContents![index];
-        return GestureDetector(
-            onTap: () {
-              NavigatorService.pushNamed(AppRoutes.studyDayScreen,
-                  arguments: model.dayId.toString());
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: _buildRowDayOne(context, model),
-            ));
-      },
-    );
+    return provider.respo.data?.first.courseContent?.length != 0
+        ? Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 24.h, right: 24.h),
+                child: Row(
+                  children: [
+                    Text(
+                      "Course".tr,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    Spacer(),
+                    SizedBox(
+                      width: SizeUtils.width / 1.7,
+                      child: Text(
+                        "${provider.respo.data?.first.batchName ?? ""} | ${provider.respo.data?.first.startDate ?? ""}",
+                        style: CustomTextStyles.titleSmallBluegray500,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount:
+                    provider.respo.data?.first.courseContent?.length ?? 0,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemBuilder: (context, index) {
+                  CourseContent model =
+                      provider.respo.data!.first.courseContent![index];
+                  return GestureDetector(
+                      onTap: () {
+                        provider.navigateToDetail(
+                            model.courseContentId.toString(),
+                            model.day.toString(),
+                            provider.respo.data?.first.userLmsId.toString());
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: _buildRowDayOne(context, model),
+                      ));
+                },
+              ),
+              provider.respo.data?.first.courseContent?.length != 0
+                  ? GestureDetector(
+                      onTap: () {
+                        NavigatorService.pushNamed(AppRoutes.courseFullScreen,
+                                arguments: provider.course_id)
+                            .then((val) =>
+                                provider.getDetails(provider.course_id));
+                        ;
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              "Show More",
+                              style: CustomTextStyles.titleSmallBluegray500,
+                            ),
+                            CustomImageView(
+                              imagePath: ImageConstant.dropdownicon,
+                            )
+                          ],
+                        ),
+                      ))
+                  : SizedBox()
+            ],
+          )
+        : SizedBox();
   }
 
   /// Section Widget
-  Widget entrolWidget(BuildContext context) {
+  Widget entrolWidget(BuildContext context, StudyDetailsProvider provider) {
     return Column(
       children: [
-        SizedBox(height: 8.v),
+        SizedBox(height: 16.v),
         Padding(
           padding: EdgeInsets.only(left: 24.h, right: 24.h),
           child: Container(
             decoration: BoxDecoration(
-              color: Color.fromARGB(255, 170, 207, 231),
+              color: appTheme.entrolColor,
               borderRadius: BorderRadius.all(
                 Radius.circular(0.12 *
                     71.h), // 10% curve (0.1 times the width of the container)
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 22.h,
-                      top: 2.v,
-                    ),
-                    child: Text(
-                      "Enroll for March 31st Batch",
+            child: GestureDetector(
+              onTap: () {
+                provider.showEnrollAlert(context);
+                // .then((val) => {
+                //       if (val == true) {provider.getDetails(provider.course_id)}
+                //     });
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Enroll for ${provider.respo.data?.first.startDate} Batch",
                       style: CustomTextStyles.titleSmallWhiteA700,
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -567,8 +695,6 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
       ],
     );
   }
-
-  /// Section Widget
 
   /// Common widget
   Widget _buildColumngenesis(

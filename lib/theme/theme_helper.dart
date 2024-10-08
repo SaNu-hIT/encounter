@@ -133,14 +133,19 @@ class ColorSchemes {
 /// Class containing custom colors for a lightCode theme.
 class LightCodeColors {
   // Amber
+  Color get borderColor => Color(0XFFF708AA0);
   Color get amber300 => Color(0XFFFFD866);
+  Color get gridBg => Color(0XFF93CCF2);
   Color get amber600 => Color(0XFFEEBB01);
   Color get amber700 => Color(0XFFFA9D08);
 // Black
-  Color get black900 => Color(0XFF000000);
+  Color get black900 => Color(0XFF1C1C1E);
 // Blue
+  Color get gray20002 => Color(0XFFEFEFEF);
   Color get blue400 => Color(0XFF3C95E5);
   Color get blue800 => Color(0XFF22649F);
+  Color get blueButton => Color(0XFF236EB1);
+  Color get blue1A => Color(0XFF1A0F91);
 // BlueGray
   Color get blueGray300 => Color(0XFF83A7A0);
   Color get blueGray30001 => Color(0XFFA1ACB5);
@@ -154,13 +159,17 @@ class LightCodeColors {
   Color get blueGray600 => Color(0XFF3C95E5);
   Color get blueGray700 => Color(0XFF515151);
   Color get blueGray70001 => Color(0XFF50525A);
-  Color get blueGray900 => Color(0XFF2E2E2E);
+  Color get blueGray900 => Color(0XFF2F2F2F);
   Color get blueGray90001 => Color(0XFF27364E);
   Color get blueGray90002 => Color(0XFF323232);
+  Color get descriptionText => Color(0XFF3C3C43);
+  Color get black => Color(0XFF000000);
+  Color get yellow => Color(0XFFE49600);
   Color get blueGray90003 => Color(0XFF383333);
 // Gray
+  Color get entrolColor => Color(0XFF236EB1);
   Color get gray100 => Color(0XFFF4F4F4);
-  Color get gray10001 => Color(0XFFF0FCF8);
+  Color get gray10001 => Color(0XFFFBFEFF);
   Color get gray300 => Color(0XFFE6E6E6);
   Color get gray30001 => Color(0XFFDBEAE5);
   Color get gray30002 => Color(0XFFCFEEE3);
@@ -192,6 +201,7 @@ class LightCodeColors {
   Color get teal900 => Color(0XFF00603D);
 // White
   Color get whiteA700 => Color(0XFFFFFFFF);
+  Color get sendBack => Color(0XFFD6EBFF);
   Color get backgroundColor => Color(0XFFFBFEFF);
 // Yellow
   Color get yellow200A9 => Color(0XA9FFEE99);

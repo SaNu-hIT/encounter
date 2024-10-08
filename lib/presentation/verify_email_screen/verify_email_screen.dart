@@ -111,7 +111,7 @@ class VerifyEmailScreenState extends State<VerifyEmailScreen> {
           ),
           SizedBox(height: 8.v),
           Text(
-            'Please enter OTP received on your mobile number '.tr,
+            'Please enter OTP received on your email Id'.tr,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
@@ -154,20 +154,26 @@ class VerifyEmailScreenState extends State<VerifyEmailScreen> {
             buttonStyle: CustomButtonStyles.outlineBlueGrayC,
           ),
           SizedBox(height: 24.v),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: "msg_didn_t_recieve_otp2".tr,
-                  style: theme.textTheme.bodyMedium,
-                ),
-                TextSpan(
-                  text: "lbl_resend".tr,
-                  style: CustomTextStyles.bodyMediumAmber300,
-                )
-              ],
+          GestureDetector(
+            onTap: () {
+              Provider.of<VerifyEmailProvider>(context, listen: false)
+                  .login(context);
+            },
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "msg_didn_t_recieve_otp2".tr,
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  TextSpan(
+                    text: "lbl_resend".tr,
+                    style: CustomTextStyles.bodyMediumAmber300,
+                  )
+                ],
+              ),
+              textAlign: TextAlign.left,
             ),
-            textAlign: TextAlign.left,
           )
         ],
       ),

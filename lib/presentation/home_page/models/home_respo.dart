@@ -4,12 +4,11 @@ class HomeRespo {
   BibleVerse? bibleVerse;
   LoginUser? loginUser;
 
-  HomeRespo(
-      {this.status,  this.data, this.bibleVerse, this.loginUser});
+  HomeRespo({this.status, this.data, this.bibleVerse, this.loginUser});
 
   HomeRespo.fromJson(Map<String, dynamic> json) {
     status = json['status'];
- 
+
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
@@ -67,24 +66,30 @@ class Data {
 class BibileList {
   int? id;
   String? data1;
+  String? data3;
+  String? data4;
   String? image;
   String? data2;
 
   BibileList({this.id, this.data1, this.image, this.data2});
 
   BibileList.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json['batch_id'];
     data1 = json['data1'];
     image = json['image'];
     data2 = json['data2'];
+    data3 = json['data3'];
+    data4 = json['data4'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data['batch_id'] = this.id;
     data['data1'] = this.data1;
     data['image'] = this.image;
     data['data2'] = this.data2;
+    data['data3'] = this.data3;
+    data['data4'] = this.data4;
     return data;
   }
 }

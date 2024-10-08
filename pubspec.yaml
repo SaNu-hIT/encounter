@@ -2,7 +2,7 @@ name: encounter_app
 description: A new Flutter project.
 version: 1.0.0+1
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.5.0 <4.0.0"
 dependencies:
   flutter:
     sdk: flutter
@@ -12,32 +12,45 @@ dependencies:
   flutter_svg: ^2.0.9
   provider: ^6.1.1
   shared_preferences: ^2.2.2
-  connectivity_plus: ^5.0.2
-  readmore: ^2.2.0
+  connectivity_plus: ^6.0.5
+  readmore: ^3.0.0
   intl: ^0.19.0
   pin_code_fields: ^8.0.1
   dio: ^5.3.3
   fluttertoast: ^8.2.4
-  flutter_secure_storage: ^9.0.0
-  firebase_performance: ^0.10.0
+  flutter_secure_storage: ^9.2.2
+  firebase_performance: ^0.10.0+8
   intl_phone_field: ^3.2.0
   flutter_native_splash: ^2.4.1
   shimmer: ^3.0.0
   auto_size_text: ^3.0.0
-  audioplayers: ^6.0.0
+  url_launcher: ^6.3.0
+  scrollable_list_tab_scroller: ^3.1.0
+  flutter_widget_from_html: ^0.15.2
+  youtube_player_flutter: ^9.0.3
+  percent_indicator: ^4.2.3
+  # webview_flutter: ^4.6.0
+  share_plus: ^10.0.2
+  path_provider: ^2.1.4
+  image_picker: ^1.0.4
+  tuple: ^2.0.2
+  image_cropper: ^8.0.2
+  firebase_core: ^3.6.0
+  flutter_colorpicker: ^1.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.13.1"
+  flutter_launcher_icons: ^0.14.1
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/images/logo_icon.png"
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/image/logo_icon.png
-
+  image: assets/images/logo_icon.png
+# dependency_overrides:
+#   webview_flutter_android: 3.16.1
 flutter:
   uses-material-design: true
   assets:

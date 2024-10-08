@@ -85,7 +85,7 @@ final Map<String, String> enUs = {
   "lbl_my_notes": "My Notes",
   "lbl_notification": "Notification",
   "msg_bible_quote_of_the2": "Bible Quote of The Day",
-  "msg_play_store_encounterujexnpyc2": "play.store.encounterujexnpyc2",
+  "msg_play_store_encounterujexnpyc2": "play.store.encounter.app",
   "msg_share_encounter": "Share Encounter Bible App to your friends",
   "msg_therefore_each_of":
       "Therefore each of you must put off falsehood and speak truthfully to your neighbor, for we are all members of one body. Ephesians 4:25",
@@ -116,7 +116,7 @@ final Map<String, String> enUs = {
   "lbl_phone_number": "Phone number",
   "lbl_send_otp": "Send OTP",
   "msg_please_enter_your":
-      "Please enter your mobile number \nto sign in or register",
+      "Please enter your email Id \nto sign in or register",
 
   // OTP Screen
   "lbl_resend": "Resend",

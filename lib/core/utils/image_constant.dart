@@ -14,7 +14,8 @@ class ImageConstant {
   static String logo_blue = '$imagePath/logo_blue.svg';
 
   static String imgG6554 = '$imagePath/img_g6554.svg';
-
+  static String dropdownicon = '$imagePath/dropdownicon.svg';
+  static String upload = '$imagePath/cloud-computing 1.svg';
 // Home - Container images
   static String imgNavHome = '$imagePath/img_nav_home.svg';
 
@@ -112,4 +113,6 @@ class ImageConstant {
   static String imgLoginRegister = '$imagePath/img_login_register.png';
   // Onboarding images
   static String imgIsolationMode = '$imagePath/img_isolation_mode.svg';
+  static String sendIcon = '$imagePath/send_icon.svg';
+  static String askButton = '$imagePath/ask_button.svg';
 }

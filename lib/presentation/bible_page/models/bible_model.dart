@@ -30,15 +30,17 @@ class BibleListModel {
 class BibileData {
   int? bookId;
   dynamic bookName;
+  dynamic book_image;
   dynamic totalChapters;
   List<Chapters>? chapters;
   bool isExpanded = false;
 
-  BibileData({this.bookId, this.bookName, this.totalChapters, this.chapters});
+  BibileData({this.bookId, this.bookName, this.book_image,this.totalChapters, this.chapters});
 
   BibileData.fromJson(Map<String, dynamic> json) {
     bookId = json['book_id'];
     bookName = json['book_name'];
+    book_image = json['book_image'];
     totalChapters = json['total_chapters'];
     if (json['chapters'] != null) {
       chapters = <Chapters>[];
@@ -52,6 +54,7 @@ class BibileData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['book_id'] = this.bookId;
     data['book_name'] = this.bookName;
+    data['book_image'] = this.book_image;
     data['total_chapters'] = this.totalChapters;
     if (this.chapters != null) {
       data['chapters'] = this.chapters!.map((v) => v.toJson()).toList();

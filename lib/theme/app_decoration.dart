@@ -3,6 +3,7 @@ import '../core/app_export.dart';
 
 class AppDecoration {
   // Fill decorations
+  static BoxDecoration get outline => BoxDecoration();
   static BoxDecoration get fillGray => BoxDecoration(
         color: appTheme.gray10001,
       );
@@ -19,6 +20,9 @@ class AppDecoration {
           end: Alignment(0.5, 1),
           colors: [appTheme.teal400, appTheme.teal300],
         ),
+      );
+  static BoxDecoration get fillWhiteA => BoxDecoration(
+        color: appTheme.whiteA70001,
       );
   // Gradient decorations
   static BoxDecoration get gradientBlackToBlack => BoxDecoration(
@@ -60,6 +64,9 @@ class AppDecoration {
 
 class BorderRadiusStyle {
   // Rounded borders
+  static BorderRadius get circleBorder43 => BorderRadius.circular(
+        43.h,
+      );
   static BorderRadius get roundedBorder10 => BorderRadius.circular(
         10.h,
       );

@@ -4,6 +4,7 @@ import '../../../core/app_export.dart';
 import '../../../services/secure_storage.dart';
 import '../../../utils/enumeration.dart';
 import '../../../utils/pref_utils.dart';
+import '../../login_register_screen/models/login_model.dart';
 import '../models/verify_email_model.dart';
 import '../repo/verify_repo.dart';
 
@@ -22,6 +23,47 @@ class VerifyEmailProvider extends ChangeNotifier {
     _isLoading = load;
     notifyListeners();
   }
+
+
+  login(BuildContext context) async {
+        var email = PrefUtils().getEmail();
+    if (email != "") {
+      loader(true);
+      LoginModel loginRepo = await _repo.login(email: email);
+      loader(false);
+      if (loginRepo.status == "success") {
+        PrefUtils().setEmail(email);
+          Fluttertoast.showToast(
+            msg: "OTP send success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      } else {
+        Fluttertoast.showToast(
+            msg: "OTP Sending Failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        loader(false);
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: "Please enter email and Password",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
 
   verifyEmail(BuildContext context) async {
     var email = PrefUtils().getEmail();

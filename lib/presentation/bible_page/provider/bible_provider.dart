@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../data/models/selectionPopupModel/selection_popup_model.dart';
+import '../models/bible_detail_model.dart';
 import '../models/bible_model.dart';
 import '../repo/login_repo.dart';
 
@@ -48,12 +49,23 @@ class BibleProvider extends ChangeNotifier {
   }
 
   var testament_id = "1";
+  BibleDetailModel _bibleDetailRespo = BibleDetailModel();
   BibleListModel _bibleRespo = BibleListModel();
+  BibleDetailModel get bibleDetailRespo => _bibleDetailRespo;
   BibleListModel get bibleRespo => _bibleRespo;
   getBibleList() async {
     loader(true);
-    
+
     _bibleRespo = await _repo.getBibleList(testament_id: testament_id);
+    loader(false);
+
+    notifyListeners();
+  }
+
+  getBibleChapter(String book_id) async {
+    loader(true);
+
+    _bibleDetailRespo = await _repo.getBibleChapter(book_id: book_id);
     loader(false);
 
     notifyListeners();

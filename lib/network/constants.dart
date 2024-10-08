@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class Constants {
   const Constants._();
-  static const baseUrl = 'https://encounter.intellyze.in/api/';
+  // static const baseUrl = 'https://encounter.intellyze.in/api/';
+  static const baseUrl = 'https://encounter-test.intellyze.in/api/';
+  // https://encounter-test.intellyze.in
   // static const baseUrl = 'https://santhom-test.intellyze.in/api/';
 
   static List<Color> colors = [
@@ -17,6 +19,7 @@ class Constants {
     Color(0xFF3F7BD4), //6
   ];
 }
+
 
 const appColorPrimaryDarkLight = Color(0xFFF9FAFF);
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../../services/dio_services/dio_builder.dart';
 import '../../../network/app_apis.dart';
+import '../../profile_screen/models/my_notes_respo.dart';
 import '../models/ask_question_respo.dart';
 import '../models/category_dropdown.dart';
 import '../models/got_question_model.dart';
@@ -83,6 +84,29 @@ class AskQuestionsRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
+      return CategoryDropDown();
+    }
+  }
+
+  Future<CategoryDropDown> getSubCategory(int? id) async {
+    try {
+      DioBuilderResponse dioBuilderResponse =
+          await DioBuilder().buildNonCachedDio(hasAuth: true);
+      final response = (await dioBuilderResponse.dio.get(
+        AppAPIs.got_question_sub_categories,
+        options: dioBuilderResponse.dioOptions,
+        queryParameters: {"gq_category": id},
+      ));
+
+      CategoryDropDown registrationDetailsModel = CategoryDropDown();
+      if (response.statusCode == 200) {
+        registrationDetailsModel = CategoryDropDown.fromJson((response.data));
+      } else {
+        registrationDetailsModel = CategoryDropDown.fromJson((response.data));
+      }
+      return registrationDetailsModel;
+    } catch (e) {
       return CategoryDropDown();
     }
   }
@@ -107,6 +131,27 @@ class AskQuestionsRepo {
       return registrationDetailsModel;
     } catch (e) {
       return AskQuestionRespo();
+    }
+  }
+
+  Future<MyNotesRespo> getNotes() async {
+    try {
+      DioBuilderResponse dioBuilderResponse =
+          await DioBuilder().buildNonCachedDio(hasAuth: true);
+      final response = (await dioBuilderResponse.dio.get(
+        AppAPIs.get_notes,
+        options: dioBuilderResponse.dioOptions,
+      ));
+
+      MyNotesRespo registrationDetailsModel = MyNotesRespo();
+      if (response.statusCode == 200) {
+        registrationDetailsModel = MyNotesRespo.fromJson((response.data));
+      } else {
+        registrationDetailsModel = MyNotesRespo.fromJson((response.data));
+      }
+      return registrationDetailsModel;
+    } catch (e) {
+      return MyNotesRespo();
     }
   }
 }

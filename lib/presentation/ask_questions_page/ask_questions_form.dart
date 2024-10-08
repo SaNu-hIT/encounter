@@ -92,8 +92,9 @@ class AskQuestionsPageState extends State<AskQuestionsFormPage>
                     ),
                   ],
                 ),
+
                 Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.only(left: 24.0, right: 24.0),
                   child: Selector<AskQuestionProvider, TextEditingController?>(
                     selector: (
                       context,
@@ -101,46 +102,119 @@ class AskQuestionsPageState extends State<AskQuestionsFormPage>
                     ) =>
                         provider.notesController,
                     builder: (context, notesController, child) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: appTheme.whiteA700,
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(
-                            2.h,
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Ask a Question",
+                            style: CustomTextStyles.askQuestiontittle,
                           ),
-                        ),
-                        child: TextFormField(
-                          maxLines: 6,
-                          keyboardType: TextInputType.multiline,
-                          scrollPadding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom),
-                          controller: notesController,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              errorBorder: InputBorder.none,
-                              disabledBorder: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 15, bottom: 11, top: 11, right: 15),
-                              hintText: "Ask"),
-                        ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: appTheme.whiteA700,
+                              border: Border.all(
+                                  color: Colors.grey.withOpacity(0.3)),
+                              borderRadius: BorderRadius.circular(
+                                8.h,
+                              ),
+                            ),
+                            child: TextFormField(
+                              maxLines: 6,
+                              keyboardType: TextInputType.multiline,
+                              scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom),
+                              controller: notesController,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(
+                                      left: 15, bottom: 11, top: 11, right: 15),
+                                  hintText: "Type Here"),
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
                 ),
                 SizedBox(height: 15.v),
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: CustomElevatedButton1(
-                    text: "Submit Question",
-                    onPressed: () {
-                      Provider.of<AskQuestionProvider>(context, listen: false)
-                          .addNotes(context);
-                    },
-                    buttonStyle: CustomButtonStyles.outlineBlueGrayC,
+                GestureDetector(
+                  onTap: () {
+                    Provider.of<AskQuestionProvider>(context, listen: false)
+                        .askQuestions(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(28.0),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: appTheme.blueButton,
+                        border: Border.all(
+                            color: appTheme.black900.withOpacity(0.03)),
+                        borderRadius: BorderRadius.circular(
+                          10.h,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Submit Question",
+                            style: CustomTextStyles.titleSmallWhiteA700,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          ClipRect(
+                            child: Container(
+                              padding: EdgeInsets.all(3.h),
+                              decoration: AppDecoration.outline.copyWith(
+                                  borderRadius:
+                                      BorderRadiusStyle.circleBorder43,
+                                  color: appTheme.sendBack),
+                              child: CustomImageView(
+                                height: 20,
+                                imagePath: ImageConstant.sendIcon,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                )
+                ),
+                
+                
+                // Padding(
+                //   padding: const EdgeInsets.all(24.0),
+                //   child: CustomElevatedButton1(
+                //     text: "Submit Question",
+                //     onPressed: () {
+                //       Provider.of<AskQuestionProvider>(context, listen: false)
+                //           .askQuestions(context);
+                //     },
+                //     buttonStyle: CustomButtonStyles.outlineBlueGrayC,
+                //   ),
+                // ),
+                // Padding(
+                //   padding: const EdgeInsets.all(24.0),
+                //   child: CustomElevatedButton1(
+                //     text: "Submit Question",
+                //     onPressed: () {
+                //       Provider.of<AskQuestionProvider>(context, listen: false)
+                //           .askQuestions(context);
+                //     },
+                //     buttonStyle: CustomButtonStyles.outlineBlueGrayC,
+                //   ),
+                // )
               ],
             ),
           ),

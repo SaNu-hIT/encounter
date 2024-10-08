@@ -40,7 +40,8 @@ class AskQuestionProvider extends ChangeNotifier {
   void searchItem() {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 900), () async {
-      notifyListeners();
+      getGotQuestions();
+      // notifyListeners();
     });
   }
 
@@ -51,9 +52,14 @@ class AskQuestionProvider extends ChangeNotifier {
 
   CategoryDropDown _cat_respo = CategoryDropDown();
   CategoryDropDown get cat_respo => _cat_respo;
-  List<SelectionPopupModel>? catDropDown = [];
 
-  addNotes(BuildContext context) async {
+  CategoryDropDown _cat_sub_respo = CategoryDropDown();
+  CategoryDropDown get cat_sub_respo => _cat_sub_respo;
+
+  List<SelectionPopupModel>? catDropDown = [];
+  List<SelectionPopupModel>? catSubDropDown = [];
+
+  askQuestions(BuildContext context) async {
     if (notesController.text != "") {
       loader(true);
       AskQuestionRespo loginRepo =
@@ -97,6 +103,20 @@ class AskQuestionProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  getSubCategory(int? id) async {
+    loader(true);
+    _respo = GotQuestionModel();
+    _cat_sub_respo = await _repo.getSubCategory(id);
+    catSubDropDown = _cat_sub_respo.data?.map((data) {
+      return SelectionPopupModel(
+        id: data.id,
+        title: data.name ?? "",
+      );
+    }).toList();
+    loader(false);
+    notifyListeners();
+  }
+
   getGotQuestions() async {
     loader(true);
     _respo = await _repo.getQuestions(
@@ -116,4 +136,10 @@ class AskQuestionProvider extends ChangeNotifier {
     loader(false);
     notifyListeners();
   }
+
+
+
+
+
+
 }

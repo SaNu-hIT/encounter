@@ -3,23 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
-enum BottomBarEnum { Home, Study, Bible, Profile }
-// ignore_for_file: must_be_immutable
+enum BottomBarEnum { Home, Study, Bible, Profile ,Notes}
 
-// ignore_for_file: must_be_immutable
 class CustomBottomBar extends StatefulWidget {
-  CustomBottomBar({this.onChanged});
+  CustomBottomBar({this.onChanged, this.currentIndex});
 
   Function(BottomBarEnum)? onChanged;
+  int? currentIndex;
 
   @override
   CustomBottomBarState createState() => CustomBottomBarState();
 }
-// ignore_for_file: must_be_immutable
 
-// ignore_for_file: must_be_immutable
 class CustomBottomBarState extends State<CustomBottomBar> {
-  int selectedIndex = 0;
+  int selectedIndex = 0
+;
 
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
@@ -47,6 +45,14 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.Profile,
     )
   ];
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // If parent has provided currentIndex, use that to set the initial selectedIndex
+  //   // if (widget.currentIndex != null) {
+  //   //   selectedIndex = widget.currentIndex!;
+  //   // }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +92,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               children: [
                 CustomImageView(
                   imagePath: bottomMenuList[index].icon,
-                  height: 30.adaptSize,
-                  width: 30.adaptSize,
+                  height: 24.adaptSize,
+                  width: 24.adaptSize,
                   color: appTheme.blueGray30001,
                 ),
                 Padding(
@@ -107,8 +113,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               children: [
                 CustomImageView(
                   imagePath: bottomMenuList[index].activeIcon,
-                  height: 32.adaptSize,
-                  width: 32.adaptSize,
+                  height: 24.adaptSize,
+                  width: 24.adaptSize,
                   color: appTheme.blue400,
                 ),
                 Padding(
@@ -145,7 +151,6 @@ class BottomMenuModel {
       required this.type});
 
   String icon;
-
   String activeIcon;
 
   String? title;

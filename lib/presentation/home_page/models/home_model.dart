@@ -1,5 +1,6 @@
 import '../../../core/app_export.dart';
 import '../../../core/utils/image_constant.dart';
+import '../../../widgets/custom_bottom_bar.dart';
 import 'explorecommentary_item_model.dart';
 import 'viewhierarchy_item_model.dart'; // ignore_for_file: must_be_immutable
 
@@ -8,12 +9,20 @@ class HomeModel {
   List<ExplorecommentaryItemModel> explorecommentaryItemList = [
     ExplorecommentaryItemModel(
         dynamicImage: ImageConstant.imgMusic,
-        dynamicText: "Explore \nCommentary"),
+        dynamicText: "Explore \nCommentary",
+        id: BottomBarEnum.Home),
     ExplorecommentaryItemModel(
-        dynamicImage: ImageConstant.imgNotes, dynamicText: "Recent\nNotes"),
+        dynamicImage: ImageConstant.imgNotes,
+        dynamicText: "Recent\nNotes",
+        id: BottomBarEnum.Notes),
     ExplorecommentaryItemModel(
-        dynamicImage: ImageConstant.imgBible, dynamicText: "Explore \nBible")
+        dynamicImage: ImageConstant.imgBible,
+        dynamicText: "Explore \nBible",
+        id: BottomBarEnum.Bible)
   ];
+
+  //  Provider.of<HomeContainerProvider>(context, listen: false)
+  //               .selectTab(BottomBarEnum.Study);
 
   List<ViewhierarchyItemModel> viewhierarchyItemList = [
     ViewhierarchyItemModel(

@@ -1,8 +1,9 @@
 class CourseDetailRespo {
   String? status;
+
   List<Data>? data;
 
-  CourseDetailRespo({this.status, this.data});
+  CourseDetailRespo({this.status,  this.data});
 
   CourseDetailRespo.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -18,7 +19,7 @@ class CourseDetailRespo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
-
+ 
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -33,18 +34,22 @@ class Data {
   String? description;
   String? thumbnail;
   String? courseCreator;
-  String? courseCreatorImage;
+  String? creatorImage;
   String? creatorDesignation;
+  String? introVideo;
+  String? introAudio;
+  String? introVideoThumb;
   int? batchId;
   String? batchName;
   String? startDate;
   String? endDate;
   String? lastDate;
-  String? introCommentary;
-  String? introVideo;
-  String? introAudio;
+  String? courseStartStatus;
+  String? lastUpdatedData;
+  int? completionPercentage;
   bool? userEnrolled;
-  List<CourseContents>? courseContents;
+  dynamic userLmsId;
+  List<CourseContent>? courseContent;
 
   Data(
       {this.id,
@@ -53,18 +58,22 @@ class Data {
       this.description,
       this.thumbnail,
       this.courseCreator,
-      this.courseCreatorImage,
+      this.creatorImage,
       this.creatorDesignation,
+      this.introVideo,
+      this.introAudio,
+      this.introVideoThumb,
       this.batchId,
       this.batchName,
       this.startDate,
       this.endDate,
       this.lastDate,
-      this.introCommentary,
-      this.introVideo,
-      this.introAudio,
+      this.courseStartStatus,
+      this.lastUpdatedData,
+      this.completionPercentage,
       this.userEnrolled,
-      this.courseContents});
+      this.userLmsId,
+      this.courseContent});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -73,21 +82,25 @@ class Data {
     description = json['description'];
     thumbnail = json['thumbnail'];
     courseCreator = json['course_creator'];
-    courseCreatorImage = json['course_creator_image'];
+    creatorImage = json['creator_image'];
     creatorDesignation = json['creator_designation'];
+    introVideo = json['intro_video'];
+    introAudio = json['intro_audio'];
+    introVideoThumb = json['intro_video_thumb'];
     batchId = json['batch_id'];
     batchName = json['batch_name'];
     startDate = json['start_date'];
     endDate = json['end_date'];
     lastDate = json['last_date'];
-    introCommentary = json['intro_commentary'];
-    introVideo = json['intro_video'];
-    introAudio = json['intro_audio'];
+    courseStartStatus = json['course_start_status'];
+    lastUpdatedData = json['last_updated_data'];
+    completionPercentage = json['completion_percentage'];
     userEnrolled = json['user_enrolled'];
-    if (json['course_contents'] != null) {
-      courseContents = <CourseContents>[];
-      json['course_contents'].forEach((v) {
-        courseContents!.add(new CourseContents.fromJson(v));
+    userLmsId = json['user_lms_id'];
+    if (json['course_content'] != null) {
+      courseContent = <CourseContent>[];
+      json['course_content'].forEach((v) {
+        courseContent!.add(new CourseContent.fromJson(v));
       });
     }
   }
@@ -100,50 +113,58 @@ class Data {
     data['description'] = this.description;
     data['thumbnail'] = this.thumbnail;
     data['course_creator'] = this.courseCreator;
-    data['course_creator_image'] = this.courseCreatorImage;
+    data['creator_image'] = this.creatorImage;
     data['creator_designation'] = this.creatorDesignation;
+    data['intro_video'] = this.introVideo;
+    data['intro_audio'] = this.introAudio;
+    data['intro_video_thumb'] = this.introVideoThumb;
     data['batch_id'] = this.batchId;
     data['batch_name'] = this.batchName;
     data['start_date'] = this.startDate;
     data['end_date'] = this.endDate;
     data['last_date'] = this.lastDate;
-    data['intro_commentary'] = this.introCommentary;
-    data['intro_video'] = this.introVideo;
-    data['intro_audio'] = this.introAudio;
+    data['course_start_status'] = this.courseStartStatus;
+    data['last_updated_data'] = this.lastUpdatedData;
+    data['completion_percentage'] = this.completionPercentage;
     data['user_enrolled'] = this.userEnrolled;
-    if (this.courseContents != null) {
-      data['course_contents'] =
-          this.courseContents!.map((v) => v.toJson()).toList();
+    data['user_lms_id'] = this.userLmsId;
+    if (this.courseContent != null) {
+      data['course_content'] =
+          this.courseContent!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class CourseContents {
-  int? dayId;
+class CourseContent {
   int? day;
+  int? courseContentId;
   int? courseId;
-  String? book;
-  String? chapter;
+  List<String>? details;
+  bool? readStatus;
 
-  CourseContents(
-      {this.dayId, this.day, this.courseId, this.book, this.chapter});
+  CourseContent(
+      {this.day,
+      this.courseContentId,
+      this.courseId,
+      this.details,
+      this.readStatus});
 
-  CourseContents.fromJson(Map<String, dynamic> json) {
-    dayId = json['day_id'];
+  CourseContent.fromJson(Map<String, dynamic> json) {
     day = json['day'];
+    courseContentId = json['course_content_id'];
     courseId = json['course_id'];
-    book = json['book'];
-    chapter = json['chapter'];
+    details = json['details'].cast<String>();
+    readStatus = json['read_status'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['day_id'] = this.dayId;
     data['day'] = this.day;
+    data['course_content_id'] = this.courseContentId;
     data['course_id'] = this.courseId;
-    data['book'] = this.book;
-    data['chapter'] = this.chapter;
+    data['details'] = this.details;
+    data['read_status'] = this.readStatus;
     return data;
   }
 }

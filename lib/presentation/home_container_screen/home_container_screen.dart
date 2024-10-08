@@ -25,29 +25,24 @@ class HomeContainerScreen extends StatefulWidget {
     );
   }
 }
-// ignore_for_file: must_be_immutable
 
-// ignore_for_file: must_be_immutable
 class HomeContainerScreenState extends State<HomeContainerScreen> {
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appTheme.gray10001,
-      body: Navigator(
-        key: navigatorKey,
-        initialRoute: AppRoutes.homePage,
-        onGenerateRoute: (routeSetting) => PageRouteBuilder(
-          pageBuilder: (ctx, ani, ani1) =>
-              getCurrentPage(context, routeSetting.name!),
-          transitionDuration: Duration(seconds: 0),
-        ),
+      body: Consumer<HomeContainerProvider>(
+        builder: (context, provider, child) {
+          return Navigator(
+            key: provider.navigatorKey,
+            initialRoute: provider.getCurrentRoute(provider.currentTab),
+            onGenerateRoute: (routeSetting) => PageRouteBuilder(
+              pageBuilder: (ctx, ani, ani1) =>
+                  getCurrentPage(context, routeSetting.name!),
+              transitionDuration: Duration(seconds: 0),
+            ),
+          );
+        },
       ),
       bottomNavigationBar: _buildBottomBar(context),
     );
@@ -55,28 +50,16 @@ class HomeContainerScreenState extends State<HomeContainerScreen> {
 
   /// Section Widget
   Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
+    return Consumer<HomeContainerProvider>(
+      builder: (context, provider, child) {
+        return CustomBottomBar(
+          currentIndex: provider.currentTab.index,
+          onChanged: (BottomBarEnum type) {
+            provider.selectTab(type);
+          },
+        );
       },
     );
-  }
-
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Home:
-        return AppRoutes.homePage;
-      case BottomBarEnum.Study:
-        return AppRoutes.studyDetailsScreen;
-      case BottomBarEnum.Bible:
-        return AppRoutes.biblePage;
-      case BottomBarEnum.Profile:
-        return AppRoutes.profileScreen;
-      default:
-        return "/";
-    }
   }
 
   ///Handling page based on route

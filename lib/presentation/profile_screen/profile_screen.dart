@@ -1,6 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
+import '../../utils/utils.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_subtitle_one.dart';
 import '../../widgets/app_bar/appbar_title.dart';
@@ -28,93 +32,128 @@ class ProfileScreen extends StatefulWidget {
     );
   }
 }
-// ignore_for_file: must_be_immutable
 
-// ignore_for_file: must_be_immutable
 class ProfileScreenState extends State<ProfileScreen> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ProfileProvider>(context, listen: false).getData();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: appTheme.gray10001,
-      appBar: _buildAppbar(context),
-      body: Container(
-        width: double.maxFinite,
-        padding: EdgeInsets.symmetric(
-          horizontal: 23.h,
-          vertical: 8.v,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildColumnbiblequot(context),
-              SizedBox(height: 24.v),
-              Padding(
-                padding: EdgeInsets.only(left: 1.h),
-                child: Text(
-                  "msg_share_encounter".tr,
-                  style: CustomTextStyles.bodyMediumBluegray70001,
+    return Consumer<ProfileProvider>(builder: (context, provider, child) {
+      return Scaffold(
+        backgroundColor: appTheme.gray10001,
+        appBar: _buildAppbar(context, provider),
+        body: Container(
+          width: double.maxFinite,
+          padding: EdgeInsets.symmetric(
+            horizontal: 23.h,
+            vertical: 8.v,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildColumnbiblequot(context, provider),
+                SizedBox(height: 24.v),
+                Padding(
+                  padding: EdgeInsets.only(left: 1.h),
+                  child: Text(
+                    "msg_share_encounter".tr,
+                    style: CustomTextStyles.bodyMediumBluegray70001,
+                  ),
                 ),
-              ),
-              SizedBox(height: 8.v),
-              _buildRowcopy(context),
-              SizedBox(height: 26.v),
-              Divider(
-                indent: 1.h,
-              ),
-              SizedBox(height: 25.v),
-              Padding(
-                padding: EdgeInsets.only(left: 1.h),
-                child: _buildRowclockOne(
-                  context,
-                  clockImage: ImageConstant.imgSettings,
-                  logout: "lbl_edit_profile".tr,
+                SizedBox(height: 8.v),
+                _buildRowcopy(context),
+                SizedBox(height: 26.v),
+                Divider(
+                  indent: 1.h,
                 ),
-              ),
-              SizedBox(height: 30.v),
-              _buildRowquestionsone(context),
-              SizedBox(height: 30.v),
-              _buildRowquestionsAsk(context),
-              SizedBox(height: 31.v),
-              _buildRownotesone(context),
-              SizedBox(height: 27.v),
-              _buildRowiconone(context),
-              SizedBox(height: 29.v),
-              Padding(
-                padding: EdgeInsets.only(left: 1.h),
-                child: _buildRowclockOne(
-                  context,
-                  clockImage: ImageConstant.imgClock,
-                  logout: "lbl_logout".tr,
+                SizedBox(height: 25.v),
+                GestureDetector(
+                  onTap: () {
+                    NavigatorService.pushNamed(
+                      AppRoutes.editProfile,
+                    ).then((val) => provider.getData());
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: _buildRowclockOne(
+                      context,
+                      clockImage: ImageConstant.imgSettings,
+                      logout: "lbl_edit_profile".tr,
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(height: 5.v)
-            ],
+                SizedBox(height: 20.v),
+                _buildRowquestionsone(context),
+                SizedBox(height: 20.v),
+                _buildRowquestionsAsk(context),
+                SizedBox(height: 20.v),
+                _buildRownotesone(context),
+                SizedBox(height: 16.v),
+                // _buildRowiconone(context),
+                // SizedBox(height: 10.v),
+                GestureDetector(
+                  onTap: () async {
+                    await PrefUtils().clearToken();
+                    NavigatorService.pushNamedAndRemoveUntil(
+                      AppRoutes.loginScreen,
+                    );
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: _buildRowclockOne(
+                      context,
+                      clockImage: ImageConstant.imgClock,
+                      logout: "lbl_logout".tr,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5.v)
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppbar(BuildContext context) {
+  PreferredSizeWidget _buildAppbar(
+      BuildContext context, ProfileProvider provider) {
     return CustomAppBar(
       leadingWidth: 64.h,
-      leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgMale,
+      leading: CustomImageView(
+        imagePath: provider.image ?? ImageConstant.imgMale,
+        height: 40.adaptSize,
+        width: 40.adaptSize,
+        fit: BoxFit.contain,
+        radius: BorderRadius.circular(
+          38.h,
+        ),
         margin: EdgeInsets.only(
           left: 24.h,
           top: 5.v,
           bottom: 10.v,
         ),
       ),
+
+      //  AppbarLeadingImage(
+      //   imagePath: provider.image ?? ImageConstant.imgMale,
+
+      // margin: EdgeInsets.only(
+      //   left: 24.h,
+      //   top: 5.v,
+      //   bottom: 10.v,
+      // ),
+      // ),
       title: Padding(
         padding: EdgeInsets.only(left: 10.h),
         child: Column(
@@ -124,16 +163,28 @@ class ProfileScreenState extends State<ProfileScreen> {
               margin: EdgeInsets.only(right: 67.h),
             ),
             AppbarTitle(
-              text: "lbl_jeevan_george".tr,
+              text: provider.personName,
             )
           ],
         ),
       ),
+      // actions: [
+      //   Padding(
+      //     padding: const EdgeInsets.only(right: 25.0),
+      //     child: GestureDetector(
+      //         onTap: () {
+      //           NavigatorService.pushNamed(
+      //             AppRoutes.editProfile,
+      //           ).then((val) => provider.getData());
+      //         },
+      //         child: Text("EDIT")),
+      //   )
+      // ],
     );
   }
 
   /// Section Widget
-  Widget _buildColumnbiblequot(BuildContext context) {
+  Widget _buildColumnbiblequot(BuildContext context, ProfileProvider provider) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 31.h,
@@ -156,7 +207,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           Opacity(
             opacity: 0.88,
             child: Text(
-              "msg_bible_quote_of_the2".tr,
+              "Word of the Day",
               style: CustomTextStyles.titleSmallYellow200a9,
             ),
           ),
@@ -165,12 +216,10 @@ class ProfileScreenState extends State<ProfileScreen> {
             opacity: 0.88,
             child: SizedBox(
               width: 261.h,
-              child: Text(
-                "msg_therefore_each_of".tr,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: CustomTextStyles.labelLargeManropeWhiteA700_1.copyWith(
+              child: HtmlWidget(
+                provider.dailyVerses,
+                textStyle:
+                    CustomTextStyles.labelLargeManropeWhiteA700_1.copyWith(
                   height: 1.50,
                 ),
               ),
@@ -190,9 +239,17 @@ class ProfileScreenState extends State<ProfileScreen> {
         children: [
           CustomElevatedButton(
             width: 200.h,
-            text: "msg_play_store_encounterujexnpyc2".tr,
+            text: "Encounter app ".tr,
           ),
           CustomElevatedButton(
+            onPressed: () {
+              Clipboard.setData(
+                ClipboardData(
+                  text:
+                      "https://play.google.com/store/apps/details?id=com.encounter.app&hl=en",
+                ),
+              );
+            },
             width: 75.h,
             text: "lbl_copy".tr,
             leftIcon: Container(
@@ -209,7 +266,12 @@ class ProfileScreenState extends State<ProfileScreen> {
           CustomIconButton(
             height: 40.v,
             width: 37.h,
-    
+            onTap: () {
+              shareToWhatsAppText(
+                  "Install",
+                  "https://play.google.com/store/apps/details?id=com.encounter.app&hl=en",
+                  "");
+            },
             padding: EdgeInsets.all(9.h),
             decoration: IconButtonStyleHelper.fillGreen,
             child: CustomImageView(
@@ -299,30 +361,37 @@ class ProfileScreenState extends State<ProfileScreen> {
   Widget _buildRownotesone(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 1.h),
-      child: Row(
-        children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgNotesTeal800,
-            height: 20.adaptSize,
-            width: 20.adaptSize,
-            color: appTheme.blueGray600,
-            margin: EdgeInsets.only(bottom: 3.v),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 18.h),
-            child: Text(
-              "lbl_my_notes".tr,
-              style: CustomTextStyles.titleMediumGray70002,
+      child: GestureDetector(
+        onTap: () {
+          NavigatorService.pushNamed(
+            AppRoutes.my_notes,
+          );
+        },
+        child: Row(
+          children: [
+            CustomImageView(
+              imagePath: ImageConstant.imgNotesTeal800,
+              height: 20.adaptSize,
+              width: 20.adaptSize,
+              color: appTheme.blueGray600,
+              margin: EdgeInsets.only(bottom: 3.v),
             ),
-          ),
-          Spacer(),
-          CustomImageView(
-            imagePath: ImageConstant.imgArrowRight,
-            height: 20.adaptSize,
-            width: 20.adaptSize,
-            margin: EdgeInsets.only(bottom: 3.v),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.only(left: 18.h),
+              child: Text(
+                "lbl_my_notes".tr,
+                style: CustomTextStyles.titleMediumGray70002,
+              ),
+            ),
+            Spacer(),
+            CustomImageView(
+              imagePath: ImageConstant.imgArrowRight,
+              height: 20.adaptSize,
+              width: 20.adaptSize,
+              margin: EdgeInsets.only(bottom: 3.v),
+            )
+          ],
+        ),
       ),
     );
   }

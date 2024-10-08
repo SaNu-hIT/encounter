@@ -38,6 +38,9 @@ class HomeProvider extends ChangeNotifier {
   getHome(String? length) async {
     loader(true);
     _respo = await _repo.getHome(length: length ?? "");
+    PrefUtils().setName(_respo.loginUser?.userName ?? "");
+    PrefUtils().setImage(_respo.loginUser?.image ?? "");
+    PrefUtils().setVerses(_respo.bibleVerse?.data1 ?? "");
     loader(false);
     notifyListeners();
   }

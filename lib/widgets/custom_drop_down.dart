@@ -3,28 +3,29 @@ import '../core/app_export.dart';
 import '../data/models/selectionPopupModel/selection_popup_model.dart';
 
 class CustomDropDown extends StatelessWidget {
-  CustomDropDown(
-      {Key? key,
-      this.alignment,
-      this.width,
-      this.focusNode,
-      this.icon,
-      this.autofocus = false,
-      this.textStyle,
-      this.items,
-      this.hintText,
-      this.hintStyle,
-      this.prefix,
-      this.prefixConstraints,
-      this.suffix,
-      this.suffixConstraints,
-      this.contentPadding,
-      this.borderDecoration,
-      this.fillColor,
-      this.filled = true,
-      this.validator,
-      this.onChanged})
-      : super(
+  CustomDropDown({
+    Key? key,
+    this.alignment,
+    this.width,
+    this.focusNode,
+    this.icon,
+    this.autofocus = true,
+    this.textStyle,
+    this.items,
+    this.selectedItems,
+    this.hintText,
+    this.hintStyle,
+    this.prefix,
+    this.prefixConstraints,
+    this.suffix,
+    this.suffixConstraints,
+    this.contentPadding,
+    this.borderDecoration,
+    this.fillColor,
+    this.filled = true,
+    this.validator,
+    this.onChanged,
+  }) : super(
           key: key,
         );
 
@@ -41,6 +42,8 @@ class CustomDropDown extends StatelessWidget {
   final TextStyle? textStyle;
 
   final List<SelectionPopupModel>? items;
+
+  final SelectionPopupModel? selectedItems;
 
   final String? hintText;
 
@@ -69,25 +72,28 @@ class CustomDropDown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return alignment != null
-        ? Align(alignment: alignment ?? Alignment.center, child: dropDownWidget)
+        ? Align(
+            alignment: Alignment.center ?? Alignment.center,
+            child: dropDownWidget,
+          )
         : dropDownWidget;
   }
 
   Widget get dropDownWidget => SizedBox(
         width: width ?? double.maxFinite,
-        height: 50,
         child: DropdownButtonFormField<SelectionPopupModel>(
-          focusNode: focusNode,
+          value: selectedItems,
+          focusNode: focusNode ?? FocusNode(),
           icon: icon,
-          autofocus: autofocus!,
-          style: textStyle ?? CustomTextStyles.bodyMediumGray60001,
+          autofocus: autofocus ?? false,
+          style: textStyle ?? theme.textTheme.titleSmall,
           items: items?.map((SelectionPopupModel item) {
             return DropdownMenuItem<SelectionPopupModel>(
               value: item,
               child: Text(
                 item.title,
                 overflow: TextOverflow.ellipsis,
-                style: hintStyle ?? CustomTextStyles.bodyMediumGray60001,
+                style: theme.textTheme.titleSmall,
               ),
             );
           }).toList(),
@@ -100,30 +106,38 @@ class CustomDropDown extends StatelessWidget {
       );
   InputDecoration get decoration => InputDecoration(
         hintText: hintText ?? "",
-        hintStyle: hintStyle ?? CustomTextStyles.bodyMediumGray60001,
+        hintStyle: hintStyle ?? theme.textTheme.titleSmall,
         prefixIcon: prefix,
         prefixIconConstraints: prefixConstraints,
         suffixIcon: suffix,
         suffixIconConstraints: suffixConstraints,
         isDense: true,
-        contentPadding:
-            contentPadding ?? EdgeInsets.fromLTRB(19.h, 1.v, 1.h, 19.v),
-        fillColor: fillColor ?? appTheme.whiteA700,
+        contentPadding: contentPadding ?? EdgeInsets.all(13.h),
+        fillColor: fillColor ?? appTheme.gray50,
         filled: filled,
         border: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.h),
-              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10.h),
+              borderSide: BorderSide(
+                color: appTheme.gray20002,
+                width: 1,
+              ),
             ),
         enabledBorder: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.h),
-              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10.h),
+              borderSide: BorderSide(
+                color: appTheme.gray20002,
+                width: 1,
+              ),
             ),
         focusedBorder: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.h),
-              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10.h),
+              borderSide: BorderSide(
+                color: appTheme.gray20002,
+                width: 1,
+              ),
             ),
       );
 }

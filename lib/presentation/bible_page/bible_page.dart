@@ -1,3 +1,4 @@
+import 'package:encounter_app/widgets/loader_widget.dart';
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
@@ -42,32 +43,34 @@ class BiblePageState extends State<BiblePage>
       leadingWidth: 164.h,
       leading: AppbarTitle(
         text: "Bible",
-        margin: EdgeInsets.only(left: 24.h, top: 20.v),
+        margin: EdgeInsets.only(left: 24.h, top: 10.v),
       ),
       actions: [
-        AppbarTrailingImage(
-            imagePath: ImageConstant.imgShare11,
-            onTap: () => {
-                  // shareToWhatsApp(model.subject ?? "",
-                  //     model.messageBody ?? "", model.image ?? "")
-                },
-            margin: EdgeInsets.only(left: 5.h, top: 17.v, right: 38.h))
+        // AppbarTrailingImage(
+        //     imagePath: ImageConstant.imgShare11,
+        //     onTap: () => {
+        //           // shareToWhatsApp(model.subject ?? "",
+        //           //     model.messageBody ?? "", model.image ?? "")
+        //         },
+        //     margin: EdgeInsets.only(left: 5.h, top: 17.v, right: 38.h))
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: appTheme.gray10001,
-        appBar: _buildAppBar(context),
-        body: Stack(
-          children: [
-            SizedBox(
-              width: SizeUtils.width,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 14.0, right: 14.0),
+    return Consumer<BibleProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return LoaderWidget();
+        }
+        return Scaffold(
+          backgroundColor: appTheme.gray10001,
+          appBar: _buildAppBar(context),
+          body: Stack(
+            children: [
+              SizedBox(
+                width: SizeUtils.width,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -83,95 +86,83 @@ class BiblePageState extends State<BiblePage>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Selector<BibleProvider, bool>(
-                              selector: (context, provider) =>
-                                  provider.isSelectedOldTestament,
-                              builder: (context, value, child) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Provider.of<BibleProvider>(context,
-                                            listen: false)
-                                        .selectOldTestament();
-                                  },
-                                  child: Container(
-                                    width: SizeUtils.width / 3,
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: value
-                                            ? Color(0xFF236EB1)
-                                            : Colors.white,
-                                        border: Border.all(
-                                          width: 1,
-                                          color: value
-                                              ? Color(0xFF236EB1)
-                                              : Colors.white,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(16))),
-                                    // color: value ? Colors.blue : Colors.grey,
-                                    child: Center(
-                                      child: Text(
-                                        "Old Testament",
-                                        style: TextStyle(
-                                          color: value
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Manrope',
-                                          fontSize: 13,
-                                        ),
-                                      ),
+                            GestureDetector(
+                              onTap: () {
+                                Provider.of<BibleProvider>(context,
+                                        listen: false)
+                                    .selectOldTestament();
+                              },
+                              child: Container(
+                                width: SizeUtils.width / 3,
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    color: provider.isSelectedOldTestament
+                                        ? Color(0xFF236EB1)
+                                        : Colors.white,
+                                    border: Border.all(
+                                      width: 1,
+                                      color: provider.isSelectedOldTestament
+                                          ? Color(0xFF236EB1)
+                                          : Colors.white,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(16))),
+                                // color: value ? Colors.blue : Colors.grey,
+                                child: Center(
+                                  child: Text(
+                                    "Old Testament",
+                                    style: TextStyle(
+                                      color: provider.isSelectedOldTestament
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Manrope',
+                                      fontSize: 13,
                                     ),
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
                             SizedBox(
                               width: 10,
                             ),
-                            Selector<BibleProvider, bool>(
-                              selector: (context, provider) =>
-                                  provider.isSelectedNewTestament,
-                              builder: (context, value, child) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Provider.of<BibleProvider>(context,
-                                            listen: false)
-                                        .selectNewTestament();
+                            GestureDetector(
+                              onTap: () {
+                                Provider.of<BibleProvider>(context,
+                                        listen: false)
+                                    .selectNewTestament();
 
-                                    // model.selectNewTestament();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.all(10),
-                                    width: SizeUtils.width / 3,
-                                    decoration: BoxDecoration(
-                                        color: value
-                                            ? Color(0xFF236EB1)
-                                            : Colors.white,
-                                        border: Border.all(
-                                          width: 1,
-                                          color: value
-                                              ? Color(0xFF236EB1)
-                                              : Colors.white,
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(15))),
-                                    child: Center(
-                                      child: Text(
-                                        "New Testament",
-                                        style: TextStyle(
-                                          color: value
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Manrope',
-                                        ),
-                                      ),
+                                // model.selectNewTestament();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                width: SizeUtils.width / 3,
+                                decoration: BoxDecoration(
+                                    color: provider.isSelectedNewTestament
+                                        ? Color(0xFF236EB1)
+                                        : Colors.white,
+                                    border: Border.all(
+                                      width: 1,
+                                      color: provider.isSelectedNewTestament
+                                          ? Color(0xFF236EB1)
+                                          : Colors.white,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
+                                child: Center(
+                                  child: Text(
+                                    "New Testament",
+                                    style: TextStyle(
+                                      color: provider.isSelectedNewTestament
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Manrope',
                                     ),
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -191,20 +182,87 @@ class BiblePageState extends State<BiblePage>
                   ],
                 ),
               ),
-            ),
-            Selector<BibleProvider, bool>(
-              selector: (context, provider) => provider.isLoading,
-              builder: (context, value, child) {
-                return value ? CircularLoader() : SizedBox();
-              },
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
   Widget _buildViewHierarchy(BuildContext context, BibleListModel data) {
+    return ListView.builder(
+      physics: ScrollPhysics(),
+      itemCount: data.data?.length ?? 0,
+      itemBuilder: (context, index) {
+        BibileData? item = data.data?[index];
+        return GestureDetector(
+          onTap: () {
+            NavigatorService.pushNamed(AppRoutes.bibleDetailScreen,
+                arguments: item?.bookId.toString());
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 24.h),
+              padding: EdgeInsets.symmetric(horizontal: 1.h, vertical: 6),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 1,
+                    color: appTheme.borderColor,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 12.0, top: 6.0, bottom: 6.0),
+                child: Row(
+                  children: [
+                    Row(
+                      children: [
+                        CustomImageView(
+                          imagePath: item?.book_image  ?? ImageConstant.imgRectangle4323,
+                          height: 44.adaptSize,
+                          width: 44.adaptSize,
+                          // width: 156.adaptSize,
+                          radius: BorderRadius.circular(
+                            7.h,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item?.bookName ?? "Test name",
+                            style: CustomTextStyles.titleSmallBluegray90002,
+                          ),
+                          Text(
+                            "${item?.totalChapters} Chapters ",
+                            style: CustomTextStyles.titleSmallBluegray90002,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacer(),
+                    CustomImageView(
+                      imagePath: ImageConstant.imgVector,
+                      height: 10.v,
+                      width: 10.h,
+                      margin: EdgeInsets.fromLTRB(7.h, 22.v, 22.h, 22.v),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildViewHierarchy1(BuildContext context, BibleListModel data) {
     return ListView.builder(
       physics: ScrollPhysics(),
       itemCount: data.data?.length ?? 0,

@@ -31,17 +31,37 @@ extension on TextStyle {
 /// categorized by different font families and weights.
 /// Additionally, this class includes extensions on [TextStyle] to easily apply specific font families to text.
 class CustomTextStyles {
+  static get subHeadingBlackMono =>
+      theme.textTheme.bodyMedium?.manrope.copyWith(
+        color: appTheme.black900,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 1,
+        fontSize: 16.fSize,
+      );
+
+  static get titleSmallGray600 => theme.textTheme.titleSmall?.copyWith(
+        color: appTheme.gray600,
+        fontSize: 14.fSize,
+      );
 // Headline style
   static get headlineLargeManrope => theme.textTheme.headlineLarge!.manrope;
 // Title text style
   static get titleMediumSemiBold => theme.textTheme.titleMedium!.copyWith(
         fontWeight: FontWeight.w600,
       );
-
+  static get titleMediumSemiBold16 => theme.textTheme.titleMedium!.copyWith(
+        fontWeight: FontWeight.w600,
+        fontSize: 16.fSize,
+      );
+  static get titleMediumSemiBold18 => theme.textTheme.headlineLarge!.copyWith(
+        fontWeight: FontWeight.w600,
+        color: appTheme.whiteA70001,
+        fontSize: 18.fSize,
+      );
   static get titleSmallPoppinsWhiteA70001 =>
       theme.textTheme.titleSmall?.canelaTrial.copyWith(
         color: appTheme.whiteA70001,
-        fontSize: 15.fSize,
+        fontSize: 14.fSize,
         fontWeight: FontWeight.w700,
       );
   static get titleSmallPoppinsWhiteA700012 =>
@@ -63,10 +83,15 @@ class CustomTextStyles {
       );
   static get bodyMediumBluegray70001 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.blueGray70001,
+        fontSize: 16.fSize,
       );
   static get bodyMediumBluegray900 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.blueGray900,
         fontSize: 13.fSize,
+      );
+  static get bodyMediumBluegray90010 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.blueGray900,
+        fontSize: 7.fSize,
       );
   static get bodyMediumGray100 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.gray100,
@@ -84,6 +109,7 @@ class CustomTextStyles {
       );
   static get bodySmallGray700 => theme.textTheme.bodySmall!.copyWith(
         color: appTheme.gray700,
+        fontSize: 12.fSize,
       );
   static get bodySmallGray90001 => theme.textTheme.bodySmall!.copyWith(
         color: appTheme.gray90001,
@@ -124,12 +150,18 @@ class CustomTextStyles {
       );
 
   static get largeManrope24Bold => theme.textTheme.titleLarge!.manrope.copyWith(
-      color: appTheme.black900, fontSize: 24, fontWeight: FontWeight.w800);
+      color: appTheme.black900, fontSize: 24, fontWeight: FontWeight.w700);
 
   static get labelManropeWhiteSemi20 => theme.textTheme.labelLarge!.manrope
       .copyWith(color: appTheme.whiteA700, fontSize: 20);
   static get labelManropeWhiteSemi18 => theme.textTheme.labelLarge!.manrope
       .copyWith(color: appTheme.whiteA700, fontSize: 18);
+  static get labelManropeWhiteSemi14 =>
+      theme.textTheme.labelLarge!.manrope.copyWith(
+        color: appTheme.whiteA700,
+        fontSize: 13,
+        fontWeight: FontWeight.w400,
+      );
 
   static get labelLargeManropeWhiteTitle =>
       theme.textTheme.labelLarge!.manrope.copyWith(
@@ -186,7 +218,8 @@ class CustomTextStyles {
       );
   static get labelLargeManropeWhiteA700_1 =>
       theme.textTheme.labelLarge!.manrope.copyWith(
-        color: appTheme.whiteA700.withOpacity(0.66),
+        fontSize: 16.fSize,
+        color: appTheme.whiteA700.withOpacity(0.9),
       );
   static get labelMediumBlue800 => theme.textTheme.labelMedium!.copyWith(
         color: appTheme.blue800,
@@ -197,6 +230,12 @@ class CustomTextStyles {
 // Title text style
   static get titleLargeManrope => theme.textTheme.titleLarge!.manrope.copyWith(
         fontWeight: FontWeight.w700,
+        fontSize: 20.fSize,
+      );
+  static get titleLargeManropeHead =>
+      theme.textTheme.titleLarge!.manrope.copyWith(
+        fontWeight: FontWeight.w700,
+        fontSize: 16.fSize,
       );
   static get titleMedium18 => theme.textTheme.titleMedium!.copyWith(
         fontSize: 18.fSize,
@@ -247,6 +286,20 @@ class CustomTextStyles {
         color: appTheme.blueGray90002,
         fontSize: 14.fSize,
       );
+  static get descriptionText => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.descriptionText.withOpacity(0.85),
+        fontSize: 14.fSize,
+      );
+  static get askQuestiontittle => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.black,
+        fontSize: 15.fSize,
+        fontWeight: FontWeight.w700,
+      );
+
+  static get titleSmallBluegrayYellow => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.yellow,
+        fontSize: 14.fSize,
+      );
   static get titleSmallBluegray90003 => theme.textTheme.titleSmall!.copyWith(
         color: appTheme.blueGray90003,
         fontSize: 14.fSize,
@@ -261,6 +314,6 @@ class CustomTextStyles {
       );
   static get titleSmallYellow200a9 => theme.textTheme.titleSmall!.copyWith(
         color: appTheme.yellow200A9,
-        fontSize: 14.fSize,
+        fontSize: 16.fSize,
       );
 }

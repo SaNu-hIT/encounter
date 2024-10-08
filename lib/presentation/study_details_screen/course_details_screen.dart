@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:encounter_app/utils/utils.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:readmore/readmore.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:scrollable_list_tab_scroller/scrollable_list_tab_scroller.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_text_form_field.dart';
@@ -29,310 +37,618 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      String course_day_id =
-          ModalRoute.of(context)!.settings.arguments as String;
+      final Map<String, dynamic> args =
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+      // Extract the two variables
+      String course_day_id = args['course_day_id'] as String;
+      String userLmsId = args['userLmsId'] as String;
+      String day = args['day'] as String;
+
       Provider.of<StudyDetailsProvider>(context, listen: false)
-          .getDayDetails(course_day_id);
+          .getDayDetails(course_day_id, userLmsId, day);
     });
+  }
+
+  _changeStatusBarToLight() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  }
+
+  Future<void> showConfirmAlert() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are You Sure'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Completing the course.'),
+                Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<StudyDetailsProvider>(builder: (context, provider, child) {
       if (provider.isLoading) {
-        return LoaderHomeWidget();
+        return LoaderWidget();
       }
       return Scaffold(
-        extendBody: true,
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: SizedBox(
-            width: double.maxFinite,
-            child: Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 5.v),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "msg_day_5_genesis_5_212".tr,
-                          style: CustomTextStyles.titleLargeManrope,
+        backgroundColor: appTheme.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: appTheme.backgroundColor,
+          title: Text(
+            provider.respo_day.data?.courseName ?? "",
+            style: CustomTextStyles.titleLargeManropeHead,
+          ),
+          titleSpacing: 0,
+          centerTitle: false,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 25.0),
+              child: GestureDetector(
+                  onTap: () {
+                    provider.showConfirmAlert(context).then((val) => {
+                          {Navigator.of(context).pop(true)}
+                        });
+                  },
+                  child: Text("COMPLETE")),
+            )
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ScrollableListTabScroller.defaultComponents(
+                physics: ScrollPhysics(),
+                shrinkWrap: true,
+                headerContainerProps: HeaderContainerProps(height: 50),
+                tabBarProps:
+                    TabBarProps(dividerColor: Colors.blue.withOpacity(0.3)),
+                addRepaintBoundaries: false,
+                itemCount: provider.respo_day.data?.courseDayVerse?.length ?? 0,
+                tabBuilder: (BuildContext context, int index1, bool active) =>
+                    Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 13),
+                  child: Text(
+                    '${provider.respo_day.data?.courseDayVerse?[index1].bookName ?? ""} '
+                    '${provider.respo_day.data?.courseDayVerse?[index1].chapterNo ?? ""}: '
+                    '${provider.respo_day.data?.courseDayVerse?[index1].verseFromName ?? ""} - '
+                    '${provider.respo_day.data?.courseDayVerse?[index1].verseToName ?? ""}',
+                    style: TextStyle(
+                      fontWeight: active ? FontWeight.bold : FontWeight.normal,
+                      color: active ? Colors.blue : Colors.black,
+                      fontSize: active ? 18 : 16,
+                    ),
+                  ),
+                ),
+                itemBuilder: (BuildContext context, int index2) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0, top: 12),
+                      child: AutoSizeText(
+                        '${provider.respo_day.data?.courseDayVerse?[index2].bookName ?? ""} '
+                        '${provider.respo_day.data?.courseDayVerse?[index2].chapterNo ?? ""}: '
+                        '${provider.respo_day.data?.courseDayVerse?[index2].verseFromName ?? ""} - '
+                        '${provider.respo_day.data?.courseDayVerse?[index2].verseToName ?? ""}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
                         ),
                       ),
-                      SizedBox(height: 4.v),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 24.h,
-                          right: 24.h,
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 1.v),
-                              child: Text(
-                                "msg_genesis_old_testament".tr,
-                                style: CustomTextStyles.titleSmallBluegray500,
+                    ),
+                    SizedBox(height: 10),
+                    ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(bottom: 2),
+                      itemCount: provider.respo_day.data
+                          ?.courseDayVerse?[index2].statements?.length,
+                      itemBuilder: (context1, statementIndex) {
+                        var verses =
+                            provider.respo_day.data?.courseDayVerse?[index2];
+                        ;
+                        var statements = verses?.statements;
+                        return Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: statements![statementIndex].isSelected
+                                  ? Colors.grey.withOpacity(0.3)
+                                  : Colors.white,
+                              border: Border.all(
+                                  color: appTheme.black900.withOpacity(0.03)),
+                              borderRadius: BorderRadius.circular(
+                                10.h,
                               ),
                             ),
-                            Container(
-                              height: 4.adaptSize,
-                              width: 4.adaptSize,
-                              margin: EdgeInsets.only(
-                                left: 9.h,
-                                top: 9.v,
-                                bottom: 8.v,
-                              ),
-                              decoration: BoxDecoration(
-                                color: appTheme.amber700,
-                                borderRadius: BorderRadius.circular(
-                                  2.h,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 10.h),
-                              child: Text(
-                                "lbl_50_chapters".tr,
-                                style: CustomTextStyles.bodyMediumGray500,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.v),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Divider(
-                          indent: 24.h,
-                          endIndent: 24.h,
-                        ),
-                      ),
-                      SizedBox(height: 14.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "lbl_about_genesis".tr,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                      SizedBox(height: 11.v),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          width: 325.h,
-                          margin: EdgeInsets.symmetric(horizontal: 24.h),
-                          child: Text(
-                            "msg_genesis_speaks_of".tr,
-                            maxLines: 6,
-                            overflow: TextOverflow.ellipsis,
-                            style: theme.textTheme.bodyMedium!.copyWith(
-                              height: 1.50,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 15.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "msg_about_instructor".tr,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                      SizedBox(height: 29.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 42.h),
-                        child: Row(
-                          children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgRectangle9522,
-                              height: 68.adaptSize,
-                              width: 68.adaptSize,
-                              radius: BorderRadius.circular(
-                                8.h,
-                              ),
-                              margin: EdgeInsets.only(bottom: 2.v),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 22.h,
-                                top: 2.v,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    "msg_fr_joseph_vadakkan".tr,
-                                    style: CustomTextStyles.titleMediumBold,
-                                  ),
-                                  SizedBox(height: 6.v),
-                                  Text(
-                                    "msg_the_archeparchy".tr,
-                                    style: CustomTextStyles
-                                        .labelLargeManropeBluegray90002,
-                                  ),
-                                  SizedBox(height: 6.v),
-                                  Text(
-                                    "lbl_view_commentary".tr,
-                                    style: CustomTextStyles
-                                        .labelLargeManropeBluegray500
-                                        .copyWith(
-                                      decoration: TextDecoration.underline,
+                                  Container(
+                                    height: 33,
+                                    width: 33,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue,
                                     ),
-                                  )
+                                    alignment: Alignment.center,
+                                    child: AutoSizeText(
+                                      statements?[statementIndex].statementNo ??
+                                          "",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                      minFontSize: 7,
+                                      maxLines: 1,
+                                    ),
+                                  ),
+                                  // Text(
+                                  //   statements?[statementIndex].statementNo ??
+                                  //       "",
+                                  //   style: CustomTextStyles.titleMediumSemiBold,
+                                  // ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+
+                                  // SizedBox(
+                                  //   width: SizeUtils.width / 1.3,
+                                  //   child: HtmlWidget(
+                                  //     statements?[statementIndex]
+                                  //             .statementText ??
+                                  //         "",
+                                  //   ),
+                                  // )
+                                  SizedBox(
+                                    width: SizeUtils.width / 1.3,
+                                    child: CupertinoContextMenu(
+                                      actions: [
+                                        provider.isMultipleSelect
+                                            ? CupertinoContextMenuAction(
+                                                child: Text("Unselect all"),
+                                                trailingIcon: CupertinoIcons
+                                                    .arrow_clockwise,
+                                                onPressed: () {
+                                                  provider.unselectAll();
+                                                  provider.isMultipleSelect =
+                                                      false;
+                                                  Navigator.pop(context);
+                                                },
+                                              )
+                                            : CupertinoContextMenuAction(
+                                                child: Text("Select Multiple"),
+                                                trailingIcon:
+                                                    CupertinoIcons.check_mark,
+                                                onPressed: () {
+                                                  provider.toggleData(
+                                                      statementIndex,
+                                                      verses?.id);
+                                                  provider.isMultipleSelect =
+                                                      true;
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                        CupertinoContextMenuAction(
+                                          child: Text("Copy"),
+                                          trailingIcon: CupertinoIcons.heart,
+                                          onPressed: () {
+                                            Clipboard.setData(
+                                              ClipboardData(
+                                                text:
+                                                    statements?[statementIndex]
+                                                            .statementText ??
+                                                        "",
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        CupertinoContextMenuAction(
+                                          child: Text("Add Note"),
+                                          trailingIcon:
+                                              CupertinoIcons.add_circled,
+                                          onPressed: () {
+                                            // provider.showAddNotesAlert(context);
+                                            provider.showCustomBottomSheet(
+                                                context, provider);
+                                            // showDialog(
+                                            //   context: context,
+                                            //   builder: (context) => AddNotesPage(),
+                                            // );
+                                          },
+                                        ),
+                                        CupertinoContextMenuAction(
+                                          child: Text("Share"),
+                                          trailingIcon: CupertinoIcons.share,
+                                          onPressed: () {
+                                            shareToWhatsAppText(
+                                                statements?[statementIndex]
+                                                        .statementNo ??
+                                                    "",
+                                                statements?[statementIndex]
+                                                        .statementText ??
+                                                    "",
+                                                "");
+                                          },
+                                        )
+                                      ],
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (provider.isMultipleSelect) {
+                                            provider.toggleData(
+                                                statementIndex, verses?.id);
+                                          }
+                                          print("sadadasdas");
+                                        },
+                                        child: HtmlWidget(
+                                          statements?[statementIndex]
+                                                  .statementText ??
+                                              "",
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 32.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "lbl_course".tr,
-                          style: CustomTextStyles.titleMedium18,
-                        ),
-                      ),
-                      SizedBox(height: 25.v),
-                      _buildRowDay(context),
-                      SizedBox(height: 29.v),
-                      _buildRowDayOne(context),
-                      SizedBox(height: 18.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "lbl_commentary".tr,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                      SizedBox(height: 13.v),
-                      Align(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: 325.h,
-                          child: ReadMoreText(
-                            "msg_this_is_the_account".tr,
-                            trimLines: 8,
-                            colorClickableText: appTheme.blueGray500,
-                            trimMode: TrimMode.Line,
-                            trimCollapsedText: "lbl_read_more".tr,
-                            moreStyle: theme.textTheme.bodyMedium!.copyWith(
-                              height: 1.50,
-                            ),
-                            lessStyle: theme.textTheme.bodyMedium!.copyWith(
-                              height: 1.50,
                             ),
                           ),
-                        ),
-                      ),
-                      SizedBox(height: 15.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "lbl_video".tr,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                      SizedBox(height: 8.v),
-                      CustomImageView(
-                        imagePath: ImageConstant.imgImage,
-                        height: 200.v,
-                        width: 326.h,
-                        alignment: Alignment.center,
-                      ),
-                      SizedBox(height: 8.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "msg_genesis_2_man".tr,
-                          style: CustomTextStyles.titleSmallBluegray90003,
-                        ),
-                      ),
-                      SizedBox(height: 6.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "msg_explaining_genesis".tr,
-                          style: CustomTextStyles.bodySmallGray700,
-                        ),
-                      ),
-                      SizedBox(height: 15.v),
-                      _buildColumnAudio(context),
-                      SizedBox(height: 22.v),
-                      _buildColumnRelated(context),
-                      SizedBox(height: 21.v),
-                      _buildColumnAddNote(context),
-                      SizedBox(height: 17.v),
-                      _buildRowSpacerTwo(context),
-                      SizedBox(height: 24.v),
-                      Padding(
-                        padding: EdgeInsets.only(left: 24.h),
-                        child: Text(
-                          "lbl_previous_notes".tr,
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ),
-                      SizedBox(height: 13.v),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 23.h),
-                        child: _buildRowEyeOne(
-                          context,
-                          monthText: "msg_audio_file_from".tr,
-                        ),
-                      ),
-                      SizedBox(height: 11.v),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Divider(
-                          color: appTheme.black900.withOpacity(0.08),
-                          indent: 27.h,
-                          endIndent: 24.h,
-                        ),
-                      ),
-                      SizedBox(height: 8.v),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 23.h),
-                        child: _buildRowEyeOne(
-                          context,
-                          monthText: "msg_text_file_from_24".tr,
-                        ),
-                      ),
-                      SizedBox(height: 24.v),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "msg_mark_as_finished".tr,
-                          style: CustomTextStyles.titleSmallWhiteA700,
-                        ),
-                      )
-                    ],
-                  ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 14.v),
+                    index2 + 1 ==
+                            provider.respo_day.data?.courseDayVerse?.length
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 24.h),
+                                child: Text(
+                                  "About the course".tr,
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                              ),
+                              SizedBox(height: 11.v),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  width: 325.h,
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 24.h),
+                                  child: Text(
+                                    provider.respo_day.data?.textDescription ??
+                                        "",
+                                    maxLines: 6,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: theme.textTheme.bodyMedium!.copyWith(
+                                      height: 1.50,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(height: 12.v),
+                              Padding(
+                                padding: EdgeInsets.only(left: 24.h),
+                                child: Text(
+                                  "lbl_video".tr,
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                              ),
+                              SizedBox(height: 8.v),
+                              // Padding(
+                              //   padding: EdgeInsets.only(
+                              //     left: 24.h,
+                              //     right: 24.h,
+                              //   ),
+                              //   child: player,
+                              // ),
+                              SizedBox(height: 8.v),
+
+                              provider.controllerDay != null
+                                  ? Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 24.h,
+                                        right: 23.h,
+                                      ),
+                                      child: YoutubePlayer(
+                                        controller: provider.controllerDay!,
+                                        bottomActions: [
+                                          CurrentPosition(),
+                                          ProgressBar(isExpanded: true)
+                                          // TotalDuration(),
+                                        ],
+                                        showVideoProgressIndicator: true,
+                                        progressIndicatorColor: Colors.amber,
+                                        progressColors: const ProgressBarColors(
+                                          playedColor: Colors.amber,
+                                          handleColor: Colors.amberAccent,
+                                        ),
+                                        onReady: () {},
+                                      ),
+                                    )
+                                  : SizedBox(),
+                              SizedBox(
+                                height: 10,
+                              ),
+
+                              ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.only(bottom: 2),
+                                  itemCount: provider.respo_day.data
+                                      ?.courseContentVideoLink?.length,
+                                  itemBuilder: (context1, itemIndex) {
+                                    var video_link = provider
+                                        .respo_day
+                                        .data
+                                        ?.courseContentVideoLink?[itemIndex]
+                                        .videoSpotifyLink;
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 24.h, right: 23.h, bottom: 8),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          provider.loadNext(video_link);
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Color.fromARGB(
+                                                255, 198, 229, 249),
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(0.2 *
+                                                  71.h), // 10% curve (0.1 times the width of the container)
+                                            ),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              CustomImageView(
+                                                width: 80,
+                                                height: 80,
+                                                imagePath:
+                                                    ImageConstant.imageNotFound,
+                                              ),
+                                              SizedBox(
+                                                  width: SizeUtils.width / 1.5,
+                                                  child: Text(
+                                                      video_link ?? "Video")),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     NavigatorService.pushNamed(
+                              //         AppRoutes.videoPlayerScreen,
+                              //         arguments: provider
+                              //             .respo.data?.first.introVideo
+                              //             .toString());
+                              //   },
+                              //   child: CustomImageView(
+                              //     imagePath:
+                              //         null != provider.respo_day.data?.image
+                              //             ? provider.respo_day.data?.videoLink
+                              //             : ImageConstant.imgImage,
+                              //     height: 200.v,
+                              //     width: 326.h,
+                              //     alignment: Alignment.center,
+                              //   ),
+                              // ),
+                              SizedBox(height: 8.v),
+                              Padding(
+                                padding: EdgeInsets.only(left: 24.h),
+                                child: Text(
+                                  "${provider.respo_day.data?.courseName}",
+                                  style:
+                                      CustomTextStyles.titleSmallBluegray90003,
+                                ),
+                              ),
+                              SizedBox(height: 6.v),
+                              Padding(
+                                padding: EdgeInsets.only(left: 24.h),
+                                child: Text(
+                                  "Explaining ${provider.respo_day.data?.courseName}",
+                                  style: CustomTextStyles.bodySmallGray700,
+                                ),
+                              ),
+                              SizedBox(height: 15.v),
+                              Padding(
+                                padding: EdgeInsets.only(left: 24.h),
+                                child: Text(
+                                  "Audio".tr,
+                                  style: theme.textTheme.titleMedium,
+                                ),
+                              ),
+                              SizedBox(height: 8.v),
+                              ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.only(bottom: 2),
+                                  itemCount: provider.respo_day.data
+                                      ?.courseContentSpotifyLink?.length,
+                                  itemBuilder: (context1, index2) {
+                                    var link = provider
+                                        .respo_day
+                                        .data
+                                        ?.courseContentSpotifyLink?[index2]
+                                        .videoSpotifyLink;
+                                    var linik = provider
+                                        .respo_day
+                                        .data
+                                        ?.courseContentSpotifyLink?[index2]
+                                        .status;
+                                    return Container(
+                                      margin: EdgeInsets.only(
+                                          left: 23.h, right: 23.h, bottom: 8),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 1.h),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Color.fromARGB(
+                                                  255, 198, 229, 249),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(0.2 *
+                                                    71.h), // 10% curve (0.1 times the width of the container)
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "Spotify Link",
+                                                          style: CustomTextStyles
+                                                              .labelLargeManropeBluegray9000313,
+                                                        ),
+                                                        SizedBox(height: 3.v),
+                                                        // Text(
+                                                        //   "",
+                                                        //   style: CustomTextStyles
+                                                        //       .bodySmallGray700,
+                                                        // )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.only(),
+                                                    child: CustomIconButton(
+                                                      height: 32.adaptSize,
+                                                      width: 32.adaptSize,
+                                                      onTap: () {
+                                                        provider.playAudio();
+                                                      },
+                                                      padding:
+                                                          EdgeInsets.all(7.h),
+                                                      decoration:
+                                                          IconButtonStyleHelper
+                                                              .fillGreenA,
+                                                      child: CustomImageView(
+                                                        imagePath: ImageConstant
+                                                            .imgPlay,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }),
+
+                              // _buildColumnAudio(context, provider),
+                              // SizedBox(height: 22.v),
+                              // _buildColumnRelated(context),
+                              // SizedBox(height: 21.v),
+                              // _buildColumnAddNote(context),
+                              // SizedBox(height: 17.v),
+                              // _buildRowSpacerTwo(context, provider),
+                              // SizedBox(height: 24.v),
+                              // Padding(
+                              //   padding: EdgeInsets.only(left: 24.h),
+                              //   child: Text(
+                              //     "lbl_previous_notes".tr,
+                              //     style: theme.textTheme.titleMedium,
+                              //   ),
+                              // ),
+                              // SizedBox(height: 13.v),
+                              // Padding(
+                              //   padding: EdgeInsets.symmetric(horizontal: 23.h),
+                              //   child: _buildRowEyeOne(
+                              //     context,
+                              //     monthText: "msg_audio_file_from".tr,
+                              //   ),
+                              // ),
+                              // SizedBox(height: 11.v),
+                              // Align(
+                              //   alignment: Alignment.center,
+                              //   child: Divider(
+                              //     color: appTheme.black900.withOpacity(0.08),
+                              //     indent: 27.h,
+                              //     endIndent: 24.h,
+                              //   ),
+                              // ),
+                              // SizedBox(height: 8.v),
+                              // Padding(
+                              //   padding: EdgeInsets.symmetric(horizontal: 23.h),
+                              //   child: _buildRowEyeOne(
+                              //     context,
+                              //     monthText: "msg_text_file_from_24".tr,
+                              //   ),
+                              // ),
+                              SizedBox(height: 24.v),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "msg_mark_as_finished".tr,
+                                  style: CustomTextStyles.titleSmallWhiteA700,
+                                ),
+                              )
+                            ],
+                          )
+                        : SizedBox()
+                  ],
                 ),
               ),
             ),
-          ),
+          ],
         ),
       );
     });
   }
 
   /// Section Widget
-  Widget _buildStackArrowLeft(BuildContext context) {
+  Widget _buildStackArrowLeft(
+      BuildContext context, StudyDetailsProvider provider) {
     return SizedBox(
-      height: 300.v,
+      height: 100.v,
       width: double.maxFinite,
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
           CustomImageView(
-            imagePath: ImageConstant.imgRectangle625,
-            height: 300.v,
-            width: 375.h,
+            imagePath: null != provider.respo_day.data?.image
+                ? provider.respo_day.data?.image
+                : ImageConstant.imgRectangle625,
+            height: 400.v,
+            fit: BoxFit.cover,
+            width: SizeUtils.width,
             alignment: Alignment.center,
           ),
         ],
@@ -415,154 +731,68 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
   }
 
   /// Section Widget
-  Widget _buildRowDayOne(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 24.h),
-        padding: EdgeInsets.symmetric(
-          horizontal: 11.h,
-          vertical: 15.v,
-        ),
-        // decoration: AppDecoration.white.copyWith(
-        //   borderRadius: BorderRadiusStyle.roundedBorder16,
-        // ),
-        decoration: BoxDecoration(
-            border: Border.all(
-              width: 1,
-              color: Color.fromARGB(255, 154, 198, 236),
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 2.v),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.h),
-                    child: Text(
-                      "lbl_day".tr,
-                      style: CustomTextStyles.bodyMediumBluegray900,
-                    ),
-                  ),
-                  Text(
-                    "lbl_02".tr,
-                    style: theme.textTheme.headlineSmall,
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 11.h),
-              child: SizedBox(
-                height: 48.v,
-                child: VerticalDivider(
-                  width: 1.h,
-                  thickness: 1.v,
-                  color: appTheme.black900.withOpacity(0.2),
-                  indent: 5.h,
-                  endIndent: 5.h,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 15.h,
-                  top: 4.v,
-                  bottom: 4.v,
-                ),
-                child: _buildColumngenesis(
-                  context,
-                  titleText: "lbl_genesis".tr,
-                  chapterText: "lbl_chapter_2".tr,
-                ),
-              ),
-            ),
-            Spacer(),
-            Container(
-              height: 3.adaptSize,
-              width: 3.adaptSize,
-              margin: EdgeInsets.only(bottom: 45.v),
-              decoration: BoxDecoration(
-                color: appTheme.whiteA700,
-                borderRadius: BorderRadius.circular(
-                  1.h,
-                ),
-              ),
-            ),
-            CustomImageView(
-              imagePath: ImageConstant.imgVector,
-              height: 5.v,
-              width: 10.h,
-              margin: EdgeInsets.fromLTRB(7.h, 21.v, 12.h, 22.v),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildColumnAudio(BuildContext context) {
+  Widget _buildColumnAudio(
+      BuildContext context, StudyDetailsProvider provider) {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        margin: EdgeInsets.only(left: 23.h),
+        margin: EdgeInsets.only(left: 23.h, right: 23.h),
         padding: EdgeInsets.symmetric(horizontal: 1.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "lbl_audio".tr,
+              "Audio".tr,
               style: theme.textTheme.titleMedium,
             ),
-            SizedBox(height: 17.v),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 11.h,
-                right: 37.h,
+            SizedBox(height: 8.v),
+            Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 198, 229, 249),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(0.2 *
+                      71.h), // 10% curve (0.1 times the width of the container)
+                ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "msg_genesis_2_man".tr,
-                          style:
-                              CustomTextStyles.labelLargeManropeBluegray9000313,
-                        ),
-                        SizedBox(height: 3.v),
-                        Text(
-                          "msg_commentary_by_fr".tr,
-                          style: CustomTextStyles.bodySmallGray700,
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 41.h,
-                      top: 3.v,
-                      bottom: 6.v,
-                    ),
-                    child: CustomIconButton(
-                      height: 28.adaptSize,
-                      width: 28.adaptSize,
-                      padding: EdgeInsets.all(7.h),
-                      decoration: IconButtonStyleHelper.fillGreenA,
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgPlay,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${provider.respo_day.data?.courseName}",
+                            style: CustomTextStyles
+                                .labelLargeManropeBluegray9000313,
+                          ),
+                          SizedBox(height: 3.v),
+                          Text(
+                            "From  ${provider.respo_day.data?.bibleName}",
+                            style: CustomTextStyles.bodySmallGray700,
+                          )
+                        ],
                       ),
                     ),
-                  )
-                ],
+                    Padding(
+                      padding: EdgeInsets.only(),
+                      child: CustomIconButton(
+                        height: 32.adaptSize,
+                        width: 32.adaptSize,
+                        onTap: () {
+                          provider.playAudio();
+                        },
+                        padding: EdgeInsets.all(7.h),
+                        decoration: IconButtonStyleHelper.fillGreenA,
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgPlay,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],
@@ -656,7 +886,8 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
   }
 
   /// Section Widget
-  Widget _buildRowSpacerTwo(BuildContext context) {
+  Widget _buildRowSpacerTwo(
+      BuildContext context, StudyDetailsProvider provider) {
     return Align(
       alignment: Alignment.center,
       child: Padding(
@@ -675,41 +906,41 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: IconButton(
-                            onPressed: () {},
-                            constraints: BoxConstraints(
-                              minHeight: 30.adaptSize,
-                              minWidth: 30.adaptSize,
-                            ),
-                            padding: EdgeInsets.all(0),
-                            icon: SizedBox(
-                              width: 30.adaptSize,
-                              height: 30.adaptSize,
-                              child: CustomImageView(
-                                imagePath: ImageConstant.imageNotFound,
-                              ),
-                            ),
-                          ),
-                        ),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgIconMic,
-                          height: 20.adaptSize,
-                          width: 20.adaptSize,
-                          alignment: Alignment.center,
-                        )
+                        // Align(
+                        //   alignment: Alignment.center,
+                        //   child: IconButton(
+                        //     onPressed: () {},
+                        //     constraints: BoxConstraints(
+                        //       minHeight: 30.adaptSize,
+                        //       minWidth: 30.adaptSize,
+                        //     ),
+                        //     padding: EdgeInsets.all(0),
+                        //     icon: SizedBox(
+                        //       width: 30.adaptSize,
+                        //       height: 30.adaptSize,
+                        //       child: CustomImageView(
+                        //         imagePath: ImageConstant.imageNotFound,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // CustomImageView(
+                        //   imagePath: ImageConstant.imgIconMic,
+                        //   height: 20.adaptSize,
+                        //   width: 20.adaptSize,
+                        //   alignment: Alignment.center,
+                        // )
                       ],
                     ),
                   ),
-                  CustomIconButton(
-                    height: 30.adaptSize,
-                    width: 30.adaptSize,
-                    padding: EdgeInsets.all(7.h),
-                    child: CustomImageView(
-                      imagePath: ImageConstant.imgGroup44,
-                    ),
-                  )
+                  // CustomIconButton(
+                  //   height: 30.adaptSize,
+                  //   width: 30.adaptSize,
+                  //   // padding: EdgeInsets.all(7.h),
+                  //   child: CustomImageView(
+                  //     imagePath: ImageConstant.imgGroup44,
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -724,15 +955,20 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                 style: CustomTextStyles.titleSmallBluegray500,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(left: 8.h),
-              child: CustomIconButton(
-                height: 30.adaptSize,
-                width: 30.adaptSize,
-                padding: EdgeInsets.all(7.h),
-                decoration: IconButtonStyleHelper.fillGrayTL15,
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgIconSend,
+            GestureDetector(
+              onTap: () {
+                provider.addNotes();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: 8.h),
+                child: CustomIconButton(
+                  height: 30.adaptSize,
+                  width: 30.adaptSize,
+                  padding: EdgeInsets.all(7.h),
+                  decoration: IconButtonStyleHelper.fillGrayTL15,
+                  child: CustomImageView(
+                    imagePath: ImageConstant.imgIconSend,
+                  ),
                 ),
               ),
             )

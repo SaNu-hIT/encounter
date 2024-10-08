@@ -107,7 +107,7 @@ class QuestionData {
     subCategoryId = json['sub_category_id'];
     answer = json['answer'];
     status = json['status'];
-    createdAt = json['created_at'];
+    createdAt = json['date_of_question'];
     updatedAt = json['updated_at'];
     categoryName = json['category_name'];
     subCategoryName = json['sub_category_name'];

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:encounter_app/core/app_export.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DioInterceptor extends Interceptor {
   final Dio dio;
@@ -38,7 +40,7 @@ class DioInterceptor extends Interceptor {
             throw BadRequestException(err.requestOptions);
           case 401:
           case 403:
-          // _logOut();
+            _logOut();
           case 404:
             throw NotFoundException(err.requestOptions);
           case 409:
@@ -60,9 +62,8 @@ class DioInterceptor extends Interceptor {
 
   _logOut() async {
     try {
-      // await SharedPrefs.clearPreferences();
-
-      // GoRouter.of(navigatorKey.currentState!.context).go(Routes.LOGIN);
+      PrefUtils().clearToken();
+      NavigatorService.pushNamedAndRemoveUntil(AppRoutes.loginScreen);
     } catch (e) {
       print("sdgfbhj${e.toString()}");
     }

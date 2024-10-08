@@ -23,21 +23,21 @@ class VerifyModel {
 }
 
 class Data {
-  String? messsage;
+  String? message;
   String? token;
   User? user;
 
-  Data({this.messsage, this.token, this.user});
+  Data({this.message, this.token, this.user});
 
   Data.fromJson(Map<String, dynamic> json) {
-    messsage = json['messsage'];
+    message = json['message'];
     token = json['token'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['messsage'] = this.messsage;
+    data['message'] = this.message;
     data['token'] = this.token;
     if (this.user != null) {
       data['user'] = this.user!.toJson();
@@ -49,22 +49,23 @@ class Data {
 class User {
   int? id;
   String? firstName;
-  Null? lastName;
+  String? lastName;
   String? gender;
-  Null? age;
-  String? location;
-  String? deviceType;
-  String? ip;
-  Null? deviceId;
-  Null? refreshToken;
-  String? appUsage;
-  String? browser;
+  dynamic? age;
+  dynamic? location;
+  dynamic? image;
+  dynamic? deviceType;
+  dynamic? ip;
+  dynamic? deviceId;
+  dynamic? refreshToken;
+  dynamic? appUsage;
+  dynamic? browser;
   String? lastAccessed;
   String? email;
   int? status;
   String? createdAt;
   String? updatedAt;
-  Null? deletedAt;
+  dynamic? deletedAt;
   String? userName;
 
   User(
@@ -74,6 +75,7 @@ class User {
       this.gender,
       this.age,
       this.location,
+      this.image,
       this.deviceType,
       this.ip,
       this.deviceId,
@@ -95,6 +97,7 @@ class User {
     gender = json['gender'];
     age = json['age'];
     location = json['location'];
+    image = json['image'];
     deviceType = json['device_type'];
     ip = json['ip'];
     deviceId = json['device_id'];
@@ -118,6 +121,7 @@ class User {
     data['gender'] = this.gender;
     data['age'] = this.age;
     data['location'] = this.location;
+    data['image'] = this.image;
     data['device_type'] = this.deviceType;
     data['ip'] = this.ip;
     data['device_id'] = this.deviceId;

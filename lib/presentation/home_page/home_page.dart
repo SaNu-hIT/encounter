@@ -1,13 +1,18 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../../core/app_export.dart';
 import '../../core/utils/size_utils.dart';
+import '../../utils/utils.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_subtitle_one.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/appbar_trailing_image.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
+import '../../widgets/custom_bottom_bar.dart';
 import '../../widgets/custom_search_view.dart';
 import '../../widgets/loader_widget.dart';
+import '../home_container_screen/provider/home_container_provider.dart';
 import 'models/explorecommentary_item_model.dart';
 import 'models/home_model.dart';
 import 'models/home_respo.dart';
@@ -50,7 +55,6 @@ class HomePageState extends State<HomePage> {
 
       return Scaffold(
         backgroundColor: appTheme.gray10001,
-        resizeToAvoidBottomInset: true,
         appBar: _buildAppBar(context),
         body: SizedBox(
           width: SizeUtils.width,
@@ -99,7 +103,6 @@ class HomePageState extends State<HomePage> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 170.h,
-      height: 90,
       leading: AppbarLeadingImage(
         imagePath: ImageConstant.logoHome,
         margin: EdgeInsets.only(
@@ -134,7 +137,6 @@ class HomePageState extends State<HomePage> {
     return Padding(
       padding: const EdgeInsets.only(left: 24.0, right: 24.0),
       child: SizedBox(
-        height: 180.v,
         width: double.maxFinite,
         child: Stack(
           alignment: Alignment.bottomCenter,
@@ -142,20 +144,18 @@ class HomePageState extends State<HomePage> {
             Align(
               alignment: Alignment.bottomCenter,
               child: SizedBox(
-                height: 180.v,
                 width: 368.h,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.imgRectangle4322,
-                      height: 200.v,
-                      width: 368.h,
-                      radius: BorderRadius.circular(
-                        10.h,
-                      ),
-                      alignment: Alignment.center,
-                    ),
+                    // CustomImageView(
+                    //   imagePath: ImageConstant.imgRectangle4322,
+                    //   width: 368.h,
+                    //   radius: BorderRadius.circular(
+                    //     10.h,
+                    //   ),
+                    //   alignment: Alignment.center,
+                    // ),
                     Align(
                       alignment: Alignment.center,
                       child: Container(
@@ -163,42 +163,79 @@ class HomePageState extends State<HomePage> {
                         //   horizontal: 26.h,
                         //   vertical: 17.v,
                         // ),
-                        height: 200.v,
                         width: 368.h,
                         decoration: AppDecoration.gradientBlackToBlack.copyWith(
                           borderRadius: BorderRadius.circular(
                             10.h,
                           ),
+                          image: DecorationImage(
+                            image: AssetImage(ImageConstant.imgRectangle4322),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 312.h,
-                              margin: EdgeInsets.only(right: 2.h),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    provider.respo.bibleVerse?.data1 ?? "",
-                                    maxLines: 8,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: CustomTextStyles
-                                        .titleSmallPoppinsWhiteA70001,
-                                  ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Text(
-                                    provider.respo.bibleVerse?.data2 ?? "",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: CustomTextStyles
-                                        .titleSmallPoppinsWhiteA700012,
-                                  ),
-                                ],
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: Container(
+                                width: 312.h,
+                                margin: EdgeInsets.only(right: 2.h),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Bible quote of the day",
+                                          maxLines: 8,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                          style: CustomTextStyles
+                                              .titleMediumSemiBold18,
+                                        ),
+                                        Spacer(),
+                                        GestureDetector(
+                                          onTap: () {
+                                            shareToWhatsAppText(
+                                                provider.respo.bibleVerse
+                                                        ?.data1 ??
+                                                    "",
+                                                provider.respo.bibleVerse
+                                                        ?.data2 ??
+                                                    "",
+                                                "");
+                                          },
+                                          child: CustomImageView(
+                                            imagePath: ImageConstant.imgShare11,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SelectionArea(
+                                      child: HtmlWidget(
+                                        provider.respo.bibleVerse?.data1 ?? "",
+                                        textStyle: CustomTextStyles
+                                            .titleSmallPoppinsWhiteA70001,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    AutoSizeText(
+                                      provider.respo.bibleVerse?.data2 ?? "",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.start,
+                                      style: CustomTextStyles
+                                          .titleSmallPoppinsWhiteA700012,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -315,7 +352,10 @@ class HomePageState extends State<HomePage> {
             style: CustomTextStyles.titleMediumGray90001,
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Provider.of<HomeContainerProvider>(context, listen: false)
+                  .selectTab(BottomBarEnum.Study);
+            },
             child: Text(
               "lbl_see_all".tr,
               style: CustomTextStyles.titleSmallBluegray600,
@@ -334,8 +374,13 @@ class HomePageState extends State<HomePage> {
         height: 235.v,
         child: Consumer<HomeProvider>(
           builder: (context, provider, child) {
-            return ListView.builder(
+            return ListView.separated(
               padding: EdgeInsets.only(left: 12.h),
+              separatorBuilder: (context, index) {
+                return SizedBox(
+                  width: 12.h,
+                );
+              },
               scrollDirection: Axis.horizontal,
               itemCount: provider.respo.data?.first.list?.length ?? 0,
               itemBuilder: (context, index) {

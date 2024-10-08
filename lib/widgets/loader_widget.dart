@@ -14,56 +14,64 @@ class LoaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Shimmer.fromColors(
-                  direction: ShimmerDirection.ltr,
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  enabled: true,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          // borderRadius: BorderRadius.circular(25),
+        ),
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Shimmer.fromColors(
+                      direction: ShimmerDirection.ltr,
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      enabled: true,
+                      child: Column(
                         children: [
-                          shimmerLoader(width: 40, height: 40, radius: 20),
-                          const SizedBox(
-                            width: 10,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              shimmerLoader(width: 40, height: 40, radius: 20),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              shimmerLoader(
+                                width: 100,
+                                height: 15,
+                              ),
+                              Spacer(),
+                              shimmerLoader(width: 24, height: 24, radius: 12),
+                            ],
                           ),
-                          shimmerLoader(
-                            width: 100,
-                            height: 15,
-                          ),
-                          Spacer(),
-                          shimmerLoader(width: 24, height: 24, radius: 12),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
+              Wrap(
+                  children: List.generate(
+                10,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                  child: ListAdapterSkelton(),
+                ),
+              ))
+            ],
           ),
-          Wrap(
-              children: List.generate(
-            10,
-            (index) => Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-              child: ListAdapterSkelton(),
-            ),
-          ))
-        ],
+        ),
       ),
     );
   }
@@ -205,6 +213,17 @@ class LoaderHomeWidget extends StatelessWidget {
                             ),
                             shimmerLoader(width: 24, height: 24, radius: 12),
                           ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        shimmerLoader(width: SizeUtils.width, height: 20),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        shimmerLoader(
+                          width: SizeUtils.width,
+                          height: 40,
                         ),
                         SizedBox(
                           height: 10,
