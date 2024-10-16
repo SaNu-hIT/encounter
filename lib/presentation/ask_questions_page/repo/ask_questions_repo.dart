@@ -33,6 +33,7 @@ class AskQuestionsRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
       return GotQuestionModel();
     }
   }
@@ -62,6 +63,7 @@ class AskQuestionsRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
       return GotQuestionModel();
     }
   }
@@ -107,6 +109,7 @@ class AskQuestionsRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
       return CategoryDropDown();
     }
   }
@@ -130,6 +133,7 @@ class AskQuestionsRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
       return AskQuestionRespo();
     }
   }
@@ -151,6 +155,7 @@ class AskQuestionsRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
       return MyNotesRespo();
     }
   }

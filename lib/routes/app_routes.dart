@@ -8,6 +8,7 @@ import '../presentation/ask_questions_page/ask_questions_form.dart';
 import '../presentation/ask_questions_page/ask_questions_page.dart';
 import '../presentation/ask_questions_page/got_questions_page.dart';
 import '../presentation/bible_page/bible_details_screen.dart';
+import '../presentation/completed_course/completed_course_page.dart';
 import '../presentation/home_container_screen/home_container_screen.dart';
 import '../presentation/login_register_screen/login_screen.dart';
 import '../presentation/onboarding_screen/onboarding_screen.dart';
@@ -53,6 +54,7 @@ class AppRoutes {
   static const String videoPlayerScreen = '/VideoPlayerScreen';
   static const String editProfile = '/editProfile';
   static const String my_notes = '/my_notes';
+  static const String completed_courses = '/completed_courses';
 
   static Map<String, WidgetBuilder> get routes => {
         splashScreen: SplashScreen.builder,
@@ -74,6 +76,7 @@ class AppRoutes {
         studyDayScreen: CouseDetailsScreen.builder,
         editProfile: EditProfileScreen.builder,
         bibleDetailScreen: BibleDetailsScreen.builder,
+        completed_courses: CompletedCoursePage.builder,
         my_notes: MyNotesPage.builder
       };
 }

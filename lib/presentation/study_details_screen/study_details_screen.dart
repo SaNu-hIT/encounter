@@ -37,7 +37,7 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
         ));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       String course_id = ModalRoute.of(context)!.settings.arguments as String;
-
+      print(course_id);
       Provider.of<StudyDetailsProvider>(context, listen: false)
           .getDetails(course_id);
     });
@@ -106,12 +106,15 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(bottom: 0.v),
-                            child: Text(
-                              provider.respo.data?.first.courseStartStatus ==
-                                      "started"
-                                  ? " Started on : ${provider.respo.data?.first.startDate ?? ""}"
-                                  : " Start on ${provider.respo.data?.first.startDate ?? ""}",
-                              style: CustomTextStyles.titleSmallBluegray500,
+                            child: SizedBox(
+                              width: SizeUtils.width / 2.4,
+                              child: AutoSizeText(
+                                provider.respo.data?.first.courseStartStatus ==
+                                        "started"
+                                    ? " Started on : ${provider.respo.data?.first.startDate ?? ""}"
+                                    : " Start on ${provider.respo.data?.first.startDate ?? ""}",
+                                style: CustomTextStyles.titleSmallBluegray500,
+                              ),
                             ),
                           ),
                           Container(
@@ -130,7 +133,7 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                           Padding(
                             padding: EdgeInsets.only(left: 10.h),
                             child: SizedBox(
-                              width: SizeUtils.width / 2.4,
+                              width: SizeUtils.width / 2.6,
                               child: AutoSizeText(
                                 provider.respo.data?.first.courseStartStatus ==
                                         "started"
@@ -166,12 +169,9 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                     Align(
                       alignment: Alignment.center,
                       child: Container(
-                        width: 325.h,
                         margin: EdgeInsets.symmetric(horizontal: 24.h),
                         child: Text(
                           provider.respo.data?.first.description ?? "",
-                          maxLines: 6,
-                          overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodyMedium!.copyWith(
                             height: 1.50,
                           ),
@@ -222,11 +222,15 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      provider.respo.data?.first
-                                              .courseCreator ??
-                                          "",
-                                      style: CustomTextStyles.titleMediumBold,
+                                    SizedBox(
+                                      width: SizeUtils.width / 1.8,
+                                      child: AutoSizeText(
+                                        provider.respo.data?.first
+                                                .courseCreator ??
+                                            "",
+                                        maxLines: 1,
+                                        style: CustomTextStyles.titleMediumBold,
+                                      ),
                                     ),
                                     SizedBox(height: 6.v),
                                     Text(
@@ -364,10 +368,15 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
               "Introductory  Audio".tr,
               style: theme.textTheme.titleMedium,
             ),
+            Text(
+              provider.connectionStatus,
+              style: theme.textTheme.titleMedium,
+            ),
             SizedBox(height: 8.v),
             Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 198, 229, 249),
+                image: DecorationImage(
+                    image: AssetImage(ImageConstant.spotif_back)),
                 borderRadius: BorderRadius.all(
                   Radius.circular(0.2 *
                       71.h), // 10% curve (0.1 times the width of the container)
@@ -401,12 +410,15 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                         height: 32.adaptSize,
                         width: 32.adaptSize,
                         onTap: () {
-                          provider.playAudio();
+                          provider
+                              .playAudio(provider.respo.data?.first.introAudio);
                         },
-                        padding: EdgeInsets.all(7.h),
+                        padding: EdgeInsets.all(6.h),
                         decoration: IconButtonStyleHelper.fillGreenA,
                         child: CustomImageView(
-                          imagePath: ImageConstant.imgPlay,
+                          imagePath: provider.isPlaying
+                              ? ImageConstant.imgPause
+                              : ImageConstant.imgPlay,
                         ),
                       ),
                     )

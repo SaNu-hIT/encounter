@@ -1,3 +1,5 @@
+import '../../study_details_screen/models/course_day_details.dart';
+
 class BibleDetailModel {
   String? status;
   List<ChapterData>? data;
@@ -83,19 +85,40 @@ class ChapterData {
 
 class Statements {
   int? statementId;
+  int? statementNo;
   String? statementText;
+  String? note_marking;
+  List<BookmarkMarking>? bookmarkMarking;
+  String? color_marking;
+  bool isSelected = false;
 
   Statements({this.statementId, this.statementText});
 
   Statements.fromJson(Map<String, dynamic> json) {
     statementId = json['statement_id'];
+    statementNo = json['statement_no'];
     statementText = json['statement_text'];
+    note_marking = json['note_marking'];
+    if (json['bookmark_marking'] != null) {
+      bookmarkMarking = <BookmarkMarking>[];
+      json['bookmark_marking'].forEach((v) {
+        bookmarkMarking!.add(new BookmarkMarking.fromJson(v));
+      });
+    }
+    color_marking = json['color_marking'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['statement_id'] = this.statementId;
+    data['statement_no'] = this.statementNo;
     data['statement_text'] = this.statementText;
+    data['note_marking'] = this.note_marking;
+    if (this.bookmarkMarking != null) {
+      data['bookmark_marking'] =
+          this.bookmarkMarking!.map((v) => v.toJson()).toList();
+    }
+    data['color_marking'] = this.color_marking;
     return data;
   }
 }

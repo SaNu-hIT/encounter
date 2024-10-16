@@ -15,6 +15,7 @@ class CourseListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print("DATA${listItem.id}");
         NavigatorService.pushNamed(AppRoutes.studyDetailsScreen,
             arguments: listItem.id.toString());
       },
@@ -71,6 +72,7 @@ class CourseListWidget extends StatelessWidget {
                   child: AutoSizeText(
                     "${listItem.data1} : ${listItem.data3}",
                     style: CustomTextStyles.titleSmallBluegray900,
+                    overflow: TextOverflow.fade,
                     maxLines: 2,
                   ),
                 ),
@@ -78,8 +80,10 @@ class CourseListWidget extends StatelessWidget {
               SizedBox(height: 3.v),
               Padding(
                 padding: EdgeInsets.only(left: 1.h),
-                child: Text(
+                child: AutoSizeText(
                   listItem.data2!,
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
                   style: CustomTextStyles.labelLargeManropeTeal800,
                 ),
               )

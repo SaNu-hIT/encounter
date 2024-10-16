@@ -6,7 +6,7 @@ class MyNotesRespo {
 
   MyNotesRespo.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-  
+
     if (json['data'] != null) {
       data = <NotesData>[];
       json['data'].forEach((v) {
@@ -18,7 +18,7 @@ class MyNotesRespo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
- 
+
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -27,62 +27,67 @@ class MyNotesRespo {
 }
 
 class NotesData {
+  String? category;
+  List<ListItem>? list;
+
+  NotesData({this.category, this.list});
+
+  NotesData.fromJson(Map<String, dynamic> json) {
+    category = json['category'];
+    if (json['list'] != null) {
+      list = <ListItem>[];
+      json['list'].forEach((v) {
+        list!.add(new ListItem.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['category'] = this.category;
+    if (this.list != null) {
+      data['list'] = this.list!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ListItem {
   int? id;
   int? userId;
-  int? bibleId;
-  int? testamentId;
-  int? bookId;
-  int? chapterId;
-  int? verseId;
-  String? note;
-  String? category;
-  String? subCategory;
-  int? status;
-  String? createdAt;
-  String? updatedAt;
-  String? userName;
+  int? type;
+  int? statementId;
+  String? data;
+  String? verseStatement;
+  List<String>? markedData;
   String? bibleName;
   String? testamentName;
   String? bookName;
   String? chapterName;
   int? verseNo;
 
-  NotesData(
+  ListItem(
       {this.id,
       this.userId,
-      this.bibleId,
-      this.testamentId,
-      this.bookId,
-      this.chapterId,
-      this.verseId,
-      this.note,
-      this.category,
-      this.subCategory,
-      this.status,
-      this.createdAt,
-      this.updatedAt,
-      this.userName,
+      this.type,
+      this.statementId,
+      this.data,
+      this.verseStatement,
+      this.markedData,
       this.bibleName,
       this.testamentName,
       this.bookName,
       this.chapterName,
       this.verseNo});
 
-  NotesData.fromJson(Map<String, dynamic> json) {
+  ListItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     userId = json['user_id'];
-    bibleId = json['bible_id'];
-    testamentId = json['testament_id'];
-    bookId = json['book_id'];
-    chapterId = json['chapter_id'];
-    verseId = json['verse_id'];
-    note = json['note'];
-    category = json['category'];
-    subCategory = json['sub_category'];
-    status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    userName = json['user_name'];
+    type = json['type'];
+    statementId = json['statement_id'];
+    data = json['data'];
+    verseStatement = json['verse_statement'];
+    markedData = json['marked_data'].cast<String>();
     bibleName = json['bible_name'];
     testamentName = json['testament_name'];
     bookName = json['book_name'];
@@ -94,18 +99,11 @@ class NotesData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['user_id'] = this.userId;
-    data['bible_id'] = this.bibleId;
-    data['testament_id'] = this.testamentId;
-    data['book_id'] = this.bookId;
-    data['chapter_id'] = this.chapterId;
-    data['verse_id'] = this.verseId;
-    data['note'] = this.note;
-    data['category'] = this.category;
-    data['sub_category'] = this.subCategory;
-    data['status'] = this.status;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['user_name'] = this.userName;
+    data['type'] = this.type;
+    data['statement_id'] = this.statementId;
+    data['data'] = this.data;
+    data['verse_statement'] = this.verseStatement;
+    data['marked_data'] = this.markedData;
     data['bible_name'] = this.bibleName;
     data['testament_name'] = this.testamentName;
     data['book_name'] = this.bookName;

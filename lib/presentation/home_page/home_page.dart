@@ -217,10 +217,19 @@ class HomePageState extends State<HomePage> {
                                       height: 10,
                                     ),
                                     SelectionArea(
-                                      child: HtmlWidget(
-                                        provider.respo.bibleVerse?.data1 ?? "",
-                                        textStyle: CustomTextStyles
-                                            .titleSmallPoppinsWhiteA70001,
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          minHeight:
+                                              90.0, // Set the minimum height you want
+                                        ),
+                                        child: Center(
+                                          child: HtmlWidget(
+                                            provider.respo.bibleVerse?.data1 ??
+                                                "",
+                                            textStyle: CustomTextStyles
+                                                .titleSmallPoppinsWhiteA70001,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(
@@ -371,7 +380,7 @@ class HomePageState extends State<HomePage> {
     return Align(
       alignment: Alignment.centerRight,
       child: SizedBox(
-        height: 235.v,
+        height: 220.v,
         child: Consumer<HomeProvider>(
           builder: (context, provider, child) {
             return ListView.separated(

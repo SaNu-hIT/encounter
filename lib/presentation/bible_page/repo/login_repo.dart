@@ -26,6 +26,7 @@ class BibleRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
       return BibleListModel();
     }
   }
@@ -50,6 +51,7 @@ class BibleRepo {
       }
       return registrationDetailsModel;
     } catch (e) {
+      print(e);
       return BibleDetailModel();
     }
   }

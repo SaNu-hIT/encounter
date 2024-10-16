@@ -61,7 +61,7 @@ class CustomTextStyles {
   static get titleSmallPoppinsWhiteA70001 =>
       theme.textTheme.titleSmall?.canelaTrial.copyWith(
         color: appTheme.whiteA70001,
-        fontSize: 14.fSize,
+        fontSize: 16.fSize,
         fontWeight: FontWeight.w700,
       );
   static get titleSmallPoppinsWhiteA700012 =>

@@ -10,6 +10,8 @@ class ImageConstant {
   static String imgSplash = '$imagePath/img_splash.svg';
   static String logoHome = '$imagePath/logo_home.svg';
   static String back = '$imagePath/back.svg';
+  static String spotify = '$imagePath/spotify.svg';
+  static String spotif_back = '$imagePath/spoti_back.svg';
   static String got_question_back = '$imagePath/img_back_ask.png';
   static String logo_blue = '$imagePath/logo_blue.svg';
 
@@ -52,7 +54,8 @@ class ImageConstant {
 
   static String imgImage = '$imagePath/img_image.png';
 
-  static String imgPlay = '$imagePath/img_play.svg';
+  static String imgPause = '$imagePath/icons8-pause-50.png';
+  static String imgPlay = '$imagePath/icons8-play-50.png';
 
   static String imgRectangle4322106x128 =
       '$imagePath/img_rectangle_4322_106x128.png';
@@ -115,4 +118,6 @@ class ImageConstant {
   static String imgIsolationMode = '$imagePath/img_isolation_mode.svg';
   static String sendIcon = '$imagePath/send_icon.svg';
   static String askButton = '$imagePath/ask_button.svg';
+  static String comments = '$imagePath/icons8-comments-48.png';
+  static String attachment = '$imagePath/icons8-attachment-30.png';
 }

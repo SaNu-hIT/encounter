@@ -34,6 +34,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getString('themeData')!;
     } catch (e) {
+      print(e);
       return 'primary';
     }
   }
@@ -46,6 +47,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getBool('ON_BOARD') ?? false;
     } catch (e) {
+      print(e);
       return false;
     }
   }
@@ -58,6 +60,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getString('NAME') ?? "";
     } catch (e) {
+      print(e);
       return "";
     }
   }
@@ -70,6 +73,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getString('EMAIL') ?? "";
     } catch (e) {
+      print(e);
       return "";
     }
   }
@@ -94,6 +98,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getString('familyCode') ?? "";
     } catch (e) {
+      print(e);
       return "";
     }
   }
@@ -110,6 +115,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getInt('userType') ?? 0;
     } catch (e) {
+      print(e);
       return 0;
     }
   }
@@ -118,6 +124,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getString('image') ?? "";
     } catch (e) {
+      print(e);
       return "";
     }
   }
@@ -130,6 +137,7 @@ class PrefUtils {
     try {
       return _sharedPreferences!.getString('familyHeadName') ?? "";
     } catch (e) {
+      print(e);
       return "";
     }
   }
@@ -144,6 +152,7 @@ class PrefUtils {
       print("token${token}");
       return token;
     } catch (e) {
+      print(e);
       return "";
     }
   }

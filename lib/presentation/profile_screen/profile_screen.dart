@@ -98,8 +98,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(height: 20.v),
                 _buildRownotesone(context),
                 SizedBox(height: 16.v),
+                _buildRowComplete(context),
                 // _buildRowiconone(context),
-                // SizedBox(height: 10.v),
+                SizedBox(height: 16.v),
                 GestureDetector(
                   onTap: () async {
                     await PrefUtils().clearToken();
@@ -380,6 +381,45 @@ class ProfileScreenState extends State<ProfileScreen> {
               padding: EdgeInsets.only(left: 18.h),
               child: Text(
                 "lbl_my_notes".tr,
+                style: CustomTextStyles.titleMediumGray70002,
+              ),
+            ),
+            Spacer(),
+            CustomImageView(
+              imagePath: ImageConstant.imgArrowRight,
+              height: 20.adaptSize,
+              width: 20.adaptSize,
+              margin: EdgeInsets.only(bottom: 3.v),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Section Widget
+  Widget _buildRowComplete(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 1.h),
+      child: GestureDetector(
+        onTap: () {
+          NavigatorService.pushNamed(
+            AppRoutes.completed_courses,
+          );
+        },
+        child: Row(
+          children: [
+            CustomImageView(
+              imagePath: ImageConstant.imgBible,
+              height: 20.adaptSize,
+              width: 20.adaptSize,
+              color: appTheme.blueGray600,
+              margin: EdgeInsets.only(bottom: 3.v),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 18.h),
+              child: Text(
+                "Completed Course".tr,
                 style: CustomTextStyles.titleMediumGray70002,
               ),
             ),

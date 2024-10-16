@@ -202,19 +202,39 @@ class AskQuestionsPageState extends State<AskQuestionsPage>
                               ),
                             )
                           : Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
+                              padding:
+                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                              child: Column(
                                 children: [
-                                  Text(
-                                    "${item?.answer} ",
-                                    style: CustomTextStyles
-                                        .titleSmallBluegray90002,
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Answred",
+                                        style: CustomTextStyles
+                                            .titleSmallBluegrayYellow,
+                                      ),
+                                      Spacer(),
+                                      Text(
+                                        "${item?.updatedAt} ",
+                                        style: CustomTextStyles
+                                            .titleSmallBluegray90002,
+                                      ),
+                                    ],
                                   ),
-                                  Spacer(),
-                                  Text(
-                                    "${item?.createdAt} ",
-                                    style: CustomTextStyles
-                                        .titleSmallBluegray90002,
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width: SizeUtils.width / 1.2,
+                                        child: Text(
+                                          "${item?.answer} ",
+                                          style:
+                                              CustomTextStyles.descriptionText,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),

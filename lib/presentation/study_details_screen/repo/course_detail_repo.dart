@@ -5,6 +5,7 @@ import '../../../network/app_apis.dart';
 import '../models/common_respo.dart';
 import '../models/course_day_details.dart';
 import '../models/course_detail_respo.dart';
+import '../models/tags_respo.dart';
 
 class CourseDetailRepo {
   Future<EnrollResponse> enrollCourse({
@@ -29,6 +30,7 @@ class CourseDetailRepo {
       }
       return model;
     } catch (e) {
+      print(e);
       return EnrollResponse();
     }
   }
@@ -36,6 +38,8 @@ class CourseDetailRepo {
   Future<CourseDetailRespo> getCourseDetail({
     required String course_id,
   }) async {
+    print("getCourseDetail");
+    print(course_id);
     try {
       DioBuilderResponse dioBuilderResponse =
           await DioBuilder().buildNonCachedDio(hasAuth: true);
@@ -180,7 +184,117 @@ class CourseDetailRepo {
       }
       return model;
     } catch (e) {
+      print(e);
       return EnrollResponse();
+    }
+  }
+
+  Future<EnrollResponse> addMarkings(
+      {required type,
+      required String statement_ids,
+      required String data}) async {
+    try {
+      DioBuilderResponse dioBuilderResponse =
+          await DioBuilder().buildNonCachedDio(hasAuth: true);
+      final response = (await dioBuilderResponse.dio.post(
+        AppAPIs.add_bible_markings,
+        options: dioBuilderResponse.dioOptions,
+        queryParameters: {
+          'type': type,
+          'statement_ids': statement_ids,
+          'data': data,
+        },
+      ));
+
+      EnrollResponse model = EnrollResponse();
+      if (response.statusCode == 200) {
+        model = EnrollResponse.fromJson((response.data));
+      } else {
+        model = EnrollResponse.fromJson((response.data));
+      }
+      return model;
+    } catch (e) {
+      print(e);
+      return EnrollResponse();
+    }
+  }
+
+  Future<EnrollResponse> addTags({
+    required tagname,
+  }) async {
+    print(tagname);
+    try {
+      DioBuilderResponse dioBuilderResponse =
+          await DioBuilder().buildNonCachedDio(hasAuth: true);
+      final response = (await dioBuilderResponse.dio.post(
+        AppAPIs.add_tags,
+        options: dioBuilderResponse.dioOptions,
+        queryParameters: {
+          'tag_name': tagname,
+        },
+      ));
+
+      EnrollResponse model = EnrollResponse();
+      if (response.statusCode == 200) {
+        model = EnrollResponse.fromJson((response.data));
+      } else {
+        model = EnrollResponse.fromJson((response.data));
+      }
+      return model;
+    } catch (e) {
+      print(e);
+      return EnrollResponse();
+    }
+  }
+
+  Future<EnrollResponse> deleteTags({
+    required tagId,
+  }) async {
+    print(tagId);
+    try {
+      DioBuilderResponse dioBuilderResponse =
+          await DioBuilder().buildNonCachedDio(hasAuth: true);
+      final response = (await dioBuilderResponse.dio.delete(
+        AppAPIs.delete_tag,
+        options: dioBuilderResponse.dioOptions,
+        queryParameters: {
+          'id': tagId,
+        },
+      ));
+
+      print(response.toString());
+      EnrollResponse model = EnrollResponse();
+      if (response.statusCode == 200) {
+        model = EnrollResponse.fromJson((response.data));
+      } else {
+        model = EnrollResponse.fromJson((response.data));
+      }
+      return model;
+    } catch (e) {
+      print(e);
+      return EnrollResponse();
+    }
+  }
+
+  Future<TagsRespo> getTags() async {
+    try {
+      DioBuilderResponse dioBuilderResponse =
+          await DioBuilder().buildNonCachedDio(hasAuth: true);
+      final response = (await dioBuilderResponse.dio.get(
+        AppAPIs.my_tags,
+        options: dioBuilderResponse.dioOptions,
+      ));
+
+      TagsRespo model = TagsRespo();
+      if (response.statusCode == 200) {
+        model = TagsRespo.fromJson((response.data));
+      } else {
+        model = TagsRespo.fromJson((response.data));
+      }
+      return model;
+    } catch (e) {
+      print(e);
+      return TagsRespo();
     }
   }
 }

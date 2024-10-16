@@ -29,7 +29,7 @@ class VerifyRepo {
         registrationDetailsModel = VerifyModel.fromJson((response.data));
       }
       return registrationDetailsModel;
-    } catch (e) {
+    } catch (e) {  print(e);
       return VerifyModel();
     }
   }
@@ -51,7 +51,7 @@ class VerifyRepo {
         registrationDetailsModel = LoginModel.fromJson((response.data));
       }
       return registrationDetailsModel;
-    } catch (e) {
+    } catch (e) {  print(e);
       return LoginModel();
     }
   }

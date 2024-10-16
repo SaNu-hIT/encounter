@@ -188,19 +188,58 @@ class CourseDayVerse {
 
 class Statements {
   dynamic? statementNo;
+  dynamic? statementId;
   String? statementText;
+  String? color_marking;
+  String? note_marking;
   bool isSelected = false;
-  Statements({this.statementNo, this.statementText});
-
+  Statements({this.statementNo, this.bookmarkMarking, this.statementText});
+  List<BookmarkMarking>? bookmarkMarking;
   Statements.fromJson(Map<String, dynamic> json) {
     statementNo = json['statement_no'];
+    statementId = json['statement_id'];
     statementText = json['statement_text'];
+    note_marking = json['note_marking'];
+
+    if (json['bookmark_marking'] != null) {
+      bookmarkMarking = <BookmarkMarking>[];
+      json['bookmark_marking'].forEach((v) {
+        bookmarkMarking!.add(new BookmarkMarking.fromJson(v));
+      });
+    }
+    color_marking = json['color_marking'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['statement_no'] = this.statementNo;
+    data['statement_id'] = this.statementId;
     data['statement_text'] = this.statementText;
+    data['note_marking'] = this.note_marking;
+    if (this.bookmarkMarking != null) {
+      data['bookmark_marking'] =
+          this.bookmarkMarking!.map((v) => v.toJson()).toList();
+    }
+    data['color_marking'] = this.color_marking;
+    return data;
+  }
+}
+
+class BookmarkMarking {
+  int? id;
+  String? tagName;
+
+  BookmarkMarking({this.id, this.tagName});
+
+  BookmarkMarking.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    tagName = json['tag_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['tag_name'] = this.tagName;
     return data;
   }
 }

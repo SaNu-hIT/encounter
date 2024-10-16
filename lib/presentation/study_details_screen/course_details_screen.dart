@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:encounter_app/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:scrollable_list_tab_scroller/scrollable_list_tab_scroller.dart';
+import 'package:spotify_sdk/models/connection_status.dart';
+import 'package:spotify_sdk/models/image_uri.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_icon_button.dart';
@@ -14,7 +12,11 @@ import '../../widgets/custom_text_form_field.dart';
 import '../../widgets/loader_widget.dart';
 import 'models/study_details_item_model.dart';
 import 'provider/study_details_provider.dart';
+import 'sized_icon_button.dart';
 import 'widgets/study_details_item_widget.dart';
+
+import 'package:spotify_sdk/models/player_state.dart' as spState;
+import 'package:spotify_sdk/spotify_sdk.dart';
 
 class CouseDetailsScreen extends StatefulWidget {
   const CouseDetailsScreen({Key? key})
@@ -56,6 +58,8 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   }
 
+  bool _connected = false;
+  late ImageUri? currentTrackImageUri;
   Future<void> showConfirmAlert() async {
     return showDialog<void>(
       context: context,
@@ -95,7 +99,8 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
         appBar: AppBar(
           backgroundColor: appTheme.backgroundColor,
           title: Text(
-            provider.respo_day.data?.courseName ?? "",
+            provider.capitalizeFirstLetter(
+                provider.respo_day.data?.courseName ?? ""),
             style: CustomTextStyles.titleLargeManropeHead,
           ),
           titleSpacing: 0,
@@ -121,21 +126,35 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                 shrinkWrap: true,
                 headerContainerProps: HeaderContainerProps(height: 50),
                 tabBarProps:
-                    TabBarProps(dividerColor: Colors.blue.withOpacity(0.3)),
+                    TabBarProps(dividerColor: Colors.blue.withOpacity(0.0)),
                 addRepaintBoundaries: false,
                 itemCount: provider.respo_day.data?.courseDayVerse?.length ?? 0,
                 tabBuilder: (BuildContext context, int index1, bool active) =>
                     Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 13),
-                  child: Text(
-                    '${provider.respo_day.data?.courseDayVerse?[index1].bookName ?? ""} '
-                    '${provider.respo_day.data?.courseDayVerse?[index1].chapterNo ?? ""}: '
-                    '${provider.respo_day.data?.courseDayVerse?[index1].verseFromName ?? ""} - '
-                    '${provider.respo_day.data?.courseDayVerse?[index1].verseToName ?? ""}',
-                    style: TextStyle(
-                      fontWeight: active ? FontWeight.bold : FontWeight.normal,
-                      color: active ? Colors.blue : Colors.black,
-                      fontSize: active ? 18 : 16,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: active ? appTheme.teal300 : Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    height: 35,
+                    // width: 35,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 13),
+                      child: Center(
+                        child: Text(
+                          '${provider.respo_day.data?.courseDayVerse?[index1].bookName ?? ""} '
+                          '${provider.respo_day.data?.courseDayVerse?[index1].chapterNo ?? ""}: '
+                          '${provider.respo_day.data?.courseDayVerse?[index1].verseFromName ?? ""} - '
+                          '${provider.respo_day.data?.courseDayVerse?[index1].verseToName ?? ""}',
+                          style: TextStyle(
+                            fontWeight:
+                                active ? FontWeight.bold : FontWeight.normal,
+                            color: active ? Colors.white : Colors.black,
+                            fontSize: active ? 18 : 16,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -156,163 +175,7 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(bottom: 2),
-                      itemCount: provider.respo_day.data
-                          ?.courseDayVerse?[index2].statements?.length,
-                      itemBuilder: (context1, statementIndex) {
-                        var verses =
-                            provider.respo_day.data?.courseDayVerse?[index2];
-                        ;
-                        var statements = verses?.statements;
-                        return Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: statements![statementIndex].isSelected
-                                  ? Colors.grey.withOpacity(0.3)
-                                  : Colors.white,
-                              border: Border.all(
-                                  color: appTheme.black900.withOpacity(0.03)),
-                              borderRadius: BorderRadius.circular(
-                                10.h,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: 33,
-                                    width: 33,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.blue,
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: AutoSizeText(
-                                      statements?[statementIndex].statementNo ??
-                                          "",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                      minFontSize: 7,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  // Text(
-                                  //   statements?[statementIndex].statementNo ??
-                                  //       "",
-                                  //   style: CustomTextStyles.titleMediumSemiBold,
-                                  // ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-
-                                  // SizedBox(
-                                  //   width: SizeUtils.width / 1.3,
-                                  //   child: HtmlWidget(
-                                  //     statements?[statementIndex]
-                                  //             .statementText ??
-                                  //         "",
-                                  //   ),
-                                  // )
-                                  SizedBox(
-                                    width: SizeUtils.width / 1.3,
-                                    child: CupertinoContextMenu(
-                                      actions: [
-                                        provider.isMultipleSelect
-                                            ? CupertinoContextMenuAction(
-                                                child: Text("Unselect all"),
-                                                trailingIcon: CupertinoIcons
-                                                    .arrow_clockwise,
-                                                onPressed: () {
-                                                  provider.unselectAll();
-                                                  provider.isMultipleSelect =
-                                                      false;
-                                                  Navigator.pop(context);
-                                                },
-                                              )
-                                            : CupertinoContextMenuAction(
-                                                child: Text("Select Multiple"),
-                                                trailingIcon:
-                                                    CupertinoIcons.check_mark,
-                                                onPressed: () {
-                                                  provider.toggleData(
-                                                      statementIndex,
-                                                      verses?.id);
-                                                  provider.isMultipleSelect =
-                                                      true;
-                                                  Navigator.pop(context);
-                                                },
-                                              ),
-                                        CupertinoContextMenuAction(
-                                          child: Text("Copy"),
-                                          trailingIcon: CupertinoIcons.heart,
-                                          onPressed: () {
-                                            Clipboard.setData(
-                                              ClipboardData(
-                                                text:
-                                                    statements?[statementIndex]
-                                                            .statementText ??
-                                                        "",
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        CupertinoContextMenuAction(
-                                          child: Text("Add Note"),
-                                          trailingIcon:
-                                              CupertinoIcons.add_circled,
-                                          onPressed: () {
-                                            // provider.showAddNotesAlert(context);
-                                            provider.showCustomBottomSheet(
-                                                context, provider);
-                                            // showDialog(
-                                            //   context: context,
-                                            //   builder: (context) => AddNotesPage(),
-                                            // );
-                                          },
-                                        ),
-                                        CupertinoContextMenuAction(
-                                          child: Text("Share"),
-                                          trailingIcon: CupertinoIcons.share,
-                                          onPressed: () {
-                                            shareToWhatsAppText(
-                                                statements?[statementIndex]
-                                                        .statementNo ??
-                                                    "",
-                                                statements?[statementIndex]
-                                                        .statementText ??
-                                                    "",
-                                                "");
-                                          },
-                                        )
-                                      ],
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (provider.isMultipleSelect) {
-                                            provider.toggleData(
-                                                statementIndex, verses?.id);
-                                          }
-                                          print("sadadasdas");
-                                        },
-                                        child: HtmlWidget(
-                                          statements?[statementIndex]
-                                                  .statementText ??
-                                              "",
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    ContinuousBibleText(context, provider, index2),
                     SizedBox(height: 14.v),
                     index2 + 1 ==
                             provider.respo_day.data?.courseDayVerse?.length
@@ -482,6 +345,41 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                 ),
                               ),
                               SizedBox(height: 8.v),
+
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: [
+                                    _buildPlayerStateWidget(),
+                                    Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.only(),
+                                        child: CustomIconButton(
+                                          height: 32.adaptSize,
+                                          width: 32.adaptSize,
+                                          onTap: () {
+                                            provider.playAudio(provider
+                                                .respo_day
+                                                .data
+                                                ?.courseContentSpotifyLink
+                                                ?.first
+                                                .videoSpotifyLink);
+                                          },
+                                          padding: EdgeInsets.all(7.h),
+                                          decoration:
+                                              IconButtonStyleHelper.fillGreenA,
+                                          child: CustomImageView(
+                                            imagePath: provider.isPlaying
+                                                ? ImageConstant.imgPlay
+                                                : ImageConstant.imgPause,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               ListView.builder(
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
@@ -494,11 +392,7 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                         .data
                                         ?.courseContentSpotifyLink?[index2]
                                         .videoSpotifyLink;
-                                    var linik = provider
-                                        .respo_day
-                                        .data
-                                        ?.courseContentSpotifyLink?[index2]
-                                        .status;
+
                                     return Container(
                                       margin: EdgeInsets.only(
                                           left: 23.h, right: 23.h, bottom: 8),
@@ -524,45 +418,61 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          "Spotify Link",
-                                                          style: CustomTextStyles
-                                                              .labelLargeManropeBluegray9000313,
-                                                        ),
-                                                        SizedBox(height: 3.v),
-                                                        // Text(
-                                                        //   "",
-                                                        //   style: CustomTextStyles
-                                                        //       .bodySmallGray700,
-                                                        // )
-                                                      ],
-                                                    ),
+                                                  CustomImageView(
+                                                    imagePath:
+                                                        ImageConstant.spotify,
                                                   ),
-                                                  Padding(
-                                                    padding: EdgeInsets.only(),
-                                                    child: CustomIconButton(
-                                                      height: 32.adaptSize,
-                                                      width: 32.adaptSize,
+
+                                                  Expanded(
+                                                    child: GestureDetector(
                                                       onTap: () {
-                                                        provider.playAudio();
+                                                        provider
+                                                            .playAudio(link);
                                                       },
-                                                      padding:
-                                                          EdgeInsets.all(7.h),
-                                                      decoration:
-                                                          IconButtonStyleHelper
-                                                              .fillGreenA,
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgPlay,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            "Spotify Link",
+                                                            style: CustomTextStyles
+                                                                .labelLargeManropeBluegray9000313,
+                                                          ),
+                                                          SizedBox(height: 3.v),
+                                                          // Text(
+                                                          //   "",
+                                                          //   style: CustomTextStyles
+                                                          //       .bodySmallGray700,
+                                                          // )
+                                                        ],
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                  // Padding(
+                                                  //   padding: EdgeInsets.only(),
+                                                  //   child: CustomIconButton(
+                                                  //     height: 32.adaptSize,
+                                                  //     width: 32.adaptSize,
+                                                  //     onTap: () {
+                                                  //       provider
+                                                  //           .playAudio(link);
+                                                  //     },
+                                                  //     padding:
+                                                  //         EdgeInsets.all(7.h),
+                                                  //     decoration:
+                                                  //         IconButtonStyleHelper
+                                                  //             .fillGreenA,
+                                                  //     child: CustomImageView(
+                                                  //       imagePath:
+                                                  //           provider.isPlaying
+                                                  //               ? ImageConstant
+                                                  //                   .imgPlay
+                                                  //               : ImageConstant
+                                                  //                   .imgPause,
+                                                  //     ),
+                                                  //   ),
+                                                  // )
                                                 ],
                                               ),
                                             ),
@@ -656,6 +566,298 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
     );
   }
 
+  Widget ContinuousBibleText(
+    BuildContext context,
+    StudyDetailsProvider provider,
+    int index,
+  ) {
+    var verses = provider.respo_day.data?.courseDayVerse?[index];
+    var statements = verses?.statements;
+
+    if (statements == null) return SizedBox();
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(10),
+      child: RichText(
+        softWrap: true,
+        text: TextSpan(
+          children: statements.asMap().entries.map((entry) {
+            int statementIndex = entry.key;
+            var statement = entry.value;
+            return WidgetSpan(
+              alignment: PlaceholderAlignment.baseline,
+              baseline: TextBaseline.alphabetic,
+              child: GestureDetector(
+                onTap: () {
+                  // Handle tap action here
+                  print("Tapped on: ${statement.statementText}");
+                  if (provider.isMultipleSelect) {
+                    provider.toggleData(statementIndex, verses?.id);
+                  }
+                },
+                onLongPress: () {
+                  // Handle long-press action here
+                  print("Long-pressed on: ${statement.statementText}");
+                  provider.showAlertPopup(context, statement);
+                },
+                child: Container(
+                  // color: statement.color_marking != null
+                  //     ? Color(int.parse("0xff${statement.color_marking}"))
+                  //     : Colors.transparent,
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: statement.color_marking != null
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      children: [
+                        // Verse number
+                        WidgetSpan(
+                          alignment: PlaceholderAlignment.top,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: Text(
+                              "${statement.statementNo}",
+                              style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (statement.color_marking != null)
+                          TextSpan(
+                            recognizer: LongPressGestureRecognizer()
+                              ..onLongPress = () {
+                                // Handle long-press action here
+                                print(
+                                    "Long-pressed on: ${statement.statementText}");
+                                provider.showAlertPopup(context, statement);
+                              },
+                            text: statement.statementText ?? "",
+                            style: TextStyle(
+                              fontSize: 16,
+                              backgroundColor: Color(
+                                int.parse("0xff${statement.color_marking}"),
+                              ),
+                              color: Colors.white,
+                            ),
+                          )
+                        else
+                          TextSpan(
+                            text: statement.statementText ?? "",
+                            style: TextStyle(
+                              backgroundColor: statement.isSelected
+                                  ? Colors.amber
+                                  : Colors.white,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                        // Add a space after each statement to keep it flowing
+                        TextSpan(
+                          text: " ",
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Future<void> setShuffle(bool shuffle) async {
+    try {
+      await SpotifySdk.setShuffle(
+        shuffle: shuffle,
+      );
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> toggleShuffle() async {
+    try {
+      await SpotifySdk.toggleShuffle();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> setPlaybackSpeed(
+      PodcastPlaybackSpeed podcastPlaybackSpeed) async {
+    try {
+      await SpotifySdk.setPodcastPlaybackSpeed(
+          podcastPlaybackSpeed: podcastPlaybackSpeed);
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> play() async {
+    try {
+      await SpotifySdk.play(spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> pause() async {
+    try {
+      await SpotifySdk.pause();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> resume() async {
+    try {
+      await SpotifySdk.resume();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> skipNext() async {
+    try {
+      await SpotifySdk.skipNext();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> skipPrevious() async {
+    try {
+      await SpotifySdk.skipPrevious();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> seekTo() async {
+    try {
+      await SpotifySdk.seekTo(positionedMilliseconds: 20000);
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> seekToRelative() async {
+    try {
+      await SpotifySdk.seekToRelativePosition(relativeMilliseconds: 20000);
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> switchToLocalDevice() async {
+    try {
+      await SpotifySdk.switchToLocalDevice();
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  Future<void> addToLibrary() async {
+    try {
+      await SpotifySdk.addToLibrary(
+          spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
+    } on PlatformException catch (e) {
+      setStatus(e.code, message: e.message);
+    } on MissingPluginException {
+      setStatus('not implemented');
+    }
+  }
+
+  void setStatus(String code, {String? message}) {
+    var text = message ?? '';
+    print(text);
+  }
+
+  Widget _buildPlayerStateWidget() {
+    return StreamBuilder<spState.PlayerState>(
+      stream: SpotifySdk.subscribePlayerState() as Stream<spState.PlayerState>?,
+      builder:
+          (BuildContext context, AsyncSnapshot<spState.PlayerState> snapshot) {
+        var track = snapshot.data?.track;
+        currentTrackImageUri = track?.imageUri;
+        var playerState = snapshot.data;
+        if (playerState == null || track == null) {
+          return Center(
+            child: Container(),
+          );
+        }
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(18),
+              child: SizedBox(
+                  height: 200,
+                  child: Center(child: spotifyImageWidget(track.imageUri))),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget spotifyImageWidget(ImageUri image) {
+    return FutureBuilder(
+        future: SpotifySdk.getImage(
+          imageUri: image,
+          dimension: ImageDimension.large,
+        ),
+        builder: (BuildContext context, AsyncSnapshot<Uint8List?> snapshot) {
+          if (snapshot.hasData) {
+            return Image.memory(snapshot.data!);
+          } else if (snapshot.hasError) {
+            setStatus(snapshot.error.toString());
+            return SizedBox(
+              width: ImageDimension.large.value.toDouble(),
+              height: ImageDimension.large.value.toDouble(),
+              child: const Center(child: Text('Error getting image')),
+            );
+          } else {
+            return SizedBox(
+              width: ImageDimension.large.value.toDouble(),
+              height: ImageDimension.large.value.toDouble(),
+              child: const Center(child: Text('Getting image...')),
+            );
+          }
+        });
+  }
+
   /// Section Widget
   Widget _buildRowDay(BuildContext context) {
     return Align(
@@ -730,76 +932,78 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
     );
   }
 
-  /// Section Widget
-  Widget _buildColumnAudio(
-      BuildContext context, StudyDetailsProvider provider) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        margin: EdgeInsets.only(left: 23.h, right: 23.h),
-        padding: EdgeInsets.symmetric(horizontal: 1.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Audio".tr,
-              style: theme.textTheme.titleMedium,
-            ),
-            SizedBox(height: 8.v),
-            Container(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 198, 229, 249),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(0.2 *
-                      71.h), // 10% curve (0.1 times the width of the container)
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${provider.respo_day.data?.courseName}",
-                            style: CustomTextStyles
-                                .labelLargeManropeBluegray9000313,
-                          ),
-                          SizedBox(height: 3.v),
-                          Text(
-                            "From  ${provider.respo_day.data?.bibleName}",
-                            style: CustomTextStyles.bodySmallGray700,
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(),
-                      child: CustomIconButton(
-                        height: 32.adaptSize,
-                        width: 32.adaptSize,
-                        onTap: () {
-                          provider.playAudio();
-                        },
-                        padding: EdgeInsets.all(7.h),
-                        decoration: IconButtonStyleHelper.fillGreenA,
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgPlay,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
+  // /// Section Widget
+  // Widget _buildColumnAudio(
+  //     BuildContext context, StudyDetailsProvider provider) {
+  //   return Align(
+  //     alignment: Alignment.centerRight,
+  //     child: Container(
+  //       margin: EdgeInsets.only(left: 23.h, right: 23.h),
+  //       padding: EdgeInsets.symmetric(horizontal: 1.h),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             "Audio".tr,
+  //             style: theme.textTheme.titleMedium,
+  //           ),
+  //           SizedBox(height: 8.v),
+  //           Container(
+  //             decoration: BoxDecoration(
+  //               color: Color.fromARGB(255, 198, 229, 249),
+  //               borderRadius: BorderRadius.all(
+  //                 Radius.circular(0.2 *
+  //                     71.h), // 10% curve (0.1 times the width of the container)
+  //               ),
+  //             ),
+  //             child: Padding(
+  //               padding: const EdgeInsets.all(12.0),
+  //               child: Row(
+  //                 crossAxisAlignment: CrossAxisAlignment.center,
+  //                 children: [
+  //                   Expanded(
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           "${provider.respo_day.data?.courseName}",
+  //                           style: CustomTextStyles
+  //                               .labelLargeManropeBluegray9000313,
+  //                         ),
+  //                         SizedBox(height: 3.v),
+  //                         Text(
+  //                           "From  ${provider.respo_day.data?.bibleName}",
+  //                           style: CustomTextStyles.bodySmallGray700,
+  //                         )
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(),
+  //                     child: CustomIconButton(
+  //                       height: 32.adaptSize,
+  //                       width: 32.adaptSize,
+  //                       onTap: () {
+  //                         provider.playAudio(provider
+  //                                 .respo_day.data?.courseContentSpotifyLink ??
+  //                             "");
+  //                       },
+  //                       padding: EdgeInsets.all(7.h),
+  //                       decoration: IconButtonStyleHelper.fillGreenA,
+  //                       child: CustomImageView(
+  //                         imagePath: ImageConstant.imgPlay,
+  //                       ),
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Section Widget
   Widget _buildColumnRelated(BuildContext context) {

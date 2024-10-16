@@ -8,7 +8,7 @@ extension IconButtonStyleHelper on CustomIconButton {
       );
   static BoxDecoration get fillGreenA => BoxDecoration(
         color: appTheme.greenA700,
-        borderRadius: BorderRadius.circular(14.h),
+        borderRadius: BorderRadius.circular(16.h),
       );
   static BoxDecoration get fillGrayTL15 => BoxDecoration(
         color: appTheme.gray300,

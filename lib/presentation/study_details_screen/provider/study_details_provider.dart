@@ -1,22 +1,19 @@
 import 'package:encounter_app/presentation/study_details_screen/repo/course_detail_repo.dart';
 import 'package:encounter_app/presentation/study_details_screen/models/course_detail_respo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:spotify_sdk/spotify_sdk.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../core/app_export.dart';
-import '../custom_item_sheet.dart';
+import '../../../utils/utils.dart';
+import '../../add_notes/add_notes_page.dart';
 import '../models/common_respo.dart';
 import '../models/course_day_details.dart';
 import '../models/enroll_respo.dart';
-import '../models/study_details_item_model.dart';
 import '../models/study_details_model.dart';
-
-/// A provider class for the StudyDetailsScreen.
-///
-/// This provider manages the state of the StudyDetailsScreen, including the
-/// current studyDetailsModelObj
-// ignore_for_file: must_be_immutable
+import '../models/tags_respo.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // ignore_for_file: must_be_immutable
 class StudyDetailsProvider extends ChangeNotifier {
@@ -26,23 +23,37 @@ class StudyDetailsProvider extends ChangeNotifier {
   // final player = AudioPlayer();
   bool _isLoading = false;
   bool isMultipleSelect = false;
+  bool isSpotifyConnected = false;
+  bool isPlaying = false;
   List<bool> selected = [true, false, false];
-
+  var type;
+  String statement_ids = "";
+  String dataItem = "";
+  String connectionStatus = "";
   bool get isLoading => _isLoading;
   CourseDetailRespo _respo = CourseDetailRespo();
   CourseDetailRespo get respo => _respo;
   CommonResponse _common_respo = CommonResponse();
   CommonResponse get common_respo => _common_respo;
+  List<TagData> availableTags = [];
+  List<TagData> selectedTags = [];
 
   EnrollResponse _en_respo = EnrollResponse();
   EnrollResponse get en_respo => _en_respo;
+  TagsRespo _tag_respo = TagsRespo();
+  TagsRespo get tag_respo => _tag_respo;
 
   CourseDayDetailRespo _respo_day = CourseDayDetailRespo();
   CourseDayDetailRespo get respo_day => _respo_day;
   List<YoutubePlayerController> controllerList = [];
   YoutubePlayerController? controller;
   YoutubePlayerController? controllerDay;
+  String capitalizeFirstLetter(String text) {
+    if (text.isEmpty) return text; // Return the original string if it's empty
+    return text[0].toUpperCase() + text.substring(1);
+  }
 
+  Stream<PlayerState>? playState;
   @override
   void dispose() {
     super.dispose();
@@ -59,27 +70,28 @@ class StudyDetailsProvider extends ChangeNotifier {
   }
 
   getDetails(String course_id) async {
+    print("course_id");
+    print(course_id);
     this.course_id = course_id;
     _respo = CourseDetailRespo();
     loader(true);
     _respo = await _repo.getCourseDetail(course_id: course_id);
-    var videoId =
-        YoutubePlayer.convertUrlToId(_respo.data?.first.introVideo ?? "");
-    print("videoId{$videoId}");
+    if (_respo.status == "success") {
+      var videoId =
+          YoutubePlayer.convertUrlToId(_respo.data?.first.introVideo ?? "");
+      print("videoId{$videoId}");
 
-    controller = YoutubePlayerController(
-      initialVideoId: videoId ?? "",
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
-        mute: false,
-        hideControls: false,
-        showLiveFullscreenButton: true,
-      ),
-    );
-
-    // controller.load(videoId ?? "");
-    // controller
-    //     .loadRequest(Uri.parse('https://www.youtube.com/watch?v=N1EAsWECEKU'));
+      controller = YoutubePlayerController(
+        initialVideoId: videoId ?? "",
+        flags: YoutubePlayerFlags(
+          autoPlay: false,
+          mute: false,
+          hideControls: false,
+          showLiveFullscreenButton: true,
+        ),
+      );
+    }
+    connectToSpotifyRemote();
     loader(false);
     notifyListeners();
   }
@@ -142,12 +154,20 @@ class StudyDetailsProvider extends ChangeNotifier {
 
   getDayDetails(String day_id, String userLmsId, String day) async {
     this.dayId = day;
+    this.day_id = day_id;
     this.userLmsId = userLmsId;
+    reloadData();
+  }
+
+  reloadData() async {
     loader(true);
     _respo_day = await _repo.getCourseDayDetail(day_id: day_id);
-    var videoId = YoutubePlayer.convertUrlToId(
-        _respo_day.data?.courseContentVideoLink?.first.videoSpotifyLink ?? "");
-
+    var videoId = "";
+    if (_respo_day.data?.courseContentVideoLink?.length != 0) {
+      var videoId = YoutubePlayer.convertUrlToId(
+          _respo_day.data?.courseContentVideoLink?.first.videoSpotifyLink ??
+              "");
+    }
     controllerDay = YoutubePlayerController(
       initialVideoId: videoId ?? "",
       flags: YoutubePlayerFlags(
@@ -167,9 +187,57 @@ class StudyDetailsProvider extends ChangeNotifier {
     this.day_id = day_id;
   }
 
-  Future<void> playAudio() async {
-    // if (null != respo.data!.first.introAudio)
-    // await player.play(UrlSource(respo.data!.first.introAudio!));
+  Future<void> playAudio(String? link) async {
+    print(isSpotifyConnected.toString());
+    if (isSpotifyConnected) {
+      play(link);
+    } else {
+      connectToSpotifyRemote();
+    }
+  }
+
+  Future<void> connectToSpotifyRemote() async {
+    try {
+      var result = await SpotifySdk.connectToSpotifyRemote(
+          clientId: dotenv.env['CLIENT_ID'].toString(),
+          redirectUrl: dotenv.env['REDIRECT_URL'].toString());
+      isSpotifyConnected = result;
+      connectionStatus = result
+          ? 'connect to spotify successful'
+          : 'connect to spotify failed';
+      print(connectionStatus);
+
+      notifyListeners();
+    } on PlatformException catch (e) {
+      print(e);
+    } on MissingPluginException {
+      isSpotifyConnected = false;
+      notifyListeners();
+      connectionStatus = 'not implemented';
+      print(connectionStatus);
+    }
+  }
+
+  Future<void> play(String? link) async {
+    print(link);
+    try {
+      if (!isPlaying) {
+        await SpotifySdk.play(
+            spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
+        isPlaying = true;
+        print("play");
+      } else {
+        isPlaying = false;
+        await SpotifySdk.pause();
+      }
+      notifyListeners();
+    } on PlatformException catch (e) {
+      connectionStatus = e.message ?? "";
+      print(connectionStatus);
+    } on MissingPluginException {
+      connectionStatus = 'not implemented';
+      print(connectionStatus);
+    }
   }
 
   Future<void> _play() async {
@@ -345,6 +413,83 @@ class StudyDetailsProvider extends ChangeNotifier {
     );
   }
 
+  void showAlertPopup(BuildContext context, Statements statement) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            // title: Text('Options'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                !isMultipleSelect
+                    ? GestureDetector(
+                        onTap: () {
+                          isMultipleSelect = true;
+                          notifyListeners();
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(child: Text('Select Multiple')),
+                        ))
+                    : GestureDetector(
+                        onTap: () {
+                          unselectAll();
+                          isMultipleSelect = false;
+                          notifyListeners();
+                          Navigator.pop(context);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(child: Text('Unselect all')),
+                        )),
+                GestureDetector(
+                    onTap: () {
+                      isMultipleSelect = false;
+                      copyData();
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(child: Text('Copy')),
+                    )),
+                GestureDetector(
+                    onTap: () {
+                      isMultipleSelect = false;
+                      Navigator.pop(context);
+                      showCustomBottomSheet(context, getSelectedBibleTextIds());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(child: Text('Add Notes')),
+                    )),
+                GestureDetector(
+                    onTap: () {
+                      isMultipleSelect = false;
+                      shareWhatsApp();
+                      Navigator.pop(context);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(child: Text('Share')),
+                    ))
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   void toggleData(int statementIndex, int? id) {
     if (id == null) return;
 
@@ -352,7 +497,7 @@ class StudyDetailsProvider extends ChangeNotifier {
         _respo_day.data?.courseDayVerse?.firstWhere(
       (verse) => verse.id == id,
     );
-
+    // statementIndex = statementIndex + 1;
     if (courseDayVerseItem != null) {
       if (statementIndex >= 0 &&
           statementIndex < courseDayVerseItem.statements!.length) {
@@ -367,6 +512,53 @@ class StudyDetailsProvider extends ChangeNotifier {
     } else {
       print("CourseDayVerse with id $id not found.");
     }
+  }
+
+  String getSelectedBibleText() {
+    // List to store the selected IDs
+    List<String> selectedText = [];
+
+    // Iterate over each CourseDayVerse
+    _respo_day.data?.courseDayVerse?.forEach((verse) {
+      // Check if verse contains statements
+      verse.statements?.forEach((statement) {
+        // If the statement is selected, add its ID to the list
+        if (statement.isSelected) {
+          selectedText.add(statement.statementText.toString() +
+              "\n" +
+              verse.bookName.toString() +
+              " " +
+              verse.book.toString() +
+              " : " +
+              verse.verseFromName.toString() +
+              "-" +
+              verse.verseToName.toString()); // Assuming statementNo is the ID
+        }
+      });
+    });
+
+    // Join the selected IDs into a comma-separated string
+    return selectedText.join('\n \n \n');
+  }
+
+  String getSelectedBibleTextIds() {
+    // List to store the selected IDs
+    List<String> selectedIds = [];
+
+    // Iterate over each CourseDayVerse
+    _respo_day.data?.courseDayVerse?.forEach((verse) {
+      // Check if verse contains statements
+      verse.statements?.forEach((statement) {
+        // If the statement is selected, add its ID to the list
+        if (statement.isSelected) {
+          selectedIds.add(statement.statementId
+              .toString()); // Assuming statementNo is the ID
+        }
+      });
+    });
+
+    // Join the selected IDs into a comma-separated string
+    return selectedIds.join(',');
   }
 
   void unselectAll() {
@@ -387,8 +579,7 @@ class StudyDetailsProvider extends ChangeNotifier {
     }
   }
 
-  void showCustomBottomSheet(
-      BuildContext context, StudyDetailsProvider provider) {
+  void showCustomBottomSheet(BuildContext context, String statementIds) {
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
@@ -398,8 +589,24 @@ class StudyDetailsProvider extends ChangeNotifier {
       ),
       backgroundColor: Colors.white,
       builder: (BuildContext context) {
-        return CustomBottomSheet(
-          provider: provider,
+        return DraggableScrollableSheet(
+          initialChildSize:
+              0.5, // Starting height as a fraction of the screen (50%)
+          minChildSize: 0.5, // Minimum height (30% of screen)
+          maxChildSize: 0.9, // Maximum height (90% of screen)
+          expand: false, // Prevents full-screen expansion
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(
+              controller:
+                  scrollController, // Enables scrolling within the bottom sheet
+              child: AddNotesSheet(
+                statementIds: statementIds,
+                onApiSuccess: () {
+                  reloadData();
+                },
+              ),
+            );
+          },
         );
       },
     );
@@ -413,13 +620,21 @@ class StudyDetailsProvider extends ChangeNotifier {
     notifyListeners(); // Notify listeners to update the UI
   }
 
-  void submitNote(BuildContext context) {
-    Navigator.pop(context);
-  }
-
   void loadNext(String? video_link) {
     var videoId = YoutubePlayer.convertUrlToId(
         _respo_day.data?.courseContentVideoLink?.first.videoSpotifyLink ?? "");
     controllerDay?.load(videoId ?? "");
+  }
+
+  void copyData() {
+    Clipboard.setData(
+      ClipboardData(
+        text: getSelectedBibleText(),
+      ),
+    );
+  }
+
+  void shareWhatsApp() {
+    shareToWhatsAppText("Bible Verses \n", getSelectedBibleText() ?? "", "");
   }
 }

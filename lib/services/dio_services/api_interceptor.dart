@@ -64,7 +64,7 @@ class DioInterceptor extends Interceptor {
     try {
       PrefUtils().clearToken();
       NavigatorService.pushNamedAndRemoveUntil(AppRoutes.loginScreen);
-    } catch (e) {
+    } catch (e) {  print(e);
       print("sdgfbhj${e.toString()}");
     }
   }
@@ -86,7 +86,7 @@ class DioInterceptor extends Interceptor {
           // Success, return the response
           return handler.resolve(response);
         }
-      } catch (e) {
+      } catch (e) {  print(e);
         // Retry failed, increment the retry count
         retryCount++;
       }

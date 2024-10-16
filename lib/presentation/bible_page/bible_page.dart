@@ -219,9 +219,10 @@ class BiblePageState extends State<BiblePage>
                     Row(
                       children: [
                         CustomImageView(
-                          imagePath: item?.book_image  ?? ImageConstant.imgRectangle4323,
-                          height: 44.adaptSize,
-                          width: 44.adaptSize,
+                          imagePath: item?.book_image ??
+                              ImageConstant.imgRectangle4323,
+                          height: 54.adaptSize,
+                          width: 54.adaptSize,
                           // width: 156.adaptSize,
                           radius: BorderRadius.circular(
                             7.h,
@@ -339,7 +340,7 @@ class BiblePageState extends State<BiblePage>
                           return Container(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(statement?.statementText),
+                              child: Text(statement?.statementText ?? ""),
                             ),
                           );
                         }),

@@ -26,6 +26,9 @@ class MyNotesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  int position = 0;
+  int tab_length = 0;
+
   @override
   void dispose() {
     super.dispose();

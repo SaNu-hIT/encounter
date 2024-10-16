@@ -9,9 +9,6 @@ import '../../widgets/app_bar/custom_app_bar.dart';
 import '../home_page/models/home_respo.dart';
 import '../home_page/provider/home_provider.dart';
 import '../home_page/widgets/viewhierarchy_item_widget.dart';
-import 'models/viewhierarchy_item_model.dart';
-import 'provider/study_home_provider.dart';
-import 'widgets/viewhierarchy_item_widget.dart';
 
 class StudyHomePage extends StatefulWidget {
   const StudyHomePage({Key? key})
@@ -66,7 +63,7 @@ class HomePageState extends State<StudyHomePage> {
                     ),
                   ),
                   Text(
-                    "Stay rooted in God’s Word",
+                    "Stay Rooted in God’s Word",
                     style: TextStyle(
                       fontSize: 12, // Example font size
                       color: appTheme.black900,
@@ -96,12 +93,15 @@ class HomePageState extends State<StudyHomePage> {
   }
 
   Widget _buildViewHierarchy(BuildContext context, HomeProvider provider) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double itemWidth = (screenWidth - 60) / 2;
     return GridView.builder(
       physics: ScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio:
-            0.73, // Adjust the aspect ratio of grid items as needed
+        childAspectRatio: itemWidth / (itemWidth + 70),
+        // childAspectRatio:
+        //     0.78, // Adjust the aspect ratio of grid items as needed
         crossAxisSpacing: 10.0, // Adjust the spacing between columns
         mainAxisSpacing: 10.0, // Adjust the spacing between rows
       ),

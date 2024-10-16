@@ -1,3 +1,5 @@
+import 'bible_detail_model.dart';
+
 class BibleListModel {
   String? status;
   List<Null>? metadata;
@@ -92,32 +94,32 @@ class Chapters {
   }
 }
 
-class Statements {
-  dynamic? statementId;
-  dynamic? statementNo;
-  dynamic? statementHeading;
-  dynamic? statementText;
+// class Statements {
+//   dynamic? statementId;
+//   dynamic? statementNo;
+//   dynamic? statementHeading;
+//   dynamic? statementText;
 
-  bool isExpanded = false;
-  Statements(
-      {this.statementId,
-      this.statementNo,
-      this.statementHeading,
-      this.statementText});
+//   bool isExpanded = false;
+//   Statements(
+//       {this.statementId,
+//       this.statementNo,
+//       this.statementHeading,
+//       this.statementText});
 
-  Statements.fromJson(Map<String, dynamic> json) {
-    statementId = json['statement_id'];
-    statementNo = json['statement_no'];
-    statementHeading = json['statement_heading'];
-    statementText = json['statement_text'];
-  }
+//   Statements.fromJson(Map<String, dynamic> json) {
+//     statementId = json['statement_id'];
+//     statementNo = json['statement_no'];
+//     statementHeading = json['statement_heading'];
+//     statementText = json['statement_text'];
+//   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statement_id'] = this.statementId;
-    data['statement_no'] = this.statementNo;
-    data['statement_heading'] = this.statementHeading;
-    data['statement_text'] = this.statementText;
-    return data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['statement_id'] = this.statementId;
+//     data['statement_no'] = this.statementNo;
+//     data['statement_heading'] = this.statementHeading;
+//     data['statement_text'] = this.statementText;
+//     return data;
+//   }
+// }
