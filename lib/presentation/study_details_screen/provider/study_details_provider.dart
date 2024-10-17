@@ -196,6 +196,13 @@ class StudyDetailsProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> pauseAudio() async {
+    print(isSpotifyConnected.toString());
+    if (isSpotifyConnected) {
+      pause();
+    }
+  }
+
   Future<void> connectToSpotifyRemote() async {
     try {
       var result = await SpotifySdk.connectToSpotifyRemote(
@@ -221,15 +228,10 @@ class StudyDetailsProvider extends ChangeNotifier {
   Future<void> play(String? link) async {
     print(link);
     try {
-      if (!isPlaying) {
-        await SpotifySdk.play(
-            spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
-        isPlaying = true;
-        print("play");
-      } else {
-        isPlaying = false;
-        await SpotifySdk.pause();
-      }
+      await SpotifySdk.play(spotifyUri: 'spotify:track:58kNJana4w5BIjlZE2wq5m');
+      // await SpotifySdk.play(spotifyUri: link ?? "");
+      isPlaying = true;
+      print("play");
       notifyListeners();
     } on PlatformException catch (e) {
       connectionStatus = e.message ?? "";
@@ -240,17 +242,44 @@ class StudyDetailsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _play() async {
-    // await player.resume();
+  Future<void> pause() async {
+    try {
+      isPlaying = false;
+      await SpotifySdk.pause();
+      notifyListeners();
+    } on PlatformException catch (e) {
+      connectionStatus = e.message ?? "";
+      print(connectionStatus);
+    } on MissingPluginException {
+      connectionStatus = 'not implemented';
+      print(connectionStatus);
+    }
   }
 
-  Future<void> _pause() async {
-    // await player.pause();
+  Future<void> skipNext() async {
+    try {
+      await SpotifySdk.skipNext();
+      isPlaying = false;
+      notifyListeners();
+    } on PlatformException catch (e) {
+      connectionStatus = e.message ?? "";
+    } on MissingPluginException {
+      connectionStatus = 'not implemented';
+    }
   }
 
-  Future<void> _stop() async {
-    // await player.stop();
+  Future<void> skipPrevious() async {
+    try {
+      await SpotifySdk.skipPrevious();
+      isPlaying = false;
+      notifyListeners();
+    } on PlatformException catch (e) {
+      connectionStatus = e.message ?? "";
+    } on MissingPluginException {
+      connectionStatus = 'not implemented';
+    }
   }
+
   Future<bool?> showEnrollAlert(BuildContext context) async {
     return showDialog<bool>(
       context: context,

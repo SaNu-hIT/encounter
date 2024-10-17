@@ -10,6 +10,8 @@ class ImageConstant {
   static String imgSplash = '$imagePath/img_splash.svg';
   static String logoHome = '$imagePath/logo_home.svg';
   static String back = '$imagePath/back.svg';
+  static String tick_white = '$imagePath/tick_white.svg';
+  static String conversation = '$imagePath/conversation.svg';
   static String spotify = '$imagePath/spotify.svg';
   static String spotif_back = '$imagePath/spoti_back.svg';
   static String got_question_back = '$imagePath/img_back_ask.png';
@@ -51,10 +53,12 @@ class ImageConstant {
   static String imgCheckmark = '$imagePath/img_checkmark.svg';
 
   static String imgVector = '$imagePath/img_vector.svg';
+  static String grayBack = '$imagePath/gray_back.svg';
 
   static String imgImage = '$imagePath/img_image.png';
 
   static String imgPause = '$imagePath/icons8-pause-50.png';
+  static String youtube = '$imagePath/icons8-youtube-96.png';
   static String imgPlay = '$imagePath/icons8-play-50.png';
 
   static String imgRectangle4322106x128 =

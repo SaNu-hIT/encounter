@@ -80,271 +80,292 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 5.v),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h, top: 13),
-                      child: SizedBox(
-                        width: SizeUtils.width / 1.2,
-                        child: AutoSizeText(
-                          "${provider.respo.data?.first.courseName ?? ""} : ${provider.respo.data?.first.batchName ?? ""}",
-                          style: CustomTextStyles.titleLargeManrope,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 8.v),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 22.h,
-                        right: 24.h,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 0.v),
-                            child: SizedBox(
-                              width: SizeUtils.width / 2.4,
-                              child: AutoSizeText(
-                                provider.respo.data?.first.courseStartStatus ==
-                                        "started"
-                                    ? " Started on : ${provider.respo.data?.first.startDate ?? ""}"
-                                    : " Start on ${provider.respo.data?.first.startDate ?? ""}",
-                                style: CustomTextStyles.titleSmallBluegray500,
-                              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 5.v),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.h, top: 13),
+                          child: SizedBox(
+                            width: SizeUtils.width / 1.2,
+                            child: AutoSizeText(
+                              "${provider.respo.data?.first.courseName ?? ""} : ${provider.respo.data?.first.batchName ?? ""}",
+                              style: CustomTextStyles.titleLargeManrope,
                             ),
-                          ),
-                          Container(
-                            height: 4.adaptSize,
-                            width: 4.adaptSize,
-                            margin: EdgeInsets.only(
-                              left: 9.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: appTheme.amber700,
-                              borderRadius: BorderRadius.circular(
-                                2.h,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.h),
-                            child: SizedBox(
-                              width: SizeUtils.width / 2.6,
-                              child: AutoSizeText(
-                                provider.respo.data?.first.courseStartStatus ==
-                                        "started"
-                                    ? "Last updated date : ${provider.respo.data?.first.lastUpdatedData ?? ""}"
-                                    : "Enrolment Last date  ${provider.respo.data?.first.lastDate ?? ""}",
-                                style: CustomTextStyles.bodySmallGray700,
-                                maxLines: 2,
-                                textAlign: TextAlign.start,
-                                minFontSize: 8,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12.v),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Divider(
-                        indent: 24.h,
-                        endIndent: 24.h,
-                      ),
-                    ),
-                    SizedBox(height: 14.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h),
-                      child: Text(
-                        "About the course".tr,
-                        style: CustomTextStyles.titleMediumSemiBold16,
-                      ),
-                    ),
-                    SizedBox(height: 8.v),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 24.h),
-                        child: Text(
-                          provider.respo.data?.first.description ?? "",
-                          style: theme.textTheme.bodyMedium!.copyWith(
-                            height: 1.50,
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 15.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h),
-                      child: Text(
-                        "msg_about_instructor".tr,
-                        style: theme.textTheme.titleMedium,
-                      ),
-                    ),
-                    SizedBox(height: 8.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h, right: 24.h),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 198, 229, 249),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(0.2 *
-                                71.h), // 10% curve (0.1 times the width of the container)
+                        SizedBox(height: 8.v),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 22.h,
+                            right: 24.h,
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              CustomImageView(
-                                imagePath: null !=
-                                        provider.respo.data?.first.creatorImage
-                                    ? provider.respo.data?.first.creatorImage
-                                    : ImageConstant.imgRectangle9522,
-                                height: 68.adaptSize,
-                                width: 68.adaptSize,
-                                fit: BoxFit.cover,
-                                radius: BorderRadius.circular(
-                                  8.h,
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 0.v),
+                                child: SizedBox(
+                                  width: SizeUtils.width / 2.4,
+                                  child: AutoSizeText(
+                                    provider.respo.data?.first
+                                                .courseStartStatus ==
+                                            "started"
+                                        ? " Started on : ${provider.respo.data?.first.startDate ?? ""}"
+                                        : " Start on ${provider.respo.data?.first.startDate ?? ""}",
+                                    style:
+                                        CustomTextStyles.titleSmallBluegray500,
+                                  ),
                                 ),
-                                margin: EdgeInsets.only(bottom: 2.v),
+                              ),
+                              Container(
+                                height: 4.adaptSize,
+                                width: 4.adaptSize,
+                                margin: EdgeInsets.only(
+                                  left: 9.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: appTheme.amber700,
+                                  borderRadius: BorderRadius.circular(
+                                    2.h,
+                                  ),
+                                ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(
-                                  left: 22.h,
-                                  top: 2.v,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: SizeUtils.width / 1.8,
-                                      child: AutoSizeText(
-                                        provider.respo.data?.first
-                                                .courseCreator ??
-                                            "",
-                                        maxLines: 1,
-                                        style: CustomTextStyles.titleMediumBold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 6.v),
-                                    Text(
-                                      provider.respo.data?.first
-                                              .creatorDesignation ??
-                                          "",
-                                      style: CustomTextStyles
-                                          .labelLargeManropeBluegray90002,
-                                    ),
-                                    SizedBox(height: 6.v),
-                                    Text(
-                                      "lbl_view_commentary".tr,
-                                      style: CustomTextStyles
-                                          .labelLargeManropeBluegray500
-                                          .copyWith(
-                                        decoration: TextDecoration.underline,
-                                      ),
-                                    )
-                                  ],
+                                padding: EdgeInsets.only(left: 10.h),
+                                child: SizedBox(
+                                  width: SizeUtils.width / 2.6,
+                                  child: AutoSizeText(
+                                    provider.respo.data?.first
+                                                .courseStartStatus ==
+                                            "started"
+                                        ? "Last updated date : ${provider.respo.data?.first.lastUpdatedData ?? ""}"
+                                        : "Enrolment Last date  ${provider.respo.data?.first.lastDate ?? ""}",
+                                    style: CustomTextStyles.bodySmallGray700,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.start,
+                                    minFontSize: 8,
+                                  ),
                                 ),
                               )
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    provider.respo.data?.first.userEnrolled == true
-                        ? SizedBox()
-                        : entrolWidget(context, provider),
-                    SizedBox(height: 13.v),
-                    provider.respo.data?.first.userEnrolled == true
-                        ? _buildRowDay(context, provider)
-                        : SizedBox(),
-                    SizedBox(height: 8.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h),
-                      child: Text(
-                        "Introductory Video".tr,
-                        style: theme.textTheme.titleMedium,
-                      ),
-                    ),
-                    SizedBox(height: 8.v),
-                    provider.controller != null
-                        ? Padding(
-                            padding: EdgeInsets.only(
-                              left: 24.h,
-                              right: 23.h,
-                            ),
-                            child: YoutubePlayer(
-                              controller: provider.controller!,
-                              bottomActions: [
-                                CurrentPosition(),
-                                ProgressBar(isExpanded: true)
-                              ],
-                              showVideoProgressIndicator: true,
-                              progressIndicatorColor: Colors.amber,
-                              progressColors: const ProgressBarColors(
-                                playedColor: Colors.amber,
-                                handleColor: Colors.amberAccent,
+                        SizedBox(height: 12.v),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Divider(
+                            indent: 24.h,
+                            endIndent: 24.h,
+                          ),
+                        ),
+                        SizedBox(height: 14.v),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.h),
+                          child: Text(
+                            "About the course".tr,
+                            style: CustomTextStyles.titleMediumSemiBold16,
+                          ),
+                        ),
+                        SizedBox(height: 8.v),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 24.h),
+                            child: Text(
+                              provider.respo.data?.first.description ?? "",
+                              style: theme.textTheme.bodyMedium!.copyWith(
+                                height: 1.50,
                               ),
-                              onReady: () {},
                             ),
-                          )
-                        : SizedBox(),
+                          ),
+                        ),
+                        SizedBox(height: 15.v),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.h),
+                          child: Text(
+                            "msg_about_instructor".tr,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        SizedBox(height: 8.v),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.h, right: 24.h),
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                      10), // 10-pixel edge radius
+                                  child: CustomImageView(
+                                    imagePath: ImageConstant.grayBack,
+                                    fit: BoxFit
+                                        .cover, // Ensures the image covers the entire container
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 18.0, top: 9, bottom: 9),
+                                child: Row(
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: null !=
+                                              provider.respo.data?.first
+                                                  .creatorImage
+                                          ? provider
+                                              .respo.data?.first.creatorImage
+                                          : ImageConstant.imgRectangle9522,
+                                      height: 68.adaptSize,
+                                      width: 68.adaptSize,
+                                      fit: BoxFit.cover,
+                                      radius: BorderRadius.circular(
+                                        8.h,
+                                      ),
+                                      margin: EdgeInsets.only(bottom: 2.v),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: 22.h,
+                                        top: 2.v,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: SizeUtils.width / 1.8,
+                                            child: AutoSizeText(
+                                              provider.respo.data?.first
+                                                      .courseCreator ??
+                                                  "",
+                                              maxLines: 1,
+                                              style: CustomTextStyles
+                                                  .titleMediumBold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6.v),
+                                          Text(
+                                            provider.respo.data?.first
+                                                    .creatorDesignation ??
+                                                "",
+                                            style: CustomTextStyles
+                                                .labelLargeManropeBluegray90002,
+                                          ),
+                                          SizedBox(height: 6.v),
+                                          Text(
+                                            "lbl_view_commentary".tr,
+                                            style: CustomTextStyles
+                                                .labelLargeManropeBluegray500
+                                                .copyWith(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        provider.respo.data?.first.userEnrolled == true
+                            ? SizedBox()
+                            : entrolWidget(context, provider),
+                        SizedBox(height: 13.v),
+                        provider.respo.data?.first.userEnrolled == true
+                            ? _buildRowDay(context, provider)
+                            : SizedBox(),
+                        SizedBox(height: 8.v),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.h),
+                          child: Text(
+                            "Introductory Video".tr,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        SizedBox(height: 8.v),
+                        provider.controller != null
+                            ? Padding(
+                                padding: EdgeInsets.only(
+                                  left: 24.h,
+                                  right: 23.h,
+                                ),
+                                child: YoutubePlayer(
+                                  controller: provider.controller!,
+                                  bottomActions: [
+                                    CurrentPosition(),
+                                    ProgressBar(isExpanded: true)
+                                  ],
+                                  showVideoProgressIndicator: true,
+                                  progressIndicatorColor: Colors.amber,
+                                  progressColors: const ProgressBarColors(
+                                    playedColor: Colors.amber,
+                                    handleColor: Colors.amberAccent,
+                                  ),
+                                  onReady: () {},
+                                ),
+                              )
+                            : SizedBox(),
 
-                    // Padding(
-                    //     padding: EdgeInsets.only(
-                    //       left: 2.h,
-                    //       right: 2.h,
-                    //     ),
-                    //     child: SizedBox(
-                    //       height: 200.v,
-                    //       child: WebViewWidget(
-                    //         controller: provider.controller,
-                    //       ),
-                    //     )),
+                        // Padding(
+                        //     padding: EdgeInsets.only(
+                        //       left: 2.h,
+                        //       right: 2.h,
+                        //     ),
+                        //     child: SizedBox(
+                        //       height: 200.v,
+                        //       child: WebViewWidget(
+                        //         controller: provider.controller,
+                        //       ),
+                        //     )),
 
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     NavigatorService.pushNamed(AppRoutes.videoPlayerScreen,
-                    //         arguments: provider.respo.data?.first.introVideo
-                    //             .toString());
-                    //   },
-                    //   child: CustomImageView(
-                    //     imagePath: provider.respo.data?.first.introVideo != null
-                    //         ? provider.respo.data?.first.introVideoThumb
-                    //         : ImageConstant.imgImage,
-                    //     height: 200.v,
-                    //     width: 326.h,
-                    //     fit: BoxFit.cover,
-                    //     alignment: Alignment.center,
-                    //   ),
-                    // ),
-                    SizedBox(height: 8.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h),
-                      child: Text(
-                        "${provider.respo.data?.first.courseName}",
-                        style: CustomTextStyles.titleSmallBluegray90003,
-                      ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     NavigatorService.pushNamed(AppRoutes.videoPlayerScreen,
+                        //         arguments: provider.respo.data?.first.introVideo
+                        //             .toString());
+                        //   },
+                        //   child: CustomImageView(
+                        //     imagePath: provider.respo.data?.first.introVideo != null
+                        //         ? provider.respo.data?.first.introVideoThumb
+                        //         : ImageConstant.imgImage,
+                        //     height: 200.v,
+                        //     width: 326.h,
+                        //     fit: BoxFit.cover,
+                        //     alignment: Alignment.center,
+                        //   ),
+                        // ),
+                        SizedBox(height: 8.v),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.h),
+                          child: Text(
+                            "${provider.respo.data?.first.courseName}",
+                            style: CustomTextStyles.titleSmallBluegray90003,
+                          ),
+                        ),
+                        SizedBox(height: 6.v),
+                        Padding(
+                          padding: EdgeInsets.only(left: 24.h),
+                          child: Text(
+                            "Explaining ${provider.respo.data?.first.courseName}",
+                            style: CustomTextStyles.bodySmallGray700,
+                          ),
+                        ),
+                        SizedBox(height: 15.v),
+                        _buildColumnAudio(context, provider),
+                        SizedBox(height: 15.v),
+                      ],
                     ),
-                    SizedBox(height: 6.v),
-                    Padding(
-                      padding: EdgeInsets.only(left: 24.h),
-                      child: Text(
-                        "Explaining ${provider.respo.data?.first.courseName}",
-                        style: CustomTextStyles.bodySmallGray700,
-                      ),
-                    ),
-                    SizedBox(height: 15.v),
-                    _buildColumnAudio(context, provider),
-                    SizedBox(height: 15.v),
-                  ],
-                ),
+                  ),
+                ],
               ),
             )
           ],
@@ -368,63 +389,89 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
               "Introductory  Audio".tr,
               style: theme.textTheme.titleMedium,
             ),
-            Text(
-              provider.connectionStatus,
-              style: theme.textTheme.titleMedium,
+            // Text(
+            //   provider.connectionStatus,
+            //   style: theme.textTheme.titleMedium,
+            // ),
+            SizedBox(
+              height: 8,
             ),
-            SizedBox(height: 8.v),
-            Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(ImageConstant.spotif_back)),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(0.2 *
-                      71.h), // 10% curve (0.1 times the width of the container)
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${provider.respo.data?.first.courseName}",
-                            style: CustomTextStyles
-                                .labelLargeManropeBluegray9000313,
-                          ),
-                          SizedBox(height: 3.v),
-                          Text(
-                            "Commentary by ${provider.respo.data?.first.courseCreator}",
-                            style: CustomTextStyles.bodySmallGray700,
-                          )
-                        ],
-                      ),
+            Stack(
+              children: [
+                // Background Image with Rounded Corners
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(10), // 10-pixel edge radius
+                    child: CustomImageView(
+                      imagePath: ImageConstant.spotif_back,
+                      fit: BoxFit
+                          .cover, // Ensures the image covers the entire container
+                      width: double.infinity,
+                      height: double.infinity,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(),
-                      child: CustomIconButton(
-                        height: 32.adaptSize,
-                        width: 32.adaptSize,
-                        onTap: () {
-                          provider
-                              .playAudio(provider.respo.data?.first.introAudio);
-                        },
-                        padding: EdgeInsets.all(6.h),
-                        decoration: IconButtonStyleHelper.fillGreenA,
-                        child: CustomImageView(
-                          imagePath: provider.isPlaying
-                              ? ImageConstant.imgPause
-                              : ImageConstant.imgPlay,
+                  ),
+                ),
+
+                // Overlay Content
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "${provider.respo.data?.first.courseName ?? ''}",
+                              style: CustomTextStyles
+                                  .labelLargeManropeBluegray9000313,
+                            ),
+                            SizedBox(height: 3.v),
+                            Text(
+                              "Commentary by ${provider.respo.data?.first.courseCreator ?? ''}",
+                              style: CustomTextStyles.bodySmallGray700,
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                      provider.isPlaying
+                          ? Padding(
+                              padding: EdgeInsets.zero,
+                              child: CustomIconButton(
+                                height: 32.adaptSize,
+                                width: 32.adaptSize,
+                                onTap: () {
+                                  provider.pauseAudio();
+                                },
+                                padding: EdgeInsets.all(6.h),
+                                decoration: IconButtonStyleHelper.fillGreenA,
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.imgPause,
+                                ),
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.zero,
+                              child: CustomIconButton(
+                                height: 32.adaptSize,
+                                width: 32.adaptSize,
+                                onTap: () {
+                                  provider.playAudio(
+                                      provider.respo.data?.first.introAudio);
+                                },
+                                padding: EdgeInsets.all(6.h),
+                                decoration: IconButtonStyleHelper.fillGreenA,
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.imgPlay,
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             )
           ],
         ),
@@ -486,10 +533,14 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
           vertical: 15.v,
         ),
         decoration: BoxDecoration(
+            color:
+                model.readStatus == true ? appTheme.entrolColor : Colors.white,
             // color:  Color.fromARGB(255, 143, 187, 226),
             border: Border.all(
               width: 1,
-              color: Color.fromARGB(255, 143, 187, 226),
+              color: model.readStatus == true
+                  ? appTheme.entrolColor
+                  : Color.fromARGB(255, 143, 187, 226),
             ),
             borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Row(
@@ -504,16 +555,23 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                     padding: EdgeInsets.only(left: 2.h),
                     child: Text(
                       "lbl_day".tr,
-                      style: CustomTextStyles.bodyMediumBluegray900,
+                      style: model.readStatus == true
+                          ? CustomTextStyles.bodyMediumWhite
+                          : CustomTextStyles.bodyMediumBluegray900,
                     ),
                   ),
                   Text(
                     model.day.toString(),
-                    style: theme.textTheme.headlineSmall,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                        color: model.readStatus == true
+                            ? Colors.white
+                            : appTheme.entrolColor),
                   ),
                   Text(
                     model.readStatus == true ? "COMPLETE" : "PENDING",
-                    style: CustomTextStyles.bodyMediumBluegray90010,
+                    style: model.readStatus == true
+                        ? CustomTextStyles.bodyMediumWhiteText
+                        : CustomTextStyles.bodyMediumBluegray90010,
                   )
                 ],
               ),
@@ -552,7 +610,9 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                               detail
                                   .toString(), // Convert each detail to string if necessary
                               style: theme.textTheme.titleMedium!.copyWith(
-                                color: appTheme.blueGray90002,
+                                color: model.readStatus == true
+                                    ? appTheme.whiteA700
+                                    : appTheme.blueGray90002,
                               ), // Customize the text style if needed
                               maxLines:
                                   1, // Ensure the text stays in a single line
@@ -567,23 +627,19 @@ class StudyDetailsScreenState extends State<StudyDetailsScreen> {
                 ),
               ),
             ),
-            // Container(
-            //   height: 3.adaptSize,
-            //   width: 3.adaptSize,
-            //   margin: EdgeInsets.only(bottom: 45.v),
-            //   decoration: BoxDecoration(
-            //     color: appTheme.whiteA700,
-            //     borderRadius: BorderRadius.circular(
-            //       1.h,
-            //     ),
-            //   ),
-            // ),
-            CustomImageView(
-              imagePath: ImageConstant.imgVector,
-              height: 10.v,
-              width: 10.h,
-              margin: EdgeInsets.fromLTRB(7.h, 22.v, 12.h, 22.v),
-            )
+            model.readStatus == true
+                ? CustomImageView(
+                    imagePath: ImageConstant.tick_white,
+                    height: 30.v,
+                    width: 30.h,
+                    margin: EdgeInsets.fromLTRB(7.h, 2.v, 12.h, 2.v),
+                  )
+                : CustomImageView(
+                    imagePath: ImageConstant.imgVector,
+                    height: 10.v,
+                    width: 10.h,
+                    margin: EdgeInsets.fromLTRB(7.h, 22.v, 12.h, 22.v),
+                  )
           ],
         ),
       ),

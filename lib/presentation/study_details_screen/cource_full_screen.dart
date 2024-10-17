@@ -64,10 +64,14 @@ class CourseFullScreenState extends State<CourseFullScreen> {
           vertical: 15.v,
         ),
         decoration: BoxDecoration(
+            color:
+                model.readStatus == true ? appTheme.entrolColor : Colors.white,
             // color:  Color.fromARGB(255, 143, 187, 226),
             border: Border.all(
               width: 1,
-              color: Color.fromARGB(255, 143, 187, 226),
+              color: model.readStatus == true
+                  ? appTheme.entrolColor
+                  : Color.fromARGB(255, 143, 187, 226),
             ),
             borderRadius: BorderRadius.all(Radius.circular(15))),
         child: Row(
@@ -82,16 +86,23 @@ class CourseFullScreenState extends State<CourseFullScreen> {
                     padding: EdgeInsets.only(left: 2.h),
                     child: Text(
                       "lbl_day".tr,
-                      style: CustomTextStyles.bodyMediumBluegray900,
+                      style: model.readStatus == true
+                          ? CustomTextStyles.bodyMediumWhite
+                          : CustomTextStyles.bodyMediumBluegray900,
                     ),
                   ),
                   Text(
                     model.day.toString(),
-                    style: theme.textTheme.headlineSmall,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                        color: model.readStatus == true
+                            ? Colors.white
+                            : appTheme.entrolColor),
                   ),
                   Text(
                     model.readStatus == true ? "COMPLETE" : "PENDING",
-                    style: CustomTextStyles.bodyMediumBluegray90010,
+                    style: model.readStatus == true
+                        ? CustomTextStyles.bodyMediumWhiteText
+                        : CustomTextStyles.bodyMediumBluegray90010,
                   )
                 ],
               ),
@@ -130,7 +141,9 @@ class CourseFullScreenState extends State<CourseFullScreen> {
                               detail
                                   .toString(), // Convert each detail to string if necessary
                               style: theme.textTheme.titleMedium!.copyWith(
-                                color: appTheme.blueGray90002,
+                                color: model.readStatus == true
+                                    ? appTheme.whiteA700
+                                    : appTheme.blueGray90002,
                               ), // Customize the text style if needed
                               maxLines:
                                   1, // Ensure the text stays in a single line
@@ -145,12 +158,19 @@ class CourseFullScreenState extends State<CourseFullScreen> {
                 ),
               ),
             ),
-            CustomImageView(
-              imagePath: ImageConstant.imgVector,
-              height: 10.v,
-              width: 10.h,
-              margin: EdgeInsets.fromLTRB(7.h, 22.v, 12.h, 22.v),
-            )
+            model.readStatus == true
+                ? CustomImageView(
+                    imagePath: ImageConstant.tick_white,
+                    height: 30.v,
+                    width: 30.h,
+                    margin: EdgeInsets.fromLTRB(7.h, 2.v, 12.h, 2.v),
+                  )
+                : CustomImageView(
+                    imagePath: ImageConstant.imgVector,
+                    height: 10.v,
+                    width: 10.h,
+                    margin: EdgeInsets.fromLTRB(7.h, 22.v, 12.h, 22.v),
+                  )
           ],
         ),
       ),

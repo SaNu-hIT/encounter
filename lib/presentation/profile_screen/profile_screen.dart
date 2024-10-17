@@ -1,11 +1,9 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../../core/app_export.dart';
 import '../../theme/custom_button_style.dart';
 import '../../utils/utils.dart';
-import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/appbar_subtitle_one.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
@@ -14,7 +12,6 @@ import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_switch.dart';
 import '../home_page/home_page.dart';
-import 'models/profile_model.dart';
 import 'provider/profile_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -334,7 +331,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         child: Row(
           children: [
             CustomImageView(
-              imagePath: ImageConstant.imgQuestions1,
+              imagePath: ImageConstant.conversation,
               height: 22.adaptSize,
               width: 22.adaptSize,
               color: appTheme.blueGray600,

@@ -97,6 +97,7 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
       return Scaffold(
         backgroundColor: appTheme.backgroundColor,
         appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
           backgroundColor: appTheme.backgroundColor,
           title: Text(
             provider.capitalizeFirstLetter(
@@ -162,7 +163,8 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0, top: 12),
+                      padding:
+                          const EdgeInsets.only(left: 23.0, right: 23, top: 12),
                       child: AutoSizeText(
                         '${provider.respo_day.data?.courseDayVerse?[index2].bookName ?? ""} '
                         '${provider.respo_day.data?.courseDayVerse?[index2].chapterNo ?? ""}: '
@@ -190,7 +192,7 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                   style: theme.textTheme.titleMedium,
                                 ),
                               ),
-                              SizedBox(height: 11.v),
+                              SizedBox(height: 8.v),
                               Align(
                                 alignment: Alignment.center,
                                 child: Container(
@@ -209,7 +211,7 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                 ),
                               ),
 
-                              SizedBox(height: 12.v),
+                              SizedBox(height: 8.v),
                               Padding(
                                 padding: EdgeInsets.only(left: 24.h),
                                 child: Text(
@@ -217,14 +219,6 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                   style: theme.textTheme.titleMedium,
                                 ),
                               ),
-                              SizedBox(height: 8.v),
-                              // Padding(
-                              //   padding: EdgeInsets.only(
-                              //     left: 24.h,
-                              //     right: 24.h,
-                              //   ),
-                              //   child: player,
-                              // ),
                               SizedBox(height: 8.v),
 
                               provider.controllerDay != null
@@ -268,58 +262,78 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                         .videoSpotifyLink;
                                     return Padding(
                                       padding: EdgeInsets.only(
-                                          left: 24.h, right: 23.h, bottom: 8),
+                                          left: 23.h, right: 23.h, bottom: 8),
                                       child: GestureDetector(
                                         onTap: () {
                                           provider.loadNext(video_link);
                                         },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Color.fromARGB(
-                                                255, 198, 229, 249),
-                                            borderRadius: BorderRadius.all(
-                                              Radius.circular(0.2 *
-                                                  71.h), // 10% curve (0.1 times the width of the container)
-                                            ),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              CustomImageView(
-                                                width: 80,
-                                                height: 80,
-                                                imagePath:
-                                                    ImageConstant.imageNotFound,
+                                        child: Stack(
+                                          children: [
+                                            Positioned.fill(
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(
+                                                    10), // 10-pixel edge radius
+                                                child: CustomImageView(
+                                                  imagePath:
+                                                      ImageConstant.spotif_back,
+                                                  fit: BoxFit
+                                                      .cover, // Ensures the image covers the entire container
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                ),
                                               ),
-                                              SizedBox(
-                                                  width: SizeUtils.width / 1.5,
-                                                  child: Text(
-                                                      video_link ?? "Video")),
-                                            ],
-                                          ),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(18.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  CustomImageView(
+                                                    width: 42,
+                                                    height: 42,
+                                                    imagePath:
+                                                        ImageConstant.youtube,
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  SizedBox(
+                                                      width:
+                                                          SizeUtils.width / 1.5,
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            "Heading Of the Courses",
+                                                            style: CustomTextStyles
+                                                                .labelLargeManropeBluegray9000313,
+                                                          ),
+                                                          SizedBox(height: 2.v),
+                                                          Text(
+                                                            video_link ??
+                                                                "Video",
+                                                            style: CustomTextStyles
+                                                                .bodySmallGray700,
+                                                          ),
+                                                        ],
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     );
                                   }),
 
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     NavigatorService.pushNamed(
-                              //         AppRoutes.videoPlayerScreen,
-                              //         arguments: provider
-                              //             .respo.data?.first.introVideo
-                              //             .toString());
-                              //   },
-                              //   child: CustomImageView(
-                              //     imagePath:
-                              //         null != provider.respo_day.data?.image
-                              //             ? provider.respo_day.data?.videoLink
-                              //             : ImageConstant.imgImage,
-                              //     height: 200.v,
-                              //     width: 326.h,
-                              //     alignment: Alignment.center,
-                              //   ),
-                              // ),
-                              SizedBox(height: 8.v),
+                              // SizedBox(height: 8.v),
                               Padding(
                                 padding: EdgeInsets.only(left: 24.h),
                                 child: Text(
@@ -328,7 +342,7 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                       CustomTextStyles.titleSmallBluegray90003,
                                 ),
                               ),
-                              SizedBox(height: 6.v),
+                              SizedBox(height: 8.v),
                               Padding(
                                 padding: EdgeInsets.only(left: 24.h),
                                 child: Text(
@@ -336,46 +350,85 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                   style: CustomTextStyles.bodySmallGray700,
                                 ),
                               ),
-                              SizedBox(height: 15.v),
+                              SizedBox(height: 8.v),
                               Padding(
                                 padding: EdgeInsets.only(left: 24.h),
                                 child: Text(
-                                  "Audio".tr,
+                                  "Spotify Audio".tr,
                                   style: theme.textTheme.titleMedium,
                                 ),
                               ),
-                              SizedBox(height: 8.v),
-
                               Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Stack(
-                                  alignment: AlignmentDirectional.center,
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: Row(
                                   children: [
-                                    _buildPlayerStateWidget(),
-                                    Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(),
-                                        child: CustomIconButton(
-                                          height: 32.adaptSize,
-                                          width: 32.adaptSize,
-                                          onTap: () {
-                                            provider.playAudio(provider
-                                                .respo_day
-                                                .data
-                                                ?.courseContentSpotifyLink
-                                                ?.first
-                                                .videoSpotifyLink);
-                                          },
-                                          padding: EdgeInsets.all(7.h),
-                                          decoration:
-                                              IconButtonStyleHelper.fillGreenA,
-                                          child: CustomImageView(
-                                            imagePath: provider.isPlaying
-                                                ? ImageConstant.imgPlay
-                                                : ImageConstant.imgPause,
+                                    provider.isSpotifyConnected
+                                        ? _buildPlayerStateWidget()
+                                        : Padding(
+                                            padding: const EdgeInsets.all(18.0),
+                                            child: CustomImageView(
+                                              height: 80,
+                                              imagePath: ImageConstant.spotify,
+                                            ),
                                           ),
+                                    provider.isPlaying
+                                        ? Padding(
+                                            padding: EdgeInsets.zero,
+                                            child: CustomIconButton(
+                                              height: 32.adaptSize,
+                                              width: 32.adaptSize,
+                                              onTap: () {
+                                                provider.pauseAudio();
+                                              },
+                                              padding: EdgeInsets.all(6.h),
+                                              decoration: IconButtonStyleHelper
+                                                  .fillGreenA,
+                                              child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.imgPause,
+                                              ),
+                                            ),
+                                          )
+                                        : Padding(
+                                            padding: EdgeInsets.zero,
+                                            child: CustomIconButton(
+                                              height: 32.adaptSize,
+                                              width: 32.adaptSize,
+                                              onTap: () {
+                                                provider.playAudio(provider
+                                                    .respo
+                                                    .data
+                                                    ?.first
+                                                    .introAudio);
+                                              },
+                                              padding: EdgeInsets.all(6.h),
+                                              decoration: IconButtonStyleHelper
+                                                  .fillGreenA,
+                                              child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.imgPlay,
+                                              ),
+                                            ),
+                                          ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Heading Of the Courses",
+                                          style: CustomTextStyles
+                                              .labelLargeManropeBluegray9000313,
                                         ),
-                                      ),
+                                        SizedBox(height: 3.v),
+                                        Text(
+                                          "Spotify Link",
+                                          style:
+                                              CustomTextStyles.bodySmallGray700,
+                                        )
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -393,90 +446,67 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                                         ?.courseContentSpotifyLink?[index2]
                                         .videoSpotifyLink;
 
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                          left: 23.h, right: 23.h, bottom: 8),
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 1.h),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                    return Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 23.0, right: 23.0, top: 8),
+                                      child: Stack(
                                         children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: Color.fromARGB(
-                                                  255, 198, 229, 249),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(0.2 *
-                                                    71.h), // 10% curve (0.1 times the width of the container)
+                                          Positioned.fill(
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(
+                                                  10), // 10-pixel edge radius
+                                              child: CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.spotif_back,
+                                                fit: BoxFit
+                                                    .cover, // Ensures the image covers the entire container
+                                                width: double.infinity,
+                                                height: double.infinity,
                                               ),
                                             ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(12.0),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  CustomImageView(
-                                                    imagePath:
-                                                        ImageConstant.spotify,
-                                                  ),
-
-                                                  Expanded(
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        provider
-                                                            .playAudio(link);
-                                                      },
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "Spotify Link",
-                                                            style: CustomTextStyles
-                                                                .labelLargeManropeBluegray9000313,
-                                                          ),
-                                                          SizedBox(height: 3.v),
-                                                          // Text(
-                                                          //   "",
-                                                          //   style: CustomTextStyles
-                                                          //       .bodySmallGray700,
-                                                          // )
-                                                        ],
-                                                      ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(18.0),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                CustomImageView(
+                                                  height: 32,
+                                                  imagePath:
+                                                      ImageConstant.spotify,
+                                                ),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                Expanded(
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      provider.playAudio(link);
+                                                    },
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "Heading Of the Courses",
+                                                          style: CustomTextStyles
+                                                              .labelLargeManropeBluegray9000313,
+                                                        ),
+                                                        SizedBox(height: 3.v),
+                                                        Text(
+                                                          "Spotify Link",
+                                                          style: CustomTextStyles
+                                                              .bodySmallGray700,
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
-                                                  // Padding(
-                                                  //   padding: EdgeInsets.only(),
-                                                  //   child: CustomIconButton(
-                                                  //     height: 32.adaptSize,
-                                                  //     width: 32.adaptSize,
-                                                  //     onTap: () {
-                                                  //       provider
-                                                  //           .playAudio(link);
-                                                  //     },
-                                                  //     padding:
-                                                  //         EdgeInsets.all(7.h),
-                                                  //     decoration:
-                                                  //         IconButtonStyleHelper
-                                                  //             .fillGreenA,
-                                                  //     child: CustomImageView(
-                                                  //       imagePath:
-                                                  //           provider.isPlaying
-                                                  //               ? ImageConstant
-                                                  //                   .imgPlay
-                                                  //               : ImageConstant
-                                                  //                   .imgPause,
-                                                  //     ),
-                                                  //   ),
-                                                  // )
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     );
@@ -577,27 +607,32 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
     if (statements == null) return SizedBox();
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.only(left: 23, right: 23),
       child: RichText(
         softWrap: true,
         text: TextSpan(
           children: statements.asMap().entries.map((entry) {
             int statementIndex = entry.key;
             var statement = entry.value;
+
+            var stateText = statement.statementText ?? "";
+            String statementText = stateText.replaceAll(
+                RegExp(r'<br>', caseSensitive: false), '\n');
+
             return WidgetSpan(
               alignment: PlaceholderAlignment.baseline,
               baseline: TextBaseline.alphabetic,
               child: GestureDetector(
                 onTap: () {
                   // Handle tap action here
-                  print("Tapped on: ${statement.statementText}");
+                  print("Tapped on: ${statementText}");
                   if (provider.isMultipleSelect) {
                     provider.toggleData(statementIndex, verses?.id);
                   }
                 },
                 onLongPress: () {
                   // Handle long-press action here
-                  print("Long-pressed on: ${statement.statementText}");
+                  print("Long-pressed on: ${statementText}");
                   provider.showAlertPopup(context, statement);
                 },
                 child: Container(
@@ -633,11 +668,10 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                             recognizer: LongPressGestureRecognizer()
                               ..onLongPress = () {
                                 // Handle long-press action here
-                                print(
-                                    "Long-pressed on: ${statement.statementText}");
+                                print("Long-pressed on: ${statementText}");
                                 provider.showAlertPopup(context, statement);
                               },
-                            text: statement.statementText ?? "",
+                            text: statementText ?? "",
                             style: TextStyle(
                               fontSize: 16,
                               backgroundColor: Color(
@@ -648,7 +682,7 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
                           )
                         else
                           TextSpan(
-                            text: statement.statementText ?? "",
+                            text: statementText ?? "",
                             style: TextStyle(
                               backgroundColor: statement.isSelected
                                   ? Colors.amber
@@ -823,8 +857,12 @@ class StudyDetailsScreenState extends State<CouseDetailsScreen> {
             Padding(
               padding: const EdgeInsets.all(18),
               child: SizedBox(
-                  height: 200,
-                  child: Center(child: spotifyImageWidget(track.imageUri))),
+                  height: 80,
+                  child: Row(
+                    children: [
+                      spotifyImageWidget(track.imageUri),
+                    ],
+                  )),
             ),
           ],
         );

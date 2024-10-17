@@ -89,8 +89,20 @@ class CustomTextStyles {
         color: appTheme.blueGray900,
         fontSize: 13.fSize,
       );
+
+  static get bodyMediumWhite=> theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.whiteA700,
+        fontSize: 13.fSize,
+      );
+
   static get bodyMediumBluegray90010 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.blueGray900,
+        fontSize: 7.fSize,
+      );
+
+
+        static get bodyMediumWhiteText => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.whiteA700,
         fontSize: 7.fSize,
       );
   static get bodyMediumGray100 => theme.textTheme.bodyMedium!.copyWith(
@@ -202,7 +214,7 @@ class CustomTextStyles {
   static get labelLargeManropeBluegray9000313 =>
       theme.textTheme.labelLarge!.manrope.copyWith(
         color: appTheme.blueGray90003,
-        fontSize: 13.fSize,
+        fontSize: 14.fSize,
       );
   static get labelLargeManropeTeal800 =>
       theme.textTheme.labelLarge!.manrope.copyWith(
